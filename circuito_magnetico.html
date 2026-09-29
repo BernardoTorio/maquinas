@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La bobina y el circuito magnético</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--fe:#9aa5b1;
+  --cF:#7B4FA0;--cH:#2E75B6;--cB:#C0602B;--cP:#6A9A1F;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--fe:#5d6873;--cF:#B58BDB;--cH:#6FAEE8;--cB:#EE9A62;--cP:#9BCB4F}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--fe:#5d6873;--cF:#B58BDB;--cH:#6FAEE8;--cB:#EE9A62;--cP:#9BCB4F}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.boxes.wide{grid-template-columns:1fr 2fr}
+.boxes.wide ul{columns:2;column-gap:26px}.boxes.wide li{break-inside:avoid}
+@media (max-width:620px){.boxes.wide{grid-template-columns:1fr}.boxes.wide ul{columns:1}}
+.box ul{margin:0;padding-left:18px}.box li{margin-bottom:6px}
+.grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage>svg{display:block;width:100%;height:auto}
+.panel{padding:14px 16px}
+.ctl{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center;margin-bottom:10px;font-size:.95rem}
+.ctl label{font-weight:700}
+.ctl output{font-weight:700;min-width:70px;text-align:right}
+input[type=range]{width:100%;accent-color:var(--acc)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 12px;font-size:.95rem}
+.row button{font:inherit;font-weight:700;padding:8px 12px;border-radius:9px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.row button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.mag{margin:0 0 8px}
+.mag .h{display:flex;justify-content:space-between;font-size:.95rem}
+.mag .h b{font-size:1rem}
+.mag .h span{color:var(--muted);font-size:.85rem}
+.bar{height:16px;background:var(--line);border-radius:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:8px;transition:width .4s}
+.mag p{margin:2px 0 0;font-size:.86rem;color:var(--muted)}
+.note{background:rgba(46,117,182,.10);border-left:5px solid var(--field);border-radius:6px;padding:8px 12px;font-size:.93rem;margin-top:10px;min-height:3em}
+.fl{fill:none;stroke:var(--field);stroke-width:2;stroke-dasharray:8 8;animation:run 1s linear infinite}
+@keyframes run{to{stroke-dashoffset:-16}}
+@media (prefers-reduced-motion:reduce){.fl{animation:none}}
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <small>Máquinas Eléctricas 2MB · Tema 1 · Puntos 1.3, 1.4 y 1.5</small>
+    <h1>La bobina y el circuito magnético</h1>
+    <p class="sub">Cambia una cosa cada vez y mira qué barras se mueven y cuáles no.</p>
+  </header>
+
+  <div class="grid">
+    <div class="left">
+    <div class="stage">
+      <svg id="sv" viewBox="0 0 760 460" role="img" aria-label="Circuito magnético con bobina y núcleo">
+        <g id="gHB"></g><g id="gCore"></g><g id="gLines"></g><g id="gCoil"></g><g id="gTxt"></g>
+      </svg>
+    </div>
+    <div class="boxes wide">
+      <div class="box blue">
+        <h2>Qué está pasando</h2>
+        <div id="note"></div>
+      </div>
+      <div class="box">
+        <h2>Qué es cada barra</h2>
+        <ul>
+          <li><b style="color:var(--cF)">Fuerza magnetomotriz</b>: el "empuje" que da la bobina. Sube con más corriente o más espiras.</li>
+          <li><b style="color:var(--cH)">Intensidad de campo</b>: ese empuje repartido a lo largo del circuito. Si el circuito es más largo, toca a menos por cada metro. No depende del material.</li>
+          <li><b style="color:var(--cB)">Inducción</b>: cuántas líneas hay en cada cm² del núcleo, es decir, lo juntas que van. Aquí sí importa el material.</li>
+          <li><b style="color:var(--cP)">Flujo</b>: todas las líneas que dan la vuelta por el núcleo. Con un núcleo más grueso caben más.</li>
+        </ul>
+      </div>
+    </div>
+    </div>
+
+    <aside class="panel">
+      <div class="ctl">
+        <label for="rI">Corriente</label><input id="rI" type="range" min="0" max="5" step="0.5" value="2"><output id="oI"></output>
+        <label for="rN">Espiras</label><input id="rN" type="range" min="100" max="500" step="50" value="250"><output id="oN"></output>
+        <label for="rL">Longitud</label><input id="rL" type="range" min="0" max="4" step="1" value="1"><output id="oL"></output>
+        <label for="rS">Grosor</label><input id="rS" type="range" min="0" max="4" step="1" value="2"><output id="oS"></output>
+      </div>
+      <div class="row"><b>Núcleo:</b>
+        <button data-m="fe" aria-pressed="true">Hierro</button>
+        <button data-m="air" aria-pressed="false">Sin núcleo (aire)</button>
+      </div>
+      <div class="row"><b>Entrehierro:</b>
+        <button data-g="0" aria-pressed="true">Núcleo cerrado</button>
+        <button data-g="1" aria-pressed="false">Con un corte de aire</button>
+      </div>
+      <div class="row"><button id="bHand" aria-pressed="true">✋ Mano derecha: sí</button></div>
+
+      <div class="mag"><div class="h"><b style="color:var(--cF)">Fuerza magnetomotriz</b><span>amperio-vuelta (A·v)</span></div>
+        <div class="bar"><i id="bF" style="background:var(--cF)"></i></div></div>
+      <div class="mag"><div class="h"><b style="color:var(--cH)">Intensidad de campo</b><span>amperio-vuelta por metro (A·v/m)</span></div>
+        <div class="bar"><i id="bH" style="background:var(--cH)"></i></div></div>
+      <div class="mag"><div class="h"><b style="color:var(--cB)">Inducción</b><span>tesla (T)</span></div>
+        <div class="bar"><i id="bB" style="background:var(--cB)"></i></div></div>
+      <div class="mag"><div class="h"><b style="color:var(--cP)">Flujo</b><span>weber (Wb)</span></div>
+        <div class="bar"><i id="bP" style="background:var(--cP)"></i></div></div>
+    </aside>
+  </div>
+</main>
+
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;};
+const LEN=[0.4,0.6,0.8,1.0,1.2], LENTXT=['muy corto','corto','medio','largo','muy largo'];
+const SEC=[4,7,10,13,16], SECTXT=['muy fino','fino','medio','grueso','muy grueso'];
+let mat='fe', gap=0, showHand=true;
+const mu0=4e-7*Math.PI, mur=800, Bsat=1.6, g=0.002;
+
+function Bfe(H){return Bsat*Math.tanh(mur*mu0*H/Bsat);}
+function calc(){
+  const I=+$('rI').value, N=+$('rN').value, L=LEN[$('rL').value], S=SEC[$('rS').value];
+  const F=N*I, H=F/L;
+  let B;
+  if(mat==='air') B=mu0*H;
+  else if(!gap) B=Bfe(H);
+  else { // hierro + corte de aire: repartir el empuje
+    let lo=0,hi=Bsat*0.9999;
+    for(let k=0;k<60;k++){const b=(lo+hi)/2; const Hfe=Bsat/(mur*mu0)*Math.atanh(Math.min(b/Bsat,0.99999)); const need=Hfe*L+b/mu0*g; need>F?hi=b:lo=b;}
+    B=(lo+hi)/2;
+  }
+  return {I,N,L,S,F,H,B,P:B*S*1e-4};
+}
+
+// ---------- mano derecha dibujada, vista como la ves tú en tu propia mano (pulgar arriba) ----------
+// Agarra una barra vertical en x=0 de semiancho R.
+//  back : dedos. Salen de detrás de la barra hacia la izquierda y se doblan: lo que se ve es el
+//         nudillo del medio (extremo izquierdo redondeado). Van ANTES que la barra/bobina.
+//  front: yemas que vuelven hacia la barra, palma, muñeca y pulgar. Van DESPUÉS.
+// Por delante de la barra la corriente va hacia la derecha (+x), como las yemas; el pulgar marca -y.
+function handOwner(R=20){
+  const S='#F3C9A2', P='#EBB892', O='#7a4a2c', w='stroke="'+O+'" stroke-width="1.7" stroke-linejoin="round"', L='stroke="'+O+'" fill="none" stroke-linecap="round"';
+  let back='', front='';
+  // [y arriba, alto, largo visible]  índice, corazón, anular, meñique
+  const F=[[-31,15,40],[-16,15,44],[-1,15,41],[14,14,34]];
+  for(const [y,hh,Lf] of F){
+    const r=hh/2, xl=-R-Lf;
+    back+=`<path d="M${-R+4} ${y} H${xl+r} A${r} ${r} 0 0 0 ${xl+r} ${y+hh} H${-R+4} Z" fill="${S}" ${w}/>`;
+    back+=`<path d="M${xl+11} ${y+3} q-2.5 ${r-3} 0 ${hh-6}" ${L} stroke-width="1" opacity=".5"/>`;
+    // yema doblada hacia la barra
+    front+=`<path d="M${-R+1} ${y+1.2} H${-R-14} C${-R-21} ${y+1.2} ${-R-21} ${y+hh-1.2} ${-R-14} ${y+hh-1.2} H${-R+1}" fill="${P}" ${L} stroke-width="1.2"/>`;
+  }
+  // muñeca, difuminada
+  front+=`<defs><linearGradient id="howg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${S}"/><stop offset="1" stop-color="${S}" stop-opacity="0"/></linearGradient></defs>`;
+  front+=`<path d="M${R+14} 26 L${R+36} 4 L${R+96} 58 L${R+74} 82 Z" fill="url(#howg)"/>`;
+  front+=`<path d="M${R+36} 4 L${R+96} 58 M${R+14} 26 L${R+74} 82" stroke="${O}" stroke-width="1.5" opacity=".45"/>`;
+  // palma + pulgar en una sola silueta: el pulgar es grueso y recto y su borde derecho baja suave hasta la palma
+  front+=`<path d="M${R-10} -62 C${R-10} -74 ${R+7} -74 ${R+7} -62 C${R+8} -50 ${R+12} -40 ${R+22} -31 C${R+34} -21 ${R+40} -5 ${R+38} 11 C${R+36} 27 ${R+22} 36 ${R+8} 35 C${R-2} 34 ${R-6} 28 ${R-6} 20 L${R-6} -24 C${R-6} -28 ${R-8} -30 ${R-9} -35 Z" fill="${S}" ${w}/>`;
+  // pliegues: articulación del pulgar y base del pulgar
+  front+=`<path d="M${R-9} -48 q8 2 16 -1" ${L} stroke-width="1" opacity=".45"/>`;
+  front+=`<path d="M${R-5} -30 C${R+6} -24 ${R+18} -18 ${R+26} -6" ${L} stroke-width="1" opacity=".35"/>`;
+  return {back,front};
+}
+
+const air0=()=>mat==='air';
+function draw(v){
+  $('gHB').innerHTML='';
+  const gc=$('gCore'),gl=$('gLines'),gk=$('gCoil'),gt=$('gTxt');
+  gc.innerHTML=gl.innerHTML=gk.innerHTML=gt.innerHTML='';
+  const li=+$('rL').value, si=+$('rS').value;
+  const W=280+li*85, Hh=350, t=28+si*11, cy=226;
+  // centrar todo el conjunto (fuente + mano + núcleo + rótulo del corte) en el dibujo
+  const hs=(t+26)/52, hand=v.I>0&&showHand;
+  const offL=150, offR=W+(gap&&!air0()?118:16);
+  const x0c=380-(offL+offR)/2+offL, cx=x0c+W/2;
+  // si no cabe, ampliar la vista (se ve un poco más pequeño, pero entero)
+  const tot=offL+offR+30, vw=Math.max(760,tot), vh=460*vw/760;
+  $('sv').setAttribute('viewBox',`${(380-vw/2).toFixed(1)} ${(230-vh/2).toFixed(1)} ${vw.toFixed(1)} ${vh.toFixed(1)}`);
+  const x0=cx-W/2, y0=cy-Hh/2, x1=cx+W/2, y1=cy+Hh/2;
+  const air=mat==='air';
+  // núcleo
+  const core=`M${x0} ${y0}H${x1}V${y1}H${x0}Z M${x0+t} ${y0+t}V${y1-t}H${x1-t}V${y0+t}Z`;
+  el('path',{d:core,'fill-rule':'evenodd',fill:air?'none':'var(--fe)',stroke:air?'var(--line)':'var(--ink)','stroke-width':air?2:1.5,'stroke-dasharray':air?'6 6':''},gc);
+  if(gap&&!air) el('rect',{x:x1-t-2,y:cy-7,width:t+4,height:14,fill:'var(--card)'},gc);
+  if(gap&&!air){const tx=el('text',{x:x1+12,y:cy+5,'font-size':15,fill:'var(--muted)'},gt);tx.textContent='corte de aire';}
+  // longitud media
+  el('path',{d:`M${x0+t/2} ${y0+t/2}H${x1-t/2}V${y1-t/2}H${x0+t/2}Z`,fill:'none',stroke:'var(--muted)','stroke-width':1,'stroke-dasharray':'2 6',opacity:.8},gc);
+  const lt=el('text',{x:cx,y:y1+28,'text-anchor':'middle','font-size':15,fill:'var(--muted)'},gt);lt.textContent='longitud del circuito (línea de puntos): '+LENTXT[li];
+  // líneas de flujo: cuántas = flujo; lo juntas que van = inducción
+  const Pmax=Bsat*16e-4, n=v.P<=0?0:Math.max(1,Math.round(v.P/Pmax*14));
+  if(air){
+    if(v.P>0){ // aire: casi nada, una línea débil y desparramada
+      el('ellipse',{cx:x0+t/2,cy,rx:60,ry:Hh/2+30,class:'fl',opacity:.5},gl);
+    }
+  } else {
+    // repartir n líneas en un ancho proporcional a n/B (las que caben con esa densidad), limitado al grosor
+    const Bmax=Bsat, span=Math.min(t-6, n>1? (n-1)*Math.max(2.5,(t-6)/13*(Bmax/Math.max(v.B,.05))) : 0);
+    for(let k=0;k<n;k++){
+      const off=(n>1? -span/2+span*k/(n-1):0), m=t/2+off;
+      el('path',{d:`M${x0+m} ${y0+m}H${x1-m}V${y1-m}H${x0+m}Z`,class:'fl'},gl);
+    }
+  }
+  // bobina en la pata izquierda
+  const turns=Math.round(v.N/25), cy0=cy-110, cy1=cy+110, step=(cy1-cy0)/(turns-1);
+  for(let k=0;k<turns;k++){
+    const y=cy0+k*step;
+    el('rect',{x:x0-8,y:y-3,width:t+16,height:6,rx:3,fill:'var(--cu)',stroke:'var(--ink)','stroke-width':.8},gk);
+    if(v.I>0&&k%2===0) el('polygon',{points:'6,0 -4,-4.5 -4,4.5',fill:'#D9362E',transform:`translate(${x0+t+14} ${y})`},gk);
+  }
+  // cables a la fuente
+  const col=v.I>0?'#D9362E':'var(--muted)';
+  const fy=cy-45;
+  el('path',{d:`M${x0-8} ${cy0}H${x0-70}V${fy-26}`,fill:'none',stroke:col,'stroke-width':2.5},gk);
+  el('path',{d:`M${x0-8} ${cy1}H${x0-70}V${fy+26}`,fill:'none',stroke:'#2E75B6','stroke-width':2.5},gk);
+  el('rect',{x:x0-110,y:fy-26,width:80,height:52,rx:8,fill:'var(--card)',stroke:'var(--ink)','stroke-width':2},gk);
+  const at=el('text',{x:x0-70,y:fy+6,'text-anchor':'middle','font-size':16,'font-weight':700,fill:'var(--ink)'},gk);at.textContent='Fuente';
+  const it=el('text',{x:x0-118,y:fy+6,'text-anchor':'end','font-size':15,fill:'var(--muted)'},gt);it.textContent=v.I.toLocaleString('es-ES')+' A';
+  const nt=el('text',{x:x0-14,y:cy-110-8,'text-anchor':'end','font-size':15,fill:'var(--muted)'},gt);nt.textContent=v.N+' espiras';
+  if(v.I>0){ // sentido del flujo, encima del núcleo
+    el('polygon',{points:'10,0 -6,-7 -6,7',fill:'var(--field)',transform:`translate(${cx+44} ${y0-14})`},gt);
+    el('line',{x1:cx-10,y1:y0-14,x2:cx+38,y2:y0-14,stroke:'var(--field)','stroke-width':3},gt);
+    const ft=el('text',{x:cx-16,y:y0-9,'text-anchor':'end','font-size':15,fill:'var(--field)','font-weight':700},gt);ft.textContent='sentido del flujo';
+  }
+  if(hand){ // los dedos van por detrás de la pata (se dibujan debajo); palma y pulgar, por delante
+    const H=handOwner((t/2)/hs), tr=`translate(${x0+t/2} ${cy+45}) scale(${hs.toFixed(2)})`;
+    el('g',{transform:tr},$('gHB')).innerHTML=H.back;
+    el('g',{transform:tr},gt).innerHTML=H.front;
+  }
+}
+
+function bars(v){
+  const pct=(x,m)=>Math.min(100,x/m*100).toFixed(1)+'%';
+  $('bF').style.width=pct(v.F,2500);
+  $('bH').style.width=pct(v.H,6250);
+  $('bB').style.width=pct(v.B,1.7);
+  $('bP').style.width=pct(v.P,1.7*16e-4);
+}
+
+function note(v,why){
+  let t='';
+  if(v.I===0) t='Sin corriente, la bobina no crea nada: todas las barras a cero.';
+  else if(mat==='air') t='<b>Sin núcleo</b> hay el mismo empuje y la misma intensidad de campo, pero la inducción y el flujo son casi cero. El hierro "conduce" las líneas muchísimo mejor que el aire: por eso las máquinas llevan núcleo de hierro.';
+  else if(gap) t='<b>El corte de aire frena muchísimo el flujo</b>, aunque sea de solo 2 mm. En el circuito magnético el aire es como una resistencia muy grande en un circuito eléctrico. Por eso los núcleos de los transformadores van cerrados.';
+  else if(v.B>1.45) t='<b>El hierro está saturado.</b> Aunque subas la corriente o las espiras, la inducción ya casi no sube: el hierro no admite más líneas por cm².';
+  else t={I:'Más corriente: sube el empuje de la bobina y con él todo lo demás.',N:'Más espiras con la misma corriente: sube el empuje, igual que si subieras la corriente.',L:'Circuito más largo: el empuje es el mismo, pero repartido en más metros. Baja la intensidad de campo y con ella la inducción.',S:'Núcleo más grueso: la inducción no cambia (las líneas van igual de juntas), pero caben más líneas: sube el flujo.',m:'Con hierro las líneas van por dentro del núcleo, juntas y ordenadas.',g:'Núcleo cerrado: el flujo da la vuelta entero por el hierro.',h:'<b>Regla de la mano derecha</b>: coge la bobina como en el dibujo, con los dedos en el sentido de la corriente: por delante va como las flechas rojas y los dedos dan la vuelta por detrás. El pulgar marca hacia dónde va el flujo dentro del núcleo.'}[why]||'Este es un <b>circuito magnético</b>: la bobina empuja el flujo y el núcleo de hierro lo lleva dando la vuelta, igual que un cable lleva la corriente.';
+  $('note').innerHTML=t;
+}
+
+function update(why){
+  $('oI').textContent=(+$('rI').value).toLocaleString('es-ES')+' A';
+  $('oN').textContent=$('rN').value;
+  $('oL').textContent=LENTXT[$('rL').value];
+  $('oS').textContent=SECTXT[$('rS').value];
+  const v=calc(); draw(v); bars(v); note(v,why);
+}
+[['rI','I'],['rN','N'],['rL','L'],['rS','S']].forEach(([id,w])=>$(id).addEventListener('input',()=>update(w)));
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{mat=b.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.setAttribute('aria-pressed',x===b));update('m');});
+$('bHand').onclick=()=>{showHand=!showHand;$('bHand').setAttribute('aria-pressed',showHand);$('bHand').textContent='✋ Mano derecha: '+(showHand?'sí':'no');update('h');};
+document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{gap=+b.dataset.g;$('bHand').onclick=()=>{showHand=!showHand;$('bHand').setAttribute('aria-pressed',showHand);$('bHand').textContent='✋ Mano derecha: '+(showHand?'sí':'no');update('h');};
+document.querySelectorAll('[data-g]').forEach(x=>x.setAttribute('aria-pressed',x===b));update('g');});
+update();
+</script>
+</body>
+</html>

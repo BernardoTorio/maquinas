@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La corriente crea un campo magnético</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{font:inherit;font-weight:700;padding:10px 18px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--acc);background:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage>svg{display:block;width:100%;height:auto}
+.legend svg{flex:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button{font:inherit;font-weight:700;padding:12px 16px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 150px}
+#bOn{background:var(--acc);color:#fff}
+#bOn.on{background:var(--cur);border-color:var(--cur)}
+#bInv,#bHand{background:var(--card);color:var(--acc)}
+#bHand{flex-basis:100%}
+button:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:10px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0}
+.exp{background:var(--card);border:1px solid var(--line)}
+.rule{background:rgba(46,117,182,.10);border:1px solid var(--line);border-left:6px solid var(--field)}
+.rule b{color:var(--acc)}
+.fl{fill:none;stroke:var(--field);stroke-width:2.2;stroke-linecap:round}
+.on .fl{stroke-dasharray:9 9;animation:run 0.9s linear infinite}
+@keyframes run{to{stroke-dashoffset:-18}}
+.arr{fill:var(--field)}
+.wire{cursor:pointer}
+.wire:hover circle.w{stroke:#F2B400}
+.cmp circle{fill:var(--card);stroke:var(--gray);stroke-width:1.5}
+.ndl{transition:transform .9s cubic-bezier(.3,1.4,.5,1);transform-box:fill-box;transform-origin:center}
+.pole{font-weight:700;font-size:34px}
+@media (prefers-reduced-motion:reduce){.on .fl{animation:none}.ndl{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <small>Máquinas Eléctricas 2MB · Tema 1 · Punto 1.6</small>
+    <h1>La corriente crea un campo magnético</h1>
+    <p class="sub">Da corriente y mira cómo giran las brújulas. Luego cambia el sentido de la corriente.</p>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Casos">
+    <button role="tab" data-c="cable" aria-selected="true">1. Un cable</button>
+    <button role="tab" data-c="espira" aria-selected="false">2. Una espira</button>
+    <button role="tab" data-c="bobina" aria-selected="false">3. Una bobina</button>
+  </nav>
+
+  <div class="grid">
+    <div class="left">
+    <div class="stage">
+      <svg id="sv" viewBox="0 0 800 480" role="img" aria-label="Campo magnético y brújulas">
+        <g id="gLines"></g>
+        <g id="gCmp"></g>
+        <g id="gHandLo"></g>
+        <g id="gWires"></g>
+        <g id="gPoles"></g>
+        <g id="gHandHi"></g>
+      </svg>
+      <div class="legend">
+        <span><svg width="22" height="22" viewBox="-11 -11 22 22"><circle r="9" fill="#C87533" stroke="currentColor" stroke-width="1.5"/><circle r="2.8" fill="currentColor"/></svg> la corriente sale hacia ti</span>
+        <span><svg width="22" height="22" viewBox="-11 -11 22 22"><circle r="9" fill="#C87533" stroke="currentColor" stroke-width="1.5"/><path d="M-5-5L5 5M5-5L-5 5" stroke="currentColor" stroke-width="2"/></svg> la corriente entra</span>
+        <span><svg width="22" height="22" viewBox="-11 -11 22 22"><circle r="10" fill="none" stroke="#8a939c"/><polygon points="0,-8 3,0 -3,0" fill="#D9362E"/><polygon points="0,8 3,0 -3,0" fill="#8a939c"/></svg> brújula: la punta roja señala el norte</span>
+        <span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#2E75B6" stroke-width="2.5"/></svg> líneas de campo</span>
+      </div>
+    </div>
+    <div class="boxes">
+      <div class="box exp" id="exp"></div>
+      <div class="box rule" id="rule"></div>
+    </div>
+    </div>
+
+    <aside class="panel">
+      <div class="ctrl">
+        <button id="bOn">Dar corriente</button>
+        <button id="bInv">Cambiar el sentido</button>
+        <button id="bHand" aria-pressed="true">✋ Mano derecha: sí</button>
+      </div>
+      <div class="inset"><svg id="ins" viewBox="0 0 260 170" aria-hidden="true"></svg>
+        <p class="cap" id="cap"></p></div>
+    </aside>
+  </div>
+</main>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+
+const bob=[];for(let i=0;i<7;i++){bob.push({x:250+50*i,y:180,s:1});bob.push({x:250+50*i,y:300,s:-1});}
+const CASES={
+  cable:{wires:[{x:400,y:240,s:1}],
+    seeds:[30,55,85,120,160,205].map(r=>[400+r,240]),
+    poles:null},
+  espira:{wires:[{x:400,y:170,s:1},{x:400,y:310,s:-1}],
+    seeds:[-56,-42,-28,-14,0,14,28,42,56].map(d=>[400,240+d]),
+    poles:[330,470]},
+  bobina:{wires:bob,
+    seeds:[-48,-36,-24,-12,0,12,24,36,48].map(d=>[400,240+d]),
+    poles:[190,610]}
+};
+
+let cur='cable', on=false, dir=1, showHand=true;
+const angles={};
+
+function B(x,y){
+  let bx=0,by=0;
+  for(const w of CASES[cur].wires){
+    const dx=x-w.x, dy=y-w.y, r2=dx*dx+dy*dy+20, k=w.s*dir/r2;
+    bx+=k*dy; by-=k*dx;
+  }
+  return [bx,by];
+}
+
+function trace(x0,y0,sg){
+  const h=2.5, pts=[[x0,y0]], ws=CASES[cur].wires;
+  const f=(X,Y)=>{const b=B(X,Y),m=Math.hypot(b[0],b[1])||1e-12;return [sg*b[0]/m,sg*b[1]/m];};
+  let x=x0,y=y0;
+  for(let i=0;i<4000;i++){
+    const k1=f(x,y),k2=f(x+h/2*k1[0],y+h/2*k1[1]),k3=f(x+h/2*k2[0],y+h/2*k2[1]),k4=f(x+h*k3[0],y+h*k3[1]);
+    x+=h/6*(k1[0]+2*k2[0]+2*k3[0]+k4[0]); y+=h/6*(k1[1]+2*k2[1]+2*k3[1]+k4[1]);
+    pts.push([x,y]);
+    if(x<-60||x>860||y<-60||y>540) return {pts,closed:false};
+    if(i>40&&Math.hypot(x-x0,y-y0)<h*1.3){pts.push([x0,y0]);return {pts,closed:true};}
+    for(const w of ws) if(Math.hypot(x-w.x,y-w.y)<9) return {pts,closed:false};
+  }
+  return {pts,closed:false};
+}
+
+function drawLines(){
+  const g=$('gLines'); g.innerHTML='';
+  g.setAttribute('class',on?'on':'');
+  if(!on) return;
+  for(const [sx,sy] of CASES[cur].seeds){
+    const fw=trace(sx,sy,1);
+    let pts=fw.pts;
+    if(!fw.closed){const bw=trace(sx,sy,-1);pts=bw.pts.reverse().concat(fw.pts.slice(1));}
+    el('path',{d:'M'+pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join('L'),class:'fl'},g);
+    // flechas fijas cada cierta distancia
+    let acc=0,next=45;
+    for(let i=1;i<pts.length;i++){
+      const [x1,y1]=pts[i-1],[x2,y2]=pts[i];
+      acc+=Math.hypot(x2-x1,y2-y1);
+      if(acc>=next){
+        if(x2>10&&x2<790&&y2>10&&y2<470){
+          const a=Math.atan2(y2-y1,x2-x1)*180/Math.PI;
+          el('polygon',{points:'7,0 -5,-5.5 -5,5.5',class:'arr',transform:`translate(${x2.toFixed(1)} ${y2.toFixed(1)}) rotate(${a.toFixed(1)})`},g);
+        }
+        next+=130;
+      }
+    }
+  }
+}
+
+function buildCompasses(){
+  const g=$('gCmp'); g.innerHTML='';
+  const ws=CASES[cur].wires;
+  for(let y=60;y<=420;y+=90) for(let x=80;x<=720;x+=80){
+    if(ws.some(w=>Math.hypot(x-w.x,y-w.y)<34)) continue;
+    const pl=CASES[cur].poles; if(pl&&pl.some(px=>Math.hypot(x-px,y-240)<40)) continue;
+    const c=el('g',{class:'cmp',transform:`translate(${x} ${y})`},g);
+    el('circle',{r:17},c);
+    const n=el('g',{class:'ndl','data-x':x,'data-y':y},c);
+    el('polygon',{points:'0,-14 4.2,0 -4.2,0',fill:'#D9362E'},n);
+    el('polygon',{points:'0,14 4.2,0 -4.2,0',fill:'#8a939c'},n);
+    el('circle',{r:1.8,fill:'#555'},n);
+    angles[x+','+y]=0;
+  }
+}
+
+function aimCompasses(){
+  document.querySelectorAll('.ndl').forEach(n=>{
+    const x=+n.dataset.x,y=+n.dataset.y,key=x+','+y;
+    let a=0;
+    if(on){const b=B(x,y);a=Math.atan2(b[1],b[0])*180/Math.PI+90;}
+    const prev=angles[key]; a=prev+((a-prev+540)%360-180); angles[key]=a;
+    n.style.transform=`rotate(${a}deg)`;
+  });
+}
+
+function drawWires(){
+  const g=$('gWires'); g.innerHTML='';
+  for(const w of CASES[cur].wires){
+    const c=el('g',{class:'wire',transform:`translate(${w.x} ${w.y})`,tabindex:0,role:'button','aria-label':'Conductor: dar o quitar corriente'},g);
+    el('circle',{r:15,class:'w',fill:'var(--cu)',stroke:'var(--ink)','stroke-width':2.2},c);
+    if(on){
+      if(w.s*dir>0) el('circle',{r:4,fill:'#1a1a1a'},c);
+      else el('path',{d:'M-7-7L7 7M7-7L-7 7',stroke:'#1a1a1a','stroke-width':2.6},c);
+    }
+    c.addEventListener('click',toggle);
+    c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+  }
+}
+
+function drawPoles(){
+  const g=$('gPoles'); g.innerHTML='';
+  const p=CASES[cur].poles; if(!p||!on) return;
+  const [xl,xr]=p, nRight=dir>0;
+  const put=(x,t)=>{
+    el('circle',{cx:x,cy:240,r:24,fill:t==='N'?'#D9362E':'#8a939c',stroke:'var(--card)','stroke-width':3},g);
+    const tx=el('text',{x,y:252,'text-anchor':'middle',class:'pole',fill:'#fff'},g); tx.textContent=t;
+  };
+  put(xl,nRight?'S':'N'); put(xr,nRight?'N':'S');
+}
+
+// ---------- mano derecha dibujada, vista como la ves tú en tu propia mano (pulgar arriba) ----------
+// Agarra una barra vertical en x=0 de semiancho R.
+//  back : dedos. Salen de detrás de la barra hacia la izquierda y se doblan: lo que se ve es el
+//         nudillo del medio (extremo izquierdo redondeado). Van ANTES que la barra/bobina.
+//  front: yemas que vuelven hacia la barra, palma, muñeca y pulgar. Van DESPUÉS.
+// Por delante de la barra la corriente va hacia la derecha (+x), como las yemas; el pulgar marca -y.
+function handOwner(R=20,cut=false){
+  const S='#F3C9A2', P='#EBB892', O='#7a4a2c', w='stroke="'+O+'" stroke-width="1.7" stroke-linejoin="round"', L='stroke="'+O+'" fill="none" stroke-linecap="round"';
+  let back='', front='';
+  // [y arriba, alto, largo visible]  índice, corazón, anular, meñique
+  const F=[[-31,15,40],[-16,15,44],[-1,15,41],[14,14,34]];
+  for(const [y,hh,Lf] of F){
+    const r=hh/2, xl=-R-Lf;
+    const xs=cut?-R-1:-R+4; // cut: la bobina no tapa, así que el dedo empieza justo en su borde
+    back+=`<path d="M${xs} ${y} H${xl+r} A${r} ${r} 0 0 0 ${xl+r} ${y+hh} H${xs} Z" fill="${S}"/>`;
+    back+=`<path d="M${xs} ${y} H${xl+r} A${r} ${r} 0 0 0 ${xl+r} ${y+hh} H${xs}" fill="none" ${w}/>`;
+    back+=`<path d="M${xl+11} ${y+3} q-2.5 ${r-3} 0 ${hh-6}" ${L} stroke-width="1" opacity=".5"/>`;
+    // yema doblada hacia la barra
+    front+=`<path d="M${-R+1} ${y+1.2} H${-R-14} C${-R-21} ${y+1.2} ${-R-21} ${y+hh-1.2} ${-R-14} ${y+hh-1.2} H${-R+1}" fill="${P}" ${L} stroke-width="1.2"/>`;
+  }
+  // muñeca, difuminada
+  front+=`<defs><linearGradient id="howg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${S}"/><stop offset="1" stop-color="${S}" stop-opacity="0"/></linearGradient></defs>`;
+  front+=`<path d="M${R+14} 26 L${R+36} 4 L${R+96} 58 L${R+74} 82 Z" fill="url(#howg)"/>`;
+  front+=`<path d="M${R+36} 4 L${R+96} 58 M${R+14} 26 L${R+74} 82" stroke="${O}" stroke-width="1.5" opacity=".45"/>`;
+  // palma + pulgar en una sola silueta: el pulgar es grueso y recto y su borde derecho baja suave hasta la palma
+  front+=`<path d="M${R-10} -62 C${R-10} -74 ${R+7} -74 ${R+7} -62 C${R+8} -50 ${R+12} -40 ${R+22} -31 C${R+34} -21 ${R+40} -5 ${R+38} 11 C${R+36} 27 ${R+22} 36 ${R+8} 35 C${R-2} 34 ${R-6} 28 ${R-6} 20 L${R-6} -24 C${R-6} -28 ${R-8} -30 ${R-9} -35 Z" fill="${S}" ${w}/>`;
+  // pliegues: articulación del pulgar y base del pulgar
+  front+=`<path d="M${R-9} -48 q8 2 16 -1" ${L} stroke-width="1" opacity=".45"/>`;
+  front+=`<path d="M${R-5} -30 C${R+6} -24 ${R+18} -18 ${R+26} -6" ${L} stroke-width="1" opacity=".35"/>`;
+  return {back,front};
+}
+
+// Puño visto desde arriba (dibujo grande del cable): el pulgar apunta hacia ti
+// y el índice rodea el cable en el sentido del campo.
+function handTop(){
+  const S='#F3C9A2', O='#7a4a2c', N='#FCE6D4', w='stroke="'+O+'" stroke-width="1.6" stroke-linejoin="round"';
+  const r=30, P=a=>[(r*Math.cos(a*Math.PI/180)).toFixed(1),(-r*Math.sin(a*Math.PI/180)).toFixed(1)];
+  const [ax,ay]=P(195),[bx,by]=P(420);
+  let h='';
+  h+=`<path d="M-150 -22 H-48 V24 H-150 Z" fill="${S}" ${w}/>`;
+  h+=`<rect x="-66" y="-34" width="36" height="66" rx="15" fill="${S}" ${w}/>`;
+  const arc=`M${ax} ${ay} A${r} ${r} 0 1 0 ${bx} ${by}`;
+  h+=`<path d="${arc}" fill="none" stroke="${O}" stroke-width="21" stroke-linecap="round"/>`;
+  h+=`<path d="${arc}" fill="none" stroke="${S}" stroke-width="17.5" stroke-linecap="round"/>`;
+  h+=`<ellipse cx="${bx}" cy="${by}" rx="6" ry="5" fill="${N}" stroke="${O}" stroke-width=".9" transform="rotate(-30 ${bx} ${by})"/>`;
+  // pulgar visto de punta: sale del dorso y queda encima del cable
+  h+=`<path d="M-46 -16 C-34 -24 -18 -20 -8 -12 L4 10 C-14 14 -34 8 -46 0 Z" fill="${S}" ${w} class="thumb"/>`;
+  h+=`<circle r="15" fill="${S}" ${w} class="thumb"/>`;
+  return h;
+}
+
+function drawHand(){
+  const lo=$('gHandLo'), hi=$('gHandHi'); lo.innerHTML=hi.innerHTML='';
+  if(!on||!showHand) return;
+  if(cur==='cable'){
+    const g=el('g',{transform:`translate(400 240) scale(1 ${dir})`},lo);
+    g.innerHTML=handTop();
+    if(dir<0) g.querySelectorAll('.thumb').forEach(e=>e.remove());
+  }
+}
+
+// ---------- dibujo "así es de verdad" ----------
+function inset(){
+  const s=$('ins'), d=dir;
+  const arrowR=(x,y,rot,col)=>`<polygon points="7,0 -5,-5.5 -5,5.5" fill="${col}" transform="translate(${x} ${y}) rotate(${rot})"/>`;
+  let h='', cap='';
+  const fcol='var(--field)', ccol='#D9362E';
+  if(cur==='cable'){
+    h+=`<polygon points="40,112 200,112 232,142 72,142" fill="var(--line)" opacity=".7"/>`;
+    h+=`<ellipse cx="136" cy="127" rx="62" ry="13" fill="none" stroke="${fcol}" stroke-width="2.2"/>`;
+    const HC=(on&&showHand)?handOwner(8.75):null, trC=`translate(136 100) rotate(${d>0?0:180}) scale(.8)`;
+    if(HC) h+=`<g transform="${trC}">${HC.back}</g>`;
+    h+=`<rect x="129" y="14" width="14" height="148" rx="3" fill="var(--cu)" stroke="var(--ink)" stroke-width="1.5"/>`;
+    h+=`<path d="M74 127 A62 13 0 0 0 198 127" fill="none" stroke="${fcol}" stroke-width="2.2"/>`;
+    if(on){
+      h+=arrowR(136,140,d>0?0:180,fcol);
+      h+=`<line x1="104" y1="${d>0?66:16}" x2="104" y2="${d>0?16:66}" stroke="${ccol}" stroke-width="3"/>`+arrowR(104,d>0?14:68,d>0?-90:90,ccol);
+      h+=`<text x="96" y="44" text-anchor="end" font-size="15" font-weight="700" fill="${ccol}">corriente</text>`;
+    }
+    h+=`<text x="206" y="156" font-size="13" fill="var(--muted)">corte</text>`;
+    if(HC) h+=`<g transform="${trC}">${HC.front}</g>`;
+    cap='El cable es vertical y tú lo miras desde arriba. El plano gris es lo que ves en el dibujo grande.';
+  }else{
+    const xs=cur==='espira'?[130]:[70,96,122,148,174,200];
+    // eje
+    h+=`<line x1="20" y1="85" x2="240" y2="85" stroke="var(--muted)" stroke-dasharray="4 5" stroke-width="1.2"/>`;
+    for(const x of xs){
+      h+=`<path d="M${x} 25 A14 60 0 0 0 ${x} 145" fill="none" stroke="var(--cu)" stroke-width="4" opacity=".45"/>`; // parte de atrás
+    }
+    for(let i=0;i<xs.length-1;i++){ // unión de espiras por detrás
+      h+=`<line x1="${xs[i]}" y1="145" x2="${xs[i+1]}" y2="25" stroke="var(--cu)" stroke-width="4" opacity=".45"/>`;
+    }
+    // espira: el puño agarra el EJE de la espira (en el centro), con los dedos girando como la corriente
+    // bobina: el puño agarra la bobina entera
+    const esp=true; // espira y bobina: el puño agarra el eje, por dentro
+    const HB=(on&&showHand)?handOwner(4):null,
+          trB=`translate(${cur==='espira'?130:135} 85) rotate(${d>0?90:-90}) scale(${cur==='espira'?.62:.66})`;
+    if(HB){
+      h+=`<g transform="${trB}">${HB.back}</g>`;
+      if(esp) h+=`<g transform="${trB}">${HB.front}</g>`;
+    }
+    for(const x of xs){
+      h+=`<path d="M${x} 25 A14 60 0 0 1 ${x} 145" fill="none" stroke="var(--cu)" stroke-width="4"/>`; // parte de delante
+      if(on) h+=arrowR(x+11.4,120,d>0?100:-80,ccol);
+    }
+    if(on){
+      const dot=(x,y)=>`<circle cx="${x}" cy="${y}" r="7" fill="var(--cu)" stroke="var(--ink)"/><circle cx="${x}" cy="${y}" r="2.2" fill="#1a1a1a"/>`;
+      const crs=(x,y)=>`<circle cx="${x}" cy="${y}" r="7" fill="var(--cu)" stroke="var(--ink)"/><path d="M${x-3.5} ${y-3.5}l7 7m0-7l-7 7" stroke="#1a1a1a" stroke-width="1.8"/>`;
+      const xl=xs[xs.length-1];
+      h+=d>0?dot(xs[0],25)+crs(xl,145):crs(xs[0],25)+dot(xl,145);
+      h+=`<line x1="${xs[xs.length-1]+30}" y1="85" x2="238" y2="85" stroke="${fcol}" stroke-width="3" transform="${d>0?'':'rotate(180 '+((xs[xs.length-1]+30+238)/2)+' 85)'}"/>`;
+      const ax=d>0?240:xs[xs.length-1]+28;
+      h+=arrowR(ax,85,d>0?0:180,fcol);
+      const nx=d>0?248:12, sx=d>0?12:248;
+      h+=`<text x="${nx}" y="80" text-anchor="middle" font-size="16" font-weight="700" fill="#D9362E">N</text>`;
+      h+=`<text x="${sx}" y="80" text-anchor="middle" font-size="16" font-weight="700" fill="var(--muted)">S</text>`;
+    }
+    cap=cur==='espira'
+      ?'La espira es un aro de cable. En el dibujo grande la cortamos por la mitad: arriba y abajo ves los dos trozos de cable cortados.'+(on&&showHand?' La mano agarra el eje de la espira: los dedos giran como la corriente.':'')
+      :'La bobina son muchas espiras seguidas. En el dibujo grande está cortada por la mitad: arriba y abajo ves los cables cortados.'+(on&&showHand?' La mano agarra el eje de la bobina: los dedos giran como la corriente.':'');
+    if(HB&&!esp) h+=`<g transform="${trB}">${HB.front}</g>`;
+  }
+  s.setAttribute('viewBox','0 0 260 170');
+  s.innerHTML=h; $('cap').textContent=cap;
+}
+
+const TXT={
+  cable:{exp:'Alrededor del cable aparecen <b>líneas de campo en forma de círculos</b>. Las brújulas se colocan siguiendo esos círculos. Cuanto más cerca del cable, más fuerte es el campo.',
+    rule:'<b>Regla de la mano derecha.</b> Coge el cable con la mano derecha, con el pulgar en el sentido de la corriente. Los otros dedos te dicen hacia dónde giran las líneas de campo. En el dibujo grande ves la mano <b>desde arriba</b>: si la corriente sale hacia ti, el pulgar te apunta a ti.'},
+  espira:{exp:'Cada trozo de cable crea sus círculos. <b>Dentro de la espira los dos campos van hacia el mismo lado y se suman</b>: ahí el campo es más fuerte. La espira ya se porta como un imán pequeño, con polo norte y polo sur.',
+    rule:'<b>Regla de la mano derecha.</b> Pon los dedos de la mano derecha en el sentido de la corriente por la espira. El pulgar señala el polo <b>Norte</b>.'},
+  bobina:{exp:'Al juntar muchas espiras, sus campos se suman. <b>Dentro de la bobina las líneas van rectas y muy juntas</b>: el campo es fuerte. La bobina se porta como un imán: por donde <b>salen</b> las líneas está el polo <b>Norte</b>; por donde <b>entran</b>, el <b>Sur</b>.',
+    rule:'<b>Regla de la mano derecha.</b> Coge la bobina con la mano derecha y los dedos en el sentido de la corriente por las espiras. El pulgar señala el polo <b>Norte</b>. Si metes un núcleo de hierro dentro, tienes un <b>electroimán</b>.'}
+};
+
+function texts(){
+  $('exp').innerHTML=on?TXT[cur].exp:'<b>Sin corriente no hay campo.</b> Todas las brújulas señalan al norte de la Tierra (hacia arriba). Pulsa <b>Dar corriente</b> o toca un cable. La mano aparece cuando hay corriente, porque indica su sentido.';
+  $('rule').innerHTML=TXT[cur].rule;
+}
+
+function render(){
+  drawLines(); drawHand(); drawWires(); drawPoles(); aimCompasses(); inset(); texts();
+  const b=$('bOn'); b.textContent=on?'Quitar corriente':'Dar corriente'; b.classList.toggle('on',on);
+}
+function toggle(){on=!on;render();}
+
+$('bOn').onclick=toggle;
+$('bInv').onclick=()=>{dir=-dir;render();};
+$('bHand').onclick=()=>{showHand=!showHand; if(showHand&&!on) on=true;const b=$('bHand');b.setAttribute('aria-pressed',showHand);b.textContent='✋ Mano derecha: '+(showHand?'sí':'no');render();};
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  cur=b.dataset.c; buildCompasses(); render();
+});
+buildCompasses(); render();
+</script>
+</body>
+</html>

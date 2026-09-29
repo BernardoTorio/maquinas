@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Campo, flujo e inducción</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--flux:#6A9A1F;--ind:#C0602B;--grid:#e3e8ee;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--flux:#9BCB4F;--ind:#EE9A62;--grid:#2a323b}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--flux:#9BCB4F;--ind:#EE9A62;--grid:#2a323b}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box ul{margin:0;padding-left:18px}.box li{margin-bottom:6px}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage>svg{display:block;width:100%;height:auto;touch-action:none}
+.panel{padding:14px 16px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 10px}
+.row b{margin-right:4px}
+.row button{font:inherit;font-weight:700;padding:8px 10px;border-radius:9px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;min-width:46px}
+.row button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+button:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.out{border-radius:10px;padding:10px 12px;margin:0 0 10px;border-left:6px solid}
+.out.f{background:rgba(106,154,31,.12);border-color:var(--flux)}
+.out.b{background:rgba(192,96,43,.12);border-color:var(--ind)}
+.out .big{font-size:1.9rem;font-weight:700;line-height:1.1}
+.out.f .big{color:var(--flux)} .out.b .big{color:var(--ind)}
+.out p{margin:0 0 2px;font-size:.95rem}
+.hint{font-size:.9rem;color:var(--muted);margin:0 0 10px}
+.defs{font-size:.93rem;margin:0;padding-left:18px}
+.defs li{margin-bottom:6px}
+.reto{background:rgba(46,117,182,.10);border-left:5px solid var(--field);border-radius:6px;padding:8px 12px;font-size:.93rem;margin-top:10px}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:12px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+#win{cursor:grab}
+#win.drag{cursor:grabbing}
+.dot{fill:var(--field)}
+.dot.in{fill:var(--flux)}
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <small>Máquinas Eléctricas 2MB · Tema 1 · Puntos 1.2 y 1.3</small>
+    <h1>Campo, flujo e inducción</h1>
+    <p class="sub">Arrastra la ventana verde por encima del imán y cuenta las líneas que la atraviesan.</p>
+  </header>
+
+  <div class="grid">
+    <div class="left">
+    <div class="stage">
+      <svg id="sv" viewBox="0 0 800 480" role="img" aria-label="Líneas de campo vistas desde arriba y una ventana que se puede mover">
+        <g id="gGrid"></g>
+        <rect x="300" y="170" width="200" height="140" rx="14" fill="#D9362E" opacity=".10"/>
+        <text x="400" y="258" text-anchor="middle" font-size="44" font-weight="700" fill="#D9362E" opacity=".22">N</text>
+        <g id="gDots"></g>
+        <g id="win" tabindex="0" role="button" aria-label="Ventana. Muévela con el ratón, el dedo o las flechas del teclado">
+          <rect id="winR" fill="rgba(106,154,31,.13)" stroke="var(--flux)" stroke-width="4" rx="3"/>
+        </g>
+      </svg>
+    </div>
+    <div class="boxes">
+      <div class="box">
+        <h2>Qué significa cada cosa</h2>
+        <ul>
+          <li><b>Campo magnético</b>: toda la zona donde se nota el imán, es decir, donde hay puntos.</li>
+          <li><b style="color:var(--flux)">Flujo</b>: todas las líneas que atraviesan la ventana. Se mide en <b>weber (Wb)</b>.</li>
+          <li><b style="color:var(--ind)">Inducción</b>: cuántas líneas hay en cada cuadradito. Dice lo fuerte que es el campo en ese sitio. Se mide en <b>tesla (T)</b>.</li>
+        </ul>
+      </div>
+      <div class="box blue">
+        <h2>Pruébalo</h2>
+        <ul>
+          <li>Si <b>agrandas la ventana</b> en el mismo sitio, el flujo sube mucho, pero la inducción casi no cambia: el campo es igual de fuerte ahí.</li>
+          <li>Si <b>alejas la ventana</b> del polo, bajan las dos: hay menos líneas y más separadas.</li>
+          <li><b>Reto:</b> consigue unas 20 líneas de flujo con la ventana pequeña y luego con la grande. ¿Dónde tienes que poner cada una? ¿En cuál de los dos sitios hay más inducción?</li>
+        </ul>
+      </div>
+    </div>
+    </div>
+
+    <aside class="panel">
+      <div class="inset">
+        <svg viewBox="0 0 260 150" aria-hidden="true">
+          <g stroke="var(--field)" stroke-width="2" fill="none">
+            <path d="M112 96 C104 60 60 40 40 20"/><path d="M122 96 C120 60 104 36 96 14"/>
+            <path d="M130 96 V10"/><path d="M138 96 C140 60 156 36 164 14"/><path d="M148 96 C156 60 200 40 220 20"/>
+          </g>
+          <polygon points="84,52 176,52 196,68 104,68" fill="rgba(106,154,31,.25)" stroke="var(--flux)" stroke-width="2.5"/>
+          <rect x="104" y="96" width="52" height="24" fill="#D9362E"/><rect x="104" y="120" width="52" height="24" fill="#8a939c"/>
+          <text x="130" y="113" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">N</text>
+          <text x="130" y="137" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">S</text>
+          <text x="204" y="72" font-size="12" fill="var(--flux)" font-weight="700">ventana</text>
+        </svg>
+        <p class="cap">Miras el imán desde arriba. Cada punto azul es una línea de campo que sale del polo N hacia ti.</p>
+      </div>
+
+      <div class="row"><b>Ventana:</b>
+        <button data-s="1" aria-pressed="false">1×1</button>
+        <button data-s="2" aria-pressed="true">2×2</button>
+        <button data-s="3" aria-pressed="false">3×3</button>
+        <button data-s="4" aria-pressed="false">4×4</button>
+      </div>
+      <div class="row"><b>Imán:</b>
+        <button data-m="1" aria-pressed="true">Fuerte</button>
+        <button data-m="0.5" aria-pressed="false">Débil</button>
+      </div>
+
+      <div class="out f"><p><b>Flujo</b> (Wb)</p><div class="big" id="oF">0 líneas</div></div>
+      <div class="out b"><p><b>Inducción</b> (T)</p><div class="big" id="oB">0 por cuadradito</div></div>
+      <p class="hint" id="oA"></p>
+
+    </aside>
+  </div>
+</main>
+
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;};
+const C=40; // lado del cuadradito
+let size=2, mag=1, wx=9, wy=5; // posición de la ventana en cuadraditos
+
+// cuadrícula
+const gg=$('gGrid');
+for(let x=0;x<=800;x+=C) el('line',{x1:x,y1:0,x2:x,y2:480,stroke:'var(--grid)','stroke-width':1.2},gg);
+for(let y=0;y<=480;y+=C) el('line',{x1:0,y1:y,x2:800,y2:y,stroke:'var(--grid)','stroke-width':1.2},gg);
+
+// puntos (líneas de campo que salen hacia ti), siempre los mismos
+let seed=7; const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const pts=[];
+for(let y=5;y<480;y+=10) for(let x=5;x<800;x+=10){
+  const px=x+(rnd()-.5)*8, py=y+(rnd()-.5)*8, u=rnd();
+  const dx=(px-400)/150, dy=(py-240)/115;
+  const d=0.04+0.6*Math.exp(-(dx*dx+dy*dy)/1.3);
+  pts.push({x:px,y:py,u,d});
+}
+const gd=$('gDots'); pts.forEach(p=>{p.e=el('circle',{cx:p.x.toFixed(1),cy:p.y.toFixed(1),r:3,class:'dot'},gd);});
+
+function update(){
+  wx=Math.max(0,Math.min(20-size,wx)); wy=Math.max(0,Math.min(12-size,wy));
+  const x0=wx*C,y0=wy*C,x1=x0+size*C,y1=y0+size*C;
+  const r=$('winR'); r.setAttribute('x',x0); r.setAttribute('y',y0); r.setAttribute('width',size*C); r.setAttribute('height',size*C);
+  let n=0;
+  pts.forEach(p=>{
+    const vis=p.u<p.d*mag;
+    p.e.style.display=vis?'':'none';
+    const inside=vis&&p.x>=x0&&p.x<x1&&p.y>=y0&&p.y<y1;
+    p.e.setAttribute('class',inside?'dot in':'dot');
+    if(inside) n++;
+  });
+  const a=size*size, b=n/a;
+  $('oF').textContent=n+(n===1?' línea':' líneas');
+  $('oB').textContent=b.toLocaleString('es-ES',{maximumFractionDigits:1})+' por cuadradito';
+  $('oA').textContent=`La ventana ocupa ${a} ${a===1?'cuadradito':'cuadraditos'}: ${n} líneas repartidas en ${a} ${a===1?'cuadradito':'cuadraditos'}.`;
+}
+
+// arrastrar
+const sv=$('sv'), win=$('win');
+let drag=null;
+const toSvg=e=>{const pt=sv.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;return pt.matrixTransform(sv.getScreenCTM().inverse());};
+win.addEventListener('pointerdown',e=>{const p=toSvg(e);drag={dx:p.x-wx*C,dy:p.y-wy*C};win.classList.add('drag');win.setPointerCapture(e.pointerId);});
+win.addEventListener('pointermove',e=>{if(!drag)return;const p=toSvg(e);wx=Math.round((p.x-drag.dx)/C);wy=Math.round((p.y-drag.dy)/C);update();});
+win.addEventListener('pointerup',()=>{drag=null;win.classList.remove('drag');});
+sv.addEventListener('click',e=>{if(e.target.closest('#win'))return;const p=toSvg(e);wx=Math.floor(p.x/C-size/2+.5);wy=Math.floor(p.y/C-size/2+.5);update();});
+win.addEventListener('keydown',e=>{const k={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[e.key];if(k){e.preventDefault();wx+=k[0];wy+=k[1];update();}});
+
+document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{
+  const c=wx+size/2,d=wy+size/2; size=+b.dataset.s; wx=Math.round(c-size/2); wy=Math.round(d-size/2);
+  document.querySelectorAll('[data-s]').forEach(x=>x.setAttribute('aria-pressed',x===b)); update();});
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{
+  mag=+b.dataset.m; document.querySelectorAll('[data-m]').forEach(x=>x.setAttribute('aria-pressed',x===b)); update();});
+update();
+</script>
+</body>
+</html>
