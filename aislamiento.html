@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pruebas de aislamiento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{font:inherit;font-weight:700;padding:10px 18px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--acc);background:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage>svg{display:block;width:100%;height:auto;touch-action:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button{font:inherit;font-weight:700;padding:12px 14px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 140px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.sl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700}
+input[type=range]{width:100%;accent-color:var(--acc)}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box ul{margin:0;padding-left:18px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.fl{fill:none;stroke:var(--field);stroke-width:2;stroke-linecap:round}
+.fl.run{stroke-dasharray:9 9;animation:run .9s linear infinite}
+@keyframes run{to{stroke-dashoffset:-18}}
+.arr{fill:var(--field)}
+@media (prefers-reduced-motion:reduce){.fl.run{animation:none}}
+
+.back{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 3 · Punto 3.18</small><h1>Pruebas de aislamiento</h1><p class="sub">Coloca el megóhmetro en cada una de las tres medidas y pulsa. Luego prueba con un aislamiento dañado.</p></header>
+  <nav class="tabs" role="tablist"><button role="tab" data-c="ps" aria-selected="true">1. Primario – secundario</button><button role="tab" data-c="pm" aria-selected="false">2. Primario – masa</button><button role="tab" data-c="sm" aria-selected="false">3. Secundario – masa</button></nav>
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 800 480" role="img" aria-label="Prueba de aislamiento de un transformador con megóhmetro"><g id="gA"></g></svg><div class="legend"><span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#D9362E" stroke-width="3"/></svg> puntas del megóhmetro</span>
+<span><svg width="18" height="16"><path d="M9 2v6M3 8h12M5 11h8M7 14h4" stroke="currentColor" stroke-width="2"/></svg> masa (chapa y carcasa)</span></div></div>
+      <div class="boxes"><div class="box" id="exp"></div>
+<div class="box blue"><h2>Cómo se hace</h2><ul>
+<li>Con el transformador <b>desconectado</b> de todo.</li>
+<li>Se usa un <b>megóhmetro</b>: mide resistencias muy grandes aplicando una tensión alta: 500 V en los trafos pequeños y 5000 V en los de alta tensión.</li>
+<li>Se mide entre <b>primario y secundario</b>, entre <b>primario y masa</b> y entre <b>secundario y masa</b>.</li>
+<li>El resultado sale en <b>megaohmios (MΩ)</b> o gigaohmios (GΩ = 1000 MΩ). Cuanto <b>más alto</b>, mejor aislado está. Un valor bajo indica que el barniz o el aislante están dañados o hay humedad.</li>
+<li>En el trafo construido en el aula se midió <b>antes y después</b> de un ensayo de sobrecarga que lo quemó.</li></ul></div></div>
+    </div>
+    <aside class="panel"><div id="trSel"></div><div class="ctrl"><button id="bTest" class="main">Pulsar el megóhmetro</button></div>
+<div class="ctrl"><button id="bBad" aria-pressed="false">Simular aislamiento dañado</button></div>
+<div class="inset" style="padding:10px 12px" id="tabla"></div></aside>
+  </div>
+</main>
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;};
+
+let cur='ps', bad=false, val=0, target=0, testing=false, res={ps:null,pm:null,sm:null};
+const CASES=[
+ {n:'Aula: el que construimos',t:'150 VA · medidas de la práctica (500 V)',v:500,ok:{ps:1000,pm:1000,sm:1000},mal:{ps:0,pm:432,sm:516},malTxt:'Después de la sobrecarga',max:999,tri:false},
+ {n:'Aula: trafo pequeño típico',t:'150 VA · bien construido (500 V)',v:500,ok:{ps:1000,pm:1000,sm:1000},mal:{ps:0.4,pm:0.8,sm:6},malTxt:'Simular aislamiento dañado',max:999,tri:false},
+ {n:'Real: trafo de 1 MW',t:'20 kV / 400 V · trifásico (5000 V)',v:5000,ok:{ps:20000,pm:15000,sm:5000},mal:{ps:3,pm:8,sm:1.5},malTxt:'Simular aislamiento dañado',max:100000,tri:true}];
+let CS=CASES[0];
+const fmt=v=>v>CS.max?'> '+CS.max:v>=1000?(v/1000).toLocaleString('es-ES',{maximumFractionDigits:1})+' G':v<10?v.toLocaleString('es-ES',{maximumFractionDigits:1}):Math.round(v)+'';
+const PTS={p1:[250,150],p2:[250,330],s1:[550,150],s2:[550,330],m:[400,420]};
+const PAIR={ps:['p1','s1'],pm:['p1','m'],sm:['s1','m']};
+const NAME0={ps:'Primario – secundario',pm:'Primario – masa',sm:'Secundario – masa'}, NAME3={ps:'Alta – baja tensión',pm:'Alta tensión – masa',sm:'Baja tensión – masa'};
+let NAME=NAME0;
+function draw(){
+  let s='';
+  // trafo con carcasa
+  s+=`<rect x="300" y="110" width="200" height="260" rx="6" fill="#9aa5b1" stroke="var(--ink)" stroke-width="1.5"/><rect x="345" y="155" width="110" height="170" fill="var(--card)" stroke="var(--ink)" stroke-width="1.5"/>`;
+  s+=`<rect x="290" y="170" width="70" height="140" rx="8" fill="#E07A5F" stroke="var(--ink)"/><rect x="440" y="170" width="70" height="140" rx="8" fill="#7FB069" stroke="var(--ink)"/>`;
+  if(bad)s+=`<g><path d="M${cur==='ps'?'360 240 L440 240':cur==='pm'?'300 280 L300 300':'500 280 L500 300'}" stroke="#F2B400" stroke-width="5" stroke-dasharray="3 4"/><text x="400" y="100" text-anchor="middle" font-size="14" font-weight="700" fill="#D9362E">aislante dañado</text></g>`;
+  s+=`<path d="M290 190 H250 V150 M290 290 H250 V330 M510 190 H550 V150 M510 290 H550 V330" fill="none" stroke="var(--ink)" stroke-width="2.5"/>`;
+  const lab={p1:'1.1',p2:'1.2',s1:'2.1',s2:'2.2'};
+  for(const k of ['p1','p2','s1','s2']){const [x,y]=PTS[k];s+=`<circle cx="${x}" cy="${y}" r="8" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/><text x="${x+(x<400?-14:14)}" y="${y+6}" text-anchor="${x<400?'end':'start'}" font-size="16" font-weight="700" fill="var(--ink)">${lab[k]}</text>`;}
+  s+=`<path d="M400 370 V405 M388 405h24 M392 412h16 M396 419h8" stroke="var(--ink)" stroke-width="2.5"/><circle cx="400" cy="398" r="6" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/><text x="420" y="402" font-size="14" fill="var(--muted)">masa</text>`;
+  s+=`<text x="250" y="380" text-anchor="middle" font-size="15" font-weight="700" fill="#C0602B">${CS.tri?'alta tensión':'primario'}</text><text x="550" y="380" text-anchor="middle" font-size="15" font-weight="700" fill="var(--force)">${CS.tri?'baja tensión':'secundario'}</text>`;
+  // megóhmetro
+  const mx=650,my=40;
+  s+=`<rect x="${mx}" y="${my}" width="140" height="120" rx="12" fill="#F2B400" stroke="var(--ink)" stroke-width="2"/><rect x="${mx+14}" y="${my+14}" width="112" height="44" rx="6" fill="#1d2b22"/>`;
+  const txt=fmt(val);
+  s+=`<text x="${mx+70}" y="${my+46}" text-anchor="middle" font-size="22" font-weight="700" fill="#8CF08C" font-family="monospace">${testing||res[cur]!==null?txt:'---'}</text><text x="${mx+70}" y="${my+82}" text-anchor="middle" font-size="15" font-weight="700" fill="#1a1a1a">${val>=1000&&val<=CS.max?'GΩ':'MΩ'} · ${CS.v} V</text><text x="${mx+70}" y="${my+104}" text-anchor="middle" font-size="13" fill="#1a1a1a">megóhmetro</text>`;
+  const [a,b]=PAIR[cur];const [ax,ay]=PTS[a],[bx,by]=PTS[b];
+  s+=`<path d="M${mx+40} ${my+120} C${mx+30} 230 ${ax+120} ${ay-60} ${ax} ${ay}" fill="none" stroke="#D9362E" stroke-width="3"/><path d="M${mx+100} ${my+120} C${mx+120} 300 ${bx+120} ${by+40} ${bx} ${by}" fill="none" stroke="#1a1a1a" stroke-width="3"/>`;
+  s+=`<circle cx="${ax}" cy="${ay}" r="5" fill="#D9362E"/><circle cx="${bx}" cy="${by}" r="5" fill="#1a1a1a"/>`;
+  s+=`<text x="30" y="40" font-size="18" font-weight="700" fill="var(--acc)">${NAME[cur]}</text>`;
+  $('gA').innerHTML=s;
+  $('tabla').innerHTML='<b>Resultados</b><table style="width:100%;margin-top:6px;border-collapse:collapse;font-size:.95rem">'+Object.keys(NAME).map(k=>`<tr><td style="padding:3px 0">${NAME[k]}</td><td style="text-align:right;font-weight:700;color:${res[k]===null?'var(--muted)':res[k]<10?'#D9362E':res[k]<(CS.tri?1000:100)?'#C0602B':'var(--force)'}">${res[k]===null?'sin medir':fmt(res[k])+(res[k]>=1000&&res[k]<=CS.max?'Ω':' MΩ')}</td></tr>`).join('')+'</table>';
+}
+function texts(){
+  const r=res[cur], lim=CS.tri?1000:100;
+  let t;
+  if(r===null) t=`Las puntas del megóhmetro están entre <b>${NAME[cur].toLowerCase()}</b>. Entre ellos no debería pasar corriente: solo los separa el aislante. Pulsa el megóhmetro.`;
+  else if(CS===CASES[0]&&bad) t=r===0?'<b>Medida real tras la sobrecarga: 0 MΩ entre devanados.</b> Con 112 V y el secundario en corto pasaron 20 A por el primario y 50 A por el secundario: el papel se quemó y el esmalte se estropeó. Ahora primario y secundario están <b>unidos</b>: el trafo ya no aísla y es peligroso.':`<b>Medida real tras la sobrecarga: ${fmt(r)} MΩ.</b> Ha bajado mucho respecto a antes (más de 999 MΩ): el calor ha debilitado el aislante, aunque hacia masa todavía aísla.`;
+  else if(CS===CASES[0]) t='<b>Medida real de la práctica: más de 999 MΩ</b> (el máximo del aparato). El aislamiento estaba perfecto antes del ensayo de sobrecarga.';
+  else if(r>=lim) t='El valor es <b>muy alto</b>: casi no pasa corriente por el aislante. El aislamiento está <b>bien</b>.'+(CS.tri?' En un trafo de alta tensión los valores se miden en gigaohmios.':'');
+  else if(r>=10) t='El valor es más bajo de lo normal: puede haber <b>humedad</b> o suciedad. Conviene secar y limpiar el trafo y volver a medir.';
+  else t='El valor es <b>muy bajo</b>: la corriente se escapa por el aislante. El aislamiento está <b>dañado</b> y el transformador no se puede usar así: sería peligroso.';
+  $('exp').innerHTML='<h2>Qué pasa</h2><p>'+t+'</p>';
+}
+$('bTest').onclick=()=>{testing=true;val=0;target=bad?CS.mal[cur]:CS.ok[cur];const t0=performance.now();
+  const tick=()=>{const k=Math.min(1,(performance.now()-t0)/1600);val=target*(1-Math.pow(1-k,3));draw();if(k<1)requestAnimationFrame(tick);else{testing=false;res[cur]=target;draw();texts();}};tick();};
+$('bBad').onclick=()=>{bad=!bad;$('bBad').setAttribute('aria-pressed',bad);res={ps:null,pm:null,sm:null};val=0;draw();texts();};
+function pick(i){CS=CASES[i];NAME=CS.tri?NAME3:NAME0;bad=false;$('bBad').setAttribute('aria-pressed',false);$('bBad').textContent=CS.malTxt;res={ps:null,pm:null,sm:null};val=0;
+  document.querySelectorAll('[data-t]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.t===i));
+  document.querySelectorAll('.tabs button').forEach(b=>b.textContent=(+b.dataset.i+1)+'. '+NAME[b.dataset.c]);draw();texts();}
+document.querySelectorAll('.tabs button').forEach((b,i)=>b.dataset.i=i);
+$('trSel').innerHTML='<div class="ctrl" style="gap:6px">'+CASES.map((c,i)=>`<button data-t="${i}" aria-pressed="false" style="flex:1 1 100%;padding:8px 10px;font-size:.92rem;text-align:left">${c.n}<br><span style="font-weight:400">${c.t}</span></button>`).join('')+'</div>';
+document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>pick(+b.dataset.t));
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));cur=b.dataset.c;val=0;draw();texts();});
+pick(0);
+
+</script>
+</body>
+</html>

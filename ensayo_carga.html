@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ensayo de carga</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{font:inherit;font-weight:700;padding:10px 18px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--acc);background:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage>svg{display:block;width:100%;height:auto;touch-action:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button{font:inherit;font-weight:700;padding:12px 14px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 140px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.sl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700}
+input[type=range]{width:100%;accent-color:var(--acc)}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box ul{margin:0;padding-left:18px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.fl{fill:none;stroke:var(--field);stroke-width:2;stroke-linecap:round}
+.fl.run{stroke-dasharray:9 9;animation:run .9s linear infinite}
+@keyframes run{to{stroke-dashoffset:-18}}
+.arr{fill:var(--field)}
+@media (prefers-reduced-motion:reduce){.fl.run{animation:none}}
+
+.back{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 3 · Punto 3.17</small><h1>Ensayo de carga</h1><p class="sub">Conecta el transformador a su tensión nominal y ve subiendo la carga. Mira la tensión del secundario, las corrientes y el rendimiento.</p></header>
+  
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 800 480" role="img" aria-label="Esquema de conexionado del ensayo"><g id="gA"></g></svg><div class="legend"><span><svg width="22" height="22" viewBox="-11 -11 22 22"><circle r="10" fill="var(--card)" stroke="currentColor" stroke-width="2"/><text y="5" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">A</text></svg> amperímetro</span>
+<span><svg width="22" height="22" viewBox="-11 -11 22 22"><circle r="10" fill="var(--card)" stroke="currentColor" stroke-width="2"/><text y="5" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">V</text></svg> voltímetro</span>
+<span><svg width="22" height="22" viewBox="-11 -11 22 22"><rect x="-10" y="-10" width="20" height="20" fill="var(--card)" stroke="currentColor" stroke-width="2"/><text y="5" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">W</text></svg> vatímetro</span>
+<span id="trInfo" style="font-weight:700"></span></div></div>
+      <div class="boxes"><div class="box" id="exp"></div>
+<div class="box blue"><h2>Qué se obtiene</h2><ul>
+<li>El comportamiento <b>real</b> del transformador trabajando con una <b>carga regulable</b> en el secundario.</li>
+<li>La <b>caída de tensión</b>: al subir la carga, la tensión del secundario baja un poco.</li>
+<li>El <b>rendimiento</b>: la potencia que sale entre la que entra. La diferencia son las pérdidas en el hierro y en el cobre.</li><li>Puedes elegir: el <b>trafo que construimos</b> en el aula (lo que midieron en la práctica), un <b>trafo pequeño típico</b> bien hecho, o un <b>trafo real de 1 MW</b> de los que alimentan un barrio.</li></ul></div></div>
+    </div>
+    <aside class="panel"><div id="trSel"></div><div class="ctrl"><button id="bOn" class="main">Conectar</button></div>
+<div class="sl"><label for="rC">Carga</label><input id="rC" type="range" min="0" max="125" step="5" value="0"></div>
+<div class="inset" style="padding:10px 12px;font-size:1.02rem" id="res"></div></aside>
+  </div>
+</main>
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;};
+
+// Tres casos: el trafo construido en el aula (medidas de la práctica P1), un trafo pequeño típico bien hecho
+// y un trafo de distribución trifásico real de 1 MW (valores típicos de catálogo).
+const TRAFOS=[
+ {k:'real',n:'Aula: el que construimos',t:'150 VA · 110/48 V · medidas de la práctica',S:150,V1:110,V2:48,I1n:1.36,I2n:2.73,
+  I0:2.32,P0:null,Vcc:4.5,Pcc:6.3,I2cc:2.7, load:{V2:46,I1:2.51,I2:2.88,P1:null,P2:132.5}, tri:false,
+  ais:{ok:{ps:1000,pm:1000,sm:1000},mal:{ps:0,pm:432,sm:516},v:500,malTxt:'Después de la sobrecarga'}},
+ {k:'tip',n:'Aula: trafo pequeño típico',t:'150 VA · 110/48 V · bien construido',S:150,V1:110,V2:48,I1n:1.36,I2n:2.73,
+  I0:0.15,P0:6,Vcc:4.5,Pcc:6.3,I2cc:2.7,load:null,tri:false,
+  ais:{ok:{ps:1000,pm:1000,sm:1000},mal:{ps:0.4,pm:0.8,sm:6},v:500,malTxt:'Simular aislamiento dañado'}},
+ {k:'mw',n:'Real: trafo de 1 MW',t:'1000 kVA · 20 kV / 400 V · trifásico',S:1e6,V1:20000,V2:400,I1n:28.9,I2n:1443,
+  I0:0.17,P0:1100,Vcc:1200,Pcc:10500,I2cc:1443,load:null,tri:true,
+  ais:{ok:{ps:20000,pm:15000,sm:5000},mal:{ps:3,pm:8,sm:1.5},v:5000,malTxt:'Simular aislamiento dañado'}}];
+let TR=TRAFOS[0], on=false, warn='';
+const f=(v,d=1)=>v.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+const fV=v=>v>=1000?f(v/1000,v>=10000?1:2)+' kV':f(v,v<20?2:1)+' V';
+const fA=v=>v>=100?f(v,0)+' A':f(v,v<10?2:1)+' A';
+const fW=v=>v===null?'no medido':v>=1e6?f(v/1e6,3)+' MW':v>=1000?f(v/1000,2)+' kW':f(v,1)+' W';
+const TRSEL='<div class="ctrl" style="gap:6px">'+TRAFOS.map((t,i)=>`<button data-t="${i}" aria-pressed="false" style="flex:1 1 100%;padding:8px 10px;font-size:.92rem;text-align:left">${t.n}<br><span style="font-weight:400">${t.t}</span></button>`).join('')+'</div>';
+function markSel(i){document.querySelectorAll('[data-t]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.t===i));
+  const L=document.getElementById('trInfo'); if(L) L.textContent=TR.tri?'Trifásico: los aparatos marcan valores de línea y la potencia total':'';}
+const meter=(x,y,l,txt,hi,below)=>`<circle cx="${x}" cy="${y}" r="20" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/><text x="${x}" y="${y+7}" text-anchor="middle" font-size="18" font-weight="700" fill="var(--ink)">${l}</text>`+disp(x,y+((below??y>=200)?34:-52),txt,hi);
+const wmeter=(x,y,txt,hi)=>`<rect x="${x-20}" y="${y-20}" width="40" height="40" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/><text x="${x}" y="${y+7}" text-anchor="middle" font-size="18" font-weight="700" fill="var(--ink)">W</text>`+disp(x,y-52,txt,hi);
+function disp(x,y,txt,hi){const t=on?txt:'—';const nm=on&&txt==='no medido';return `<rect x="${x-56}" y="${y}" width="112" height="30" rx="6" fill="${nm?'#3a2a14':'#1d2b22'}" stroke="${hi?'#F2B400':'var(--ink)'}" stroke-width="${hi?3:1.5}"/><text x="${x}" y="${y+21}" text-anchor="middle" font-size="${nm?14:16}" font-weight="700" fill="${nm?'#F2B400':'#8CF08C'}" font-family="monospace">${t}</text>`;}
+function trafo(x){return `<path d="M${x-26} 170 q22 15 0 30 q22 15 0 30 q22 15 0 30 q22 15 0 30 q22 15 0 30" fill="none" stroke="#E07A5F" stroke-width="5"/><path d="M${x+26} 170 q-22 15 0 30 q-22 15 0 30 q-22 15 0 30 q-22 15 0 30 q-22 15 0 30" fill="none" stroke="#7FB069" stroke-width="5"/><line x1="${x-4}" y1="160" x2="${x-4}" y2="330" stroke="var(--ink)" stroke-width="4"/><line x1="${x+4}" y1="160" x2="${x+4}" y2="330" stroke="var(--ink)" stroke-width="4"/><text x="${x-34}" y="360" text-anchor="middle" font-size="14" fill="var(--muted)">${TR.tri?'AT':'primario'}</text><text x="${x+34}" y="360" text-anchor="middle" font-size="14" fill="var(--muted)">${TR.tri?'BT':'secundario'}</text>`+(TR.tri?`<text x="${x}" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="var(--muted)">× 3 fases</text>`:'');}
+function source(u,max){const a=-120+240*Math.min(1,u/max);return `<rect x="30" y="190" width="100" height="120" rx="10" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/><text x="80" y="212" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">fuente</text><text x="80" y="227" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">regulable</text><circle cx="80" cy="268" r="26" fill="var(--line)" stroke="var(--ink)" stroke-width="2"/><line x1="80" y1="268" x2="${80+22*Math.sin(a*Math.PI/180)}" y2="${268-22*Math.cos(a*Math.PI/180)}" stroke="#D9362E" stroke-width="4" stroke-linecap="round"/>`;}
+function steps(list,doneIdx){return '<ol style="margin:0;padding-left:20px">'+list.map((s,i)=>`<li style="margin-bottom:6px;${i<doneIdx?'color:var(--muted);text-decoration:line-through':i===doneIdx?'font-weight:700':''}">${s}</li>`).join('')+'</ol>';}
+const vbox=(x,y)=>`<circle cx="${x}" cy="${y}" r="18" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/><text x="${x}" y="${y+7}" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">V</text>`;
+function primSide(){return `<path d="M130 220 H200 M240 220 H290 M330 220 H374 V170 M130 300 H374 V330 M345 220 V252 M345 300 V288" fill="none" stroke="var(--ink)" stroke-width="2.5"/>`+vbox(345,270);}
+function setupSel(pick){$('trSel').innerHTML=TRSEL;document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>pick(+b.dataset.t));pick(0);}
+
+function vals(c){
+  if(TR.k==='real'){ // medidas de la práctica: a plena carga V2=46 V, I1=2,51 A, I2=2,88 A, P2=132,5 W. P1 no se midió.
+    const I2=2.88*c/1.05, V2=48-2*(c/1.05), I1=Math.sqrt(TR.I0*TR.I0+Math.pow(I2*V2/TR.V1,2)); return {V1:TR.V1,V2,I1,I2,P1:null,P2:V2*I2};}
+  const ur=TR.Pcc/TR.S, V2=TR.V2*(1-ur*c), I2=TR.I2n*c, P2=(TR.tri?Math.sqrt(3):1)*V2*I2, P1=P2+TR.P0+TR.Pcc*c*c, I1=Math.max(TR.I0,P1/((TR.tri?Math.sqrt(3):1)*TR.V1));
+  return {V1:TR.V1,V2,I1,I2,P1,P2};
+}
+function draw(){
+  const c=on?+$('rC').value/100:0, v=on?vals(c):{V1:0,V2:0,I1:0,I2:0,P1:0,P2:0}, nom=on&&Math.abs(c-1)<0.03;
+  let s=source(on?TR.V1:0,TR.V1*1.1)+primSide();
+  s+=meter(220,220,'A',fA(v.I1),nom,true)+wmeter(310,220,fW(v.P1),nom)+disp(300,395,fV(v.V1),false);
+  s+=trafo(400)+`<path d="M426 170 H480 M520 170 H600 M660 170 H720 V230 M426 330 H720 V300 M560 170 V232 M560 268 V330" fill="none" stroke="var(--ink)" stroke-width="2.5"/>`;
+  s+=meter(500,170,'A',fA(v.I2),nom,false)+wmeter(630,170,fW(on?v.P2:0),nom)+vbox(560,250)+disp(560,395,fV(v.V2),nom);
+  s+=`<rect x="706" y="230" width="28" height="70" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/><line x1="690" y1="310" x2="752" y2="220" stroke="#D9362E" stroke-width="2.5"/><polygon points="752,220 740,224 748,232" fill="#D9362E"/><text x="720" y="330" text-anchor="middle" font-size="13" fill="var(--muted)">carga</text>`;
+  s+=`<rect x="706" y="${300-70*Math.min(1.25,c)/1.25}" width="28" height="${70*Math.min(1.25,c)/1.25}" fill="#F2B400" opacity=".45"/>`;
+  if(on&&c>1.07)s+=`<text x="400" y="60" text-anchor="middle" font-size="17" font-weight="700" fill="#D9362E">Sobrecarga: los devanados se calientan de más</text>`;
+  $('gA').innerHTML=s;
+  const eta=v.P1&&c>0?v.P2/v.P1*100:null;
+  $('res').innerHTML=on?`<div><b>Rendimiento:</b> ${eta!==null?f(eta,1)+' %':(c>0?'no se puede calcular (no se midió P<sub>1</sub>)':'—')}</div><div><b>Tensión del secundario:</b> ${fV(v.V2)} ${c>0?'(ha bajado '+fV(TR.V2-v.V2)+')':''}</div>`:'Conecta el transformador.';
+  let t;
+  if(!on)t='El primario va a su <b>tensión nominal</b> con amperímetro, vatímetro y voltímetro. En el secundario hay una <b>carga regulable</b> con sus aparatos.';
+  else if(c===0)t='Sin carga es como el ensayo de vacío. Sube la carga.';
+  else if(TR.k==='real')t=`<b>Medida real de la práctica</b> (carga al 105 %): V<sub>2</sub> = 46 V, I<sub>2</sub> = 2,88 A y P<sub>2</sub> = 132,5 W. Por el primario pasaban 2,51 A, casi todo corriente de vacío (el núcleo saturado). Como <b>no se midió P<sub>1</sub> con vatímetro</b>, no se puede sacar el rendimiento: 110 V × 2,51 A = 276 VA no son vatios.`;
+  else if(TR.k==='tip')t=`Con la carga al <b>${Math.round(c*100)} %</b> entran ${fW(v.P1)} y salen ${fW(v.P2)}: un rendimiento del <b>${f(eta,1)} %</b>. En los trafos pequeños es más bajo que en los grandes.`;
+  else t=`Con la carga al <b>${Math.round(c*100)} %</b> entran ${fW(v.P1)} y salen ${fW(v.P2)}. Se pierden unos ${fW(v.P1-v.P2)}, pero el rendimiento es del <b>${f(eta,2)} %</b>.`;
+  $('exp').innerHTML='<h2>Qué pasa</h2><p>'+t+'</p>';
+}
+function pick(i){TR=TRAFOS[i];markSel(i);on=false;$('bOn').textContent='Conectar';$('bOn').classList.remove('on');$('rC').value=0;draw();}
+$('bOn').onclick=()=>{on=!on;$('bOn').textContent=on?'Desconectar':'Conectar';$('bOn').classList.toggle('on',on);draw();};
+$('rC').oninput=draw;setupSel(pick);
+
+</script>
+</body>
+</html>

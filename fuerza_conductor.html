@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fuerza sobre un conductor con corriente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{font:inherit;font-weight:700;padding:10px 18px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--acc);background:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage>svg{display:block;width:100%;height:auto;touch-action:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button{font:inherit;font-weight:700;padding:12px 14px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 140px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.sl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700}
+input[type=range]{width:100%;accent-color:var(--acc)}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box ul{margin:0;padding-left:18px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.fl{fill:none;stroke:var(--field);stroke-width:2;stroke-linecap:round}
+.fl.run{stroke-dasharray:9 9;animation:run .9s linear infinite}
+@keyframes run{to{stroke-dashoffset:-18}}
+.arr{fill:var(--field)}
+@media (prefers-reduced-motion:reduce){.fl.run{animation:none}}
+
+.back{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 1 · Punto 1.7</small><h1>Fuerza sobre un conductor con corriente</h1><p class="sub">Mete un cable con corriente entre los polos de un imán y mira hacia dónde lo empuja. Luego prueba con una espira.</p></header>
+  <nav class="tabs" role="tablist"><button role="tab" data-c="cable" aria-selected="true">1. Un cable</button><button role="tab" data-c="espira" aria-selected="false">2. Una espira (motor)</button></nav>
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 800 480" role="img" aria-label="Conductor con corriente dentro del campo de un imán">
+<g id="gPoles"></g><g id="gLines"></g><g id="gObj"></g></svg><div class="legend"><span><svg width="22" height="22" viewBox="-11 -11 22 22"><circle r="9" fill="#C87533" stroke="currentColor" stroke-width="1.5"/><circle r="2.8" fill="currentColor"/></svg> la corriente sale hacia ti</span>
+<span><svg width="22" height="22" viewBox="-11 -11 22 22"><circle r="9" fill="#C87533" stroke="currentColor" stroke-width="1.5"/><path d="M-5-5L5 5M5-5L-5 5" stroke="currentColor" stroke-width="2"/></svg> la corriente entra</span>
+<span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#2E75B6" stroke-width="2.5"/></svg> líneas de fuerza</span>
+<span><svg width="26" height="12"><line x1="1" y1="6" x2="18" y2="6" stroke="#3F8F2A" stroke-width="4"/><polygon points="25,6 16,1 16,11" fill="#3F8F2A"/></svg> fuerza</span></div></div>
+      <div class="boxes"><div class="box" id="exp"></div>
+<div class="box blue"><h2>2ª ley: dónde se usa</h2>
+<p>Un conductor con corriente dentro de un campo magnético sufre una <b>fuerza</b>. La fuerza es mayor cuanto más fuerte es el imán, más corriente pasa y más largo es el trozo de cable dentro del campo.</p>
+<ul><li><b>Motores eléctricos</b>: las fuerzas sobre las espiras hacen girar el rotor.</li>
+<li><b>Altavoces</b>: la bobina empuja la membrana.</li>
+<li><b>Aparatos de medida de aguja</b>: la fuerza mueve la aguja.</li></ul></div></div>
+    </div>
+    <aside class="panel"><div class="ctrl">
+  <button id="bOn" class="main">Dar corriente</button>
+  <button id="bInv">Cambiar el sentido de la corriente</button>
+  <button id="bMag">Dar la vuelta al imán</button>
+</div>
+<div class="inset"><svg id="ins" viewBox="0 0 300 225" aria-hidden="true"></svg><p class="cap">Regla de la <b>mano izquierda</b>: pon los tres dedos en ángulo recto. <b style="color:var(--field)">Índice = campo</b>, <b style="color:var(--cur)">corazón = corriente</b>, <b style="color:var(--force)">pulgar = fuerza</b>.</p></div></aside>
+  </div>
+</main>
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;};
+
+let cur='cable', on=false, s=1, b=1; // s: +1 la corriente sale; b: +1 campo hacia la derecha (N a la izquierda)
+let disp=0, phi=0.35, w=0, last=performance.now();
+const CX=400, CY=240, R=110, B0=1, K=70;
+function wires(){
+  if(cur==='cable') return [{x:CX,y:CY+disp,s:on?s:0}];
+  const c=Math.cos(phi), sA=on?(c>=0?s:-s):0; // colector: el lado de la derecha siempre lleva el mismo sentido
+  return [{x:CX+R*Math.cos(phi),y:CY-R*Math.sin(phi),s:sA},{x:CX-R*Math.cos(phi),y:CY+R*Math.sin(phi),s:-sA}];
+}
+function Bf(x,y,W){let bx=B0*b,by=0;for(const w of W){if(!w.s)continue;const dx=x-w.x,dy=y-w.y,r2=dx*dx+dy*dy+30;bx+=K*w.s*dy/r2;by-=K*w.s*dx/r2;}return [bx,by];}
+function trace(x0,y0,sg,W){
+  const h=3,pts=[[x0,y0]];let x=x0,y=y0;
+  const f=(X,Y)=>{const v=Bf(X,Y,W),n=Math.hypot(v[0],v[1])||1e-9;return [sg*v[0]/n,sg*v[1]/n];};
+  for(let i=0;i<700;i++){
+    const k1=f(x,y),k2=f(x+h/2*k1[0],y+h/2*k1[1]),k3=f(x+h/2*k2[0],y+h/2*k2[1]),k4=f(x+h*k3[0],y+h*k3[1]);
+    x+=h/6*(k1[0]+2*k2[0]+2*k3[0]+k4[0]);y+=h/6*(k1[1]+2*k2[1]+2*k3[1]+k4[1]);
+    pts.push([x,y]);
+    if(x<92||x>708||y<-20||y>500)break;
+    if(i>30&&Math.hypot(x-x0,y-y0)<h*1.2){pts.push([x0,y0]);return {pts,closed:true};}
+    if(W.some(w=>Math.hypot(x-w.x,y-w.y)<12))break;
+  }
+  return {pts,closed:false};
+}
+function drawPoles(){
+  const g=$('gPoles');g.innerHTML='';
+  const L=b>0?'N':'S', Rr=b>0?'S':'N', col=p=>p==='N'?'#D9362E':'#8a939c';
+  el('rect',{x:0,y:20,width:90,height:440,rx:8,fill:col(L)},g);el('rect',{x:710,y:20,width:90,height:440,rx:8,fill:col(Rr)},g);
+  const t1=el('text',{x:45,y:256,'text-anchor':'middle','font-size':48,'font-weight':700,fill:'#fff'},g);t1.textContent=L;
+  const t2=el('text',{x:755,y:256,'text-anchor':'middle','font-size':48,'font-weight':700,fill:'#fff'},g);t2.textContent=Rr;
+}
+function drawLines(W){
+  const g=$('gLines');g.innerHTML='';
+  const seeds=[];for(let y=35;y<=445;y+=26)seeds.push([400,y]);
+  if(cur==='cable'&&on){const w=W[0];for(const d of [22,34])seeds.push([w.x,w.y-d],[w.x,w.y+d]);}
+  const seen=[];
+  for(const [sx,sy] of seeds){
+    const fw=trace(sx,sy,1,W);let p=fw.pts;
+    if(!fw.closed){const bw=trace(sx,sy,-1,W);p=bw.pts.reverse().concat(fw.pts.slice(1));}
+    // evita repetir la misma línea
+    const key=p.length>20?p[Math.floor(p.length/2)]:null;
+    el('path',{d:'M'+p.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join('L'),class:'fl run'},g);
+    let acc=0,next=90;for(let i=1;i<p.length;i++){const[x1,y1]=p[i-1],[x2,y2]=p[i];acc+=Math.hypot(x2-x1,y2-y1);if(acc>=next){if(x2>100&&x2<700)el('polygon',{points:'7,0 -5,-5.5 -5,5.5',class:'arr',transform:`translate(${x2.toFixed(1)} ${y2.toFixed(1)}) rotate(${(Math.atan2(y2-y1,x2-x1)*180/Math.PI).toFixed(1)})`},g);next+=220;}}
+  }
+}
+function wireEl(g,w){
+  el('circle',{cx:w.x,cy:w.y,r:16,fill:'var(--cu)',stroke:'var(--ink)','stroke-width':2.2},g);
+  if(w.s>0)el('circle',{cx:w.x,cy:w.y,r:4.5,fill:'#1a1a1a'},g);
+  else if(w.s<0)el('path',{d:`M${w.x-7} ${w.y-7}l14 14m0-14l-14 14`,stroke:'#1a1a1a','stroke-width':2.6},g);
+}
+function force(g,x,y,dirY,len){
+  if(!dirY)return;const y2=y+dirY*len;
+  el('line',{x1:x,y1:y+dirY*20,x2:x,y2:y2-dirY*12,stroke:'var(--force)','stroke-width':6,'stroke-linecap':'round'},g);
+  el('polygon',{points:`${x},${y2} ${x-11},${y2-dirY*16} ${x+11},${y2-dirY*16}`,fill:'var(--force)'},g);
+}
+function drawObj(W){
+  const g=$('gObj');g.innerHTML='';
+  if(cur==='cable'){
+    el('line',{x1:CX,y1:0,x2:CX,y2:W[0].y-16,stroke:'var(--muted)','stroke-width':1.5,'stroke-dasharray':'3 5'},g); // hilos de los que cuelga
+    wireEl(g,W[0]);
+    if(on){force(g,W[0].x,W[0].y,-s*b,70);const t=el('text',{x:W[0].x+18,y:W[0].y-s*b*60+5,'font-size':17,'font-weight':700,fill:'var(--force)'},g);t.textContent='fuerza';}
+  }else{
+    const[a,c]=W;
+    el('line',{x1:a.x,y1:a.y,x2:c.x,y2:c.y,stroke:'var(--cu)','stroke-width':5,opacity:.55},g);
+    el('circle',{cx:CX,cy:CY,r:6,fill:'var(--ink)'},g);
+    el('circle',{cx:CX,cy:CY,r:R,fill:'none',stroke:'var(--line)','stroke-width':1.5,'stroke-dasharray':'4 6'},g);
+    wireEl(g,a);wireEl(g,c);
+    if(on){force(g,a.x,a.y,-a.s*b,60);force(g,c.x,c.y,-c.s*b,60);
+      const cw=s*b<0; // sentido de giro en pantalla
+      el('rect',{x:CX-150,y:448,width:300,height:26,rx:8,fill:'var(--card)',opacity:.9},g);const t=el('text',{x:CX,y:467,'text-anchor':'middle','font-size':18,'font-weight':700,fill:'var(--force)'},g);t.textContent=cw?'gira en sentido horario ↻':'gira en sentido antihorario ↺';}
+  }
+}
+function inset(W){
+  const w=cur==='cable'?W[0]:(W[0].x>=CX?W[0]:W[1]);
+  const sI=on?w.s:s, fy=-sI*b; // fuerza en pantalla (arriba = -1)
+  let h='';
+  const px=150,py=112;
+  h+=`<rect x="${px-34}" y="${py-30}" width="68" height="60" rx="18" fill="#F3C9A2" stroke="#7a4a2c" stroke-width="1.8"/>`;
+  // índice = campo (horizontal)
+  const ix=px+b*105;
+  h+=`<line x1="${px}" y1="${py-6}" x2="${ix-b*10}" y2="${py-6}" stroke="var(--field)" stroke-width="6" stroke-linecap="round"/><polygon points="${ix},${py-6} ${ix-b*14},${py-15} ${ix-b*14},${py+3}" fill="var(--field)"/>`;
+  h+=`<text x="${px+b*70}" y="${py-18}" text-anchor="middle" font-size="13" font-weight="700" fill="var(--field)">índice: campo</text>`;
+  // pulgar = fuerza (vertical)
+  const ty=py+fy*95;
+  h+=`<line x1="${px-14}" y1="${py}" x2="${px-14}" y2="${ty-fy*10}" stroke="var(--force)" stroke-width="6" stroke-linecap="round"/><polygon points="${px-14},${ty} ${px-23},${ty-fy*14} ${px-5},${ty-fy*14}" fill="var(--force)"/>`;
+  h+=`<text x="${px-24}" y="${py+fy*70}" text-anchor="end" font-size="13" font-weight="700" fill="var(--force)">pulgar:</text><text x="${px-24}" y="${py+fy*70+15}" text-anchor="end" font-size="13" font-weight="700" fill="var(--force)">fuerza</text>`;
+  // corazón = corriente (sale o entra)
+  h+=`<circle cx="${px+12}" cy="${py+8}" r="13" fill="var(--card)" stroke="var(--cur)" stroke-width="3"/>`;
+  h+=sI>0?`<circle cx="${px+12}" cy="${py+8}" r="4" fill="var(--cur)"/>`:`<path d="M${px+5} ${py+1}l14 14m0-14l-14 14" stroke="var(--cur)" stroke-width="3"/>`;
+  h+=`<text x="${px+32}" y="${py+30}" font-size="13" font-weight="700" fill="var(--cur)">corazón: corriente</text>`;
+  h+=`<text x="${px+32}" y="${py+45}" font-size="12" fill="var(--muted)">(${sI>0?'sale hacia ti':'entra'})</text>`;
+  $('ins').setAttribute('viewBox','0 0 300 225');
+  $('ins').innerHTML=h;
+}
+const TXT={
+  cable:()=>on?`El campo del cable se suma al del imán por un lado y se resta por el otro. Mira las líneas: <b>se amontonan en un lado</b> y se separan en el otro. Las líneas empujan al cable hacia donde hay menos: el cable se mueve hacia <b>${-s*b<0?'arriba':'abajo'}</b>.<br><br>Si cambias el sentido de la corriente <b>o</b> das la vuelta al imán, la fuerza cambia de sentido. Si cambias las dos cosas, no cambia.`:'Sin corriente, el cable cuelga quieto y las líneas del imán van rectas del N al S. <b>Da corriente</b> y mira qué pasa.',
+  espira:()=>on?`En los dos lados de la espira la corriente va en sentidos contrarios, así que las fuerzas también: <b>un lado sube y el otro baja</b>. Las dos fuerzas juntas hacen <b>girar</b> la espira: es el principio del <b>motor eléctrico</b>.<br><br>Cada media vuelta, el <b>colector</b> cambia el sentido de la corriente en la espira para que siga girando siempre hacia el mismo lado.`:'La espira puede girar sobre su eje, en medio del imán. <b>Da corriente</b> y mira qué pasa.'
+};
+function frame(t){
+  const dt=Math.min(.05,(t-last)/1000);last=t;
+  if(cur==='cable'){const tgt=on?-s*b*90:0;disp+=(tgt-disp)*Math.min(1,dt*3);}
+  else{const tau=on?s*b*Math.abs(Math.cos(phi))*6+ s*b*0.6:0;w+=(tau-w*1.2)*dt;phi+=w*dt;}
+  const W=wires();drawLines(W);drawObj(W);
+  requestAnimationFrame(frame);
+}
+function texts(){const W=wires();inset(W);$('exp').innerHTML='<h2>Qué pasa</h2><p>'+TXT[cur]()+'</p>';$('bOn').textContent=on?'Quitar corriente':'Dar corriente';$('bOn').classList.toggle('on',on);drawPoles();}
+$('bOn').onclick=()=>{on=!on;texts();};
+$('bInv').onclick=()=>{s=-s;texts();};
+$('bMag').onclick=()=>{b=-b;texts();};
+document.querySelectorAll('.tabs button').forEach(x=>x.onclick=()=>{document.querySelectorAll('.tabs button').forEach(y=>y.setAttribute('aria-selected',y===x));cur=x.dataset.c;disp=0;w=0;texts();});
+texts();requestAnimationFrame(frame);
+setInterval(()=>{if(on)inset(wires());},200);
+
+</script>
+</body>
+</html>

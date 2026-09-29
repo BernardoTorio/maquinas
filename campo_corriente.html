@@ -57,10 +57,14 @@ button:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
 .ndl{transition:transform .9s cubic-bezier(.3,1.4,.5,1);transform-box:fill-box;transform-origin:center}
 .pole{font-weight:700;font-size:34px}
 @media (prefers-reduced-motion:reduce){.on .fl{animation:none}.ndl{transition:none}}
+
+.back{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
 </style>
 </head>
 <body>
 <main>
+  <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
   <header class="top">
     <small>Máquinas Eléctricas 2MB · Tema 1 · Punto 1.6</small>
     <h1>La corriente crea un campo magnético</h1>

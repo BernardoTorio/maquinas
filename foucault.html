@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Corrientes de Foucault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{font:inherit;font-weight:700;padding:10px 18px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--acc);background:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage>svg{display:block;width:100%;height:auto;touch-action:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button{font:inherit;font-weight:700;padding:12px 14px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 140px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.sl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700}
+input[type=range]{width:100%;accent-color:var(--acc)}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box ul{margin:0;padding-left:18px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.fl{fill:none;stroke:var(--field);stroke-width:2;stroke-linecap:round}
+.fl.run{stroke-dasharray:9 9;animation:run .9s linear infinite}
+@keyframes run{to{stroke-dashoffset:-18}}
+.arr{fill:var(--field)}
+@media (prefers-reduced-motion:reduce){.fl.run{animation:none}}
+
+.back{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 1 · Punto 1.11</small><h1>Corrientes parásitas (de Foucault)</h1><p class="sub">Compara un núcleo macizo con uno de chapas. Fíjate en los remolinos rojos y en la temperatura.</p></header>
+  <nav class="tabs" role="tablist"><button role="tab" data-c="macizo" aria-selected="true">1. Núcleo macizo</button><button role="tab" data-c="chapas" aria-selected="false">2. Núcleo de chapas</button></nav>
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 800 480" role="img" aria-label="Corrientes de Foucault en un núcleo macizo y en uno de chapas"><g id="gA"></g></svg><div class="legend"><span><svg width="22" height="22" viewBox="-11 -11 22 22"><circle r="8" fill="none" stroke="#2E75B6" stroke-width="2"/><circle r="2.5" fill="#2E75B6"/></svg> flujo que sale hacia ti (cambia de sentido 50 veces por segundo)</span>
+<span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#D9362E" stroke-width="3" stroke-dasharray="5 4"/></svg> corrientes de Foucault</span></div></div>
+      <div class="boxes"><div class="box" id="exp"></div>
+<div class="box blue"><h2>Soluciones y usos</h2><ul>
+<li>Hacer el núcleo con <b>chapas finas aisladas entre sí</b> (barniz u óxido). Así cada corriente queda encerrada en su chapa y es muy pequeña.</li>
+<li>Añadir <b>silicio</b> al hierro: la chapa conduce peor la electricidad y las corrientes son menores.</li>
+<li>Los tornillos que atraviesan las chapas van <b>aislados</b>, para no unirlas eléctricamente.</li>
+<li>A veces se aprovechan: <b>cocinas de inducción</b>, hornos de inducción y frenos de camiones.</li></ul></div></div>
+    </div>
+    <aside class="panel"><div class="sl" id="slB"><label for="rN">Número de chapas</label><input id="rN" type="range" min="2" max="12" step="1" value="6"></div>
+<div class="inset"><svg id="ins" viewBox="0 0 300 180" aria-hidden="true"></svg><p class="cap">Así va el núcleo en el transformador: el flujo circula <b>a lo largo</b> de las chapas. En el dibujo grande lo cortamos y lo miramos de frente.</p></div>
+<div class="inset" style="padding:10px 12px"><div style="font-weight:700;margin-bottom:4px">Calor en el núcleo</div>
+<div style="height:16px;background:var(--line);border-radius:8px;overflow:hidden"><i id="heat" style="display:block;height:100%;width:0;background:linear-gradient(90deg,#F2B400,#D9362E);transition:width .6s"></i></div><p class="cap" id="cap"></p></div></aside>
+  </div>
+</main>
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;};
+
+let cur='macizo', t=0, last=performance.now();
+const X=250,Y=90,S=300;
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;draw();requestAnimationFrame(frame);}
+function draw(){
+  const n=cur==='macizo'?1:+$('rN').value, f=Math.sin(t*2.2), sgn=f>=0?1:-1, amp=Math.abs(f);
+  const loss=cur==='macizo'?1:1/(n*n)*4; // relativo
+  let s='';
+  const temp=Math.min(1,loss);
+  const hot=`rgb(${Math.round(154+100*temp)},${Math.round(165-80*temp)},${Math.round(177-120*temp)})`;
+  const gap=cur==='macizo'?0:4, w=(S-gap*(n-1))/n;
+  for(let i=0;i<n;i++){
+    const x=X+i*(w+gap);
+    s+=`<rect x="${x}" y="${Y}" width="${w}" height="${S}" fill="${hot}" stroke="var(--ink)" stroke-width="1.5"/>`;
+    // corriente de Foucault: un remolino por chapa
+    const m=Math.min(w*0.18,22), r=Math.min(10,w*0.2);
+    const dash=cur==='macizo'?'10 8':'6 5', sw=cur==='macizo'?4:Math.max(1.5,4-n*0.2);
+    if(amp>0.08)s+=`<rect x="${x+m}" y="${Y+22}" width="${w-2*m}" height="${S-44}" rx="${r}" fill="none" stroke="#D9362E" stroke-width="${sw}" stroke-dasharray="${dash}" opacity="${(0.35+0.65*amp).toFixed(2)}" style="animation:run ${(0.9/(amp+0.2)).toFixed(2)}s linear infinite ${sgn>0?'':'reverse'}"/>`;
+    if(cur==='macizo'&&amp>0.08)for(const k of [1,2])s+=`<rect x="${x+m+k*34}" y="${Y+22+k*34}" width="${w-2*m-k*68}" height="${S-44-k*68}" rx="${r}" fill="none" stroke="#D9362E" stroke-width="3" stroke-dasharray="10 8" opacity="${(0.3+0.6*amp).toFixed(2)}" style="animation:run ${(0.9/(amp+0.2)).toFixed(2)}s linear infinite ${sgn>0?'':'reverse'}"/>`;
+  }
+  // flujo: puntos o cruces
+  for(let yy=Y+40;yy<Y+S;yy+=52)for(let xx=X+30;xx<X+S;xx+=52){
+    const r=4+amp*6;
+    s+=sgn>0?`<circle cx="${xx}" cy="${yy}" r="${r+4}" fill="none" stroke="var(--field)" stroke-width="2" opacity="${(0.3+0.7*amp).toFixed(2)}"/><circle cx="${xx}" cy="${yy}" r="${2+amp*2}" fill="var(--field)" opacity="${(0.3+0.7*amp).toFixed(2)}"/>`
+      :`<circle cx="${xx}" cy="${yy}" r="${r+4}" fill="none" stroke="var(--field)" stroke-width="2" opacity="${(0.3+0.7*amp).toFixed(2)}"/><path d="M${xx-r} ${yy-r}l${2*r} ${2*r}m0 ${-2*r}l${-2*r} ${2*r}" stroke="var(--field)" stroke-width="2" opacity="${(0.3+0.7*amp).toFixed(2)}"/>`;
+  }
+  s+=`<text x="${X+S/2}" y="${Y-18}" text-anchor="middle" font-size="18" font-weight="700" fill="var(--ink)">${cur==='macizo'?'Núcleo macizo (de una pieza)':'Núcleo de '+n+' chapas aisladas'}</text>`;
+  s+=`<text x="${X+S/2}" y="${Y+S+30}" text-anchor="middle" font-size="14" fill="var(--muted)">${cur==='macizo'?'Un solo remolino grande: mucha corriente':'Un remolino pequeño en cada chapa'}</text>`;
+  // termómetro
+  const tx=640,ty=100,th=260,lvl=th*Math.min(1,0.08+0.92*temp);
+  s+=`<rect x="${tx}" y="${ty}" width="26" height="${th}" rx="13" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/><circle cx="${tx+13}" cy="${ty+th+14}" r="22" fill="#D9362E" stroke="var(--ink)" stroke-width="2"/><rect x="${tx+6}" y="${ty+th-lvl}" width="14" height="${lvl+8}" fill="#D9362E"/>`;
+  s+=`<text x="${tx+13}" y="${ty-16}" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">temperatura</text>`;
+  $('gA').innerHTML=s;
+  $('heat').style.width=Math.round(Math.min(1,loss)*100)+'%';
+  $('cap').textContent=cur==='macizo'?'Muchas pérdidas: el núcleo se calienta mucho.':(n>=8?'Pérdidas muy pequeñas.':'Cuantas más chapas (más finas), menos pérdidas.');
+}
+function inset(){
+  const n=cur==='macizo'?1:+$('rN').value;let h='';
+  // núcleo en perspectiva con chapas
+  for(let i=n-1;i>=0;i--){const o=i*(40/Math.max(1,n));
+    h+=`<path d="M${40+o} ${40-o*0.5} h160 v110 h-160 z M${70+o} ${70-o*0.5} h100 v50 h-100 z" fill="#9aa5b1" fill-rule="evenodd" stroke="var(--ink)" stroke-width="1"/>`;}
+  h+=`<path d="M52 95 V52 H190 V138 H52 Z" fill="none" stroke="var(--field)" stroke-width="3" stroke-dasharray="8 6" style="animation:run 1s linear infinite"/>`;
+  h+=`<polygon points="120,52 110,46 110,58" fill="var(--field)"/><text x="215" y="100" font-size="13" fill="var(--field)" font-weight="700">flujo</text>`;
+  h+=`<line x1="40" y1="160" x2="240" y2="160" stroke="var(--line)"/>`;
+  $('ins').innerHTML=h;
+}
+function texts(){
+  $('exp').innerHTML='<h2>Qué pasa</h2><p>'+(cur==='macizo'
+   ?'El hierro del núcleo también <b>conduce la electricidad</b>. Como el flujo cambia sin parar (corriente alterna), se induce tensión <b>dentro del propio hierro</b> (3ª ley) y circulan <b>corrientes en remolino</b>: son las <b>corrientes parásitas o de Foucault</b>. No sirven para nada: <b>calientan el núcleo</b> y son pérdidas.'
+   :'Con el núcleo hecho de <b>chapas finas aisladas</b>, cada corriente de Foucault queda <b>encerrada en su chapa</b>: el camino es estrecho y la corriente, muy pequeña. Mueve el deslizador: cuantas más chapas (más finas), menos calor.')+'</p>';
+  $('slB').style.display=cur==='macizo'?'none':'';inset();
+}
+$('rN').oninput=texts;
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));cur=b.dataset.c;texts();});
+texts();requestAnimationFrame(frame);
+
+</script>
+</body>
+</html>

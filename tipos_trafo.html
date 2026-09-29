@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tipos de transformadores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{font:inherit;font-weight:700;padding:10px 18px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--acc);background:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage>svg{display:block;width:100%;height:auto;touch-action:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button{font:inherit;font-weight:700;padding:12px 14px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 140px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.sl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700}
+input[type=range]{width:100%;accent-color:var(--acc)}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box ul{margin:0;padding-left:18px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.fl{fill:none;stroke:var(--field);stroke-width:2;stroke-linecap:round}
+.fl.run{stroke-dasharray:9 9;animation:run .9s linear infinite}
+@keyframes run{to{stroke-dashoffset:-18}}
+.arr{fill:var(--field)}
+@media (prefers-reduced-motion:reduce){.fl.run{animation:none}}
+
+.back{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 3 · Punto 3.14</small><h1>Tipos de transformadores</h1><p class="sub">Elige un tipo para ver su dibujo. Cuando te los sepas, prueba el modo examen.</p></header>
+  
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 800 480" role="img" aria-label="Dibujo del tipo de transformador elegido"><g id="gA"></g></svg><div class="legend"><span><svg width="26" height="12"><rect x="1" y="1" width="24" height="10" fill="#9aa5b1"/></svg> núcleo de chapas</span>
+<span><svg width="26" height="12"><rect x="1" y="1" width="24" height="10" rx="3" fill="#E07A5F"/></svg> primario</span>
+<span><svg width="26" height="12"><rect x="1" y="1" width="24" height="10" rx="3" fill="#7FB069"/></svg> secundario</span></div></div>
+      <div class="boxes"><div class="box" id="exp"></div>
+<div class="box blue"><h2>Clasificación</h2><ul>
+<li><b>Según la tensión</b>: reductor (la baja) y elevador (la sube). Todos son reversibles.</li>
+<li><b>Según el número de fases</b>: monofásico y trifásico.</li>
+<li><b>Según su construcción</b>: de columnas, acorazado, toroidal y autotransformador.</li>
+<li><b>Según su aplicación</b>: de distribución, de medida, de aislamiento, de impedancia…</li></ul></div></div>
+    </div>
+    <aside class="panel"><div class="ctrl"><button id="bQuiz" class="main">Modo examen: ¿cómo se llama?</button></div>
+<div id="list" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
+<div id="quiz" style="display:none"><p style="margin:0 0 8px;font-weight:700">¿Qué transformador es el del dibujo?</p><div id="opts" style="display:grid;gap:8px"></div><p id="qres" style="margin:10px 0 0;min-height:1.5em"></p><p class="cap" id="score"></p></div></aside>
+  </div>
+</main>
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;};
+
+const FE='#9aa5b1',P='#E07A5F',S='#7FB069',K='var(--ink)';
+const core=(x,y,w,h,t)=>`<path d="M${x} ${y}h${w}v${h}h${-w}z M${x+t} ${y+t}v${h-2*t}h${w-2*t}v${-(h-2*t)}z" fill="${FE}" fill-rule="evenodd" stroke="${K}" stroke-width="1.5"/>`;
+const coil=(cx,y,h,wid,col,n=8)=>{let s='';for(let i=0;i<n;i++){const yy=y+i*h/(n-1);s+=`<rect x="${cx-wid/2}" y="${yy-3.5}" width="${wid}" height="7" rx="3.5" fill="${col}" stroke="${K}" stroke-width=".6"/>`;}return s;};
+const block=(cx,y,h,wid,col)=>`<rect x="${cx-wid/2}" y="${y}" width="${wid}" height="${h}" rx="8" fill="${col}" stroke="${K}" stroke-width="1.5"/>`;
+const T=(x,y,t,sz=16,c=K,a='middle')=>`<text x="${x}" y="${y}" text-anchor="${a}" font-size="${sz}" font-weight="700" fill="${c}">${t}</text>`;
+const wire=(d,c=K)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="2.5"/>`;
+const term=(x,y)=>`<circle cx="${x}" cy="${y}" r="6" fill="var(--card)" stroke="${K}" stroke-width="2.2"/>`;
+const TYPES=[
+ {k:'sim',n:'Símbolos del transformador',d:'En los esquemas el transformador se dibuja con <b>dos círculos que se cortan</b> (uno por devanado) o con <b>dos bobinas y unas rayas</b> en medio, que son el núcleo.',g:()=>{
+   return `<circle cx="230" cy="240" r="70" fill="none" stroke="${K}" stroke-width="4"/><circle cx="320" cy="240" r="70" fill="none" stroke="${K}" stroke-width="4"/>`+wire('M110 240H160 M390 240H440')+
+   `<path d="M520 150 q30 15 0 30 q30 15 0 30 q30 15 0 30 q30 15 0 30 q30 15 0 30 q30 15 0 30" fill="none" stroke="${P}" stroke-width="5"/><path d="M640 150 q-30 15 0 30 q-30 15 0 30 q-30 15 0 30 q-30 15 0 30 q-30 15 0 30 q-30 15 0 30" fill="none" stroke="${S}" stroke-width="5"/>`+
+   `<line x1="575" y1="140" x2="575" y2="340" stroke="${K}" stroke-width="4"/><line x1="587" y1="140" x2="587" y2="340" stroke="${K}" stroke-width="4"/>`+T(275,370,'con círculos')+T(580,370,'con bobinas y núcleo');}},
+ {k:'mono',n:'Monofásico',d:'Tiene un devanado <b>primario</b> y otro <b>secundario</b>. Por ejemplo, baja de 230 V a 12 V.',g:()=>core(260,90,280,300,55)+coil(287,160,160,70,P,9)+coil(513,160,160,70,S,5)+wire('M252 160H170 M252 320H170 M548 160H630 M548 320H630')+term(170,160)+term(170,320)+term(630,160)+term(630,320)+T(140,245,'230 V',18,K,'middle')+T(665,245,'12 V',18,K,'middle')},
+ {k:'multi',n:'Monofásico multitoma',d:'Sus devanados tienen <b>varias tomas</b> (salidas intermedias) para elegir la tensión.',g:()=>{let s=core(260,90,280,300,55)+coil(287,160,160,70,P,9)+coil(513,160,160,70,S,9)+wire('M252 160H170 M252 320H170')+term(170,160)+term(170,320)+T(140,245,'230 V');
+   [['0 V',320],['6 V',260],['12 V',210],['24 V',160]].forEach(([l,y])=>{s+=wire(`M548 ${y}H640`)+term(640,y)+T(655,y+6,l,16,K,'start');});return s;}},
+ {k:'trif',n:'Trifásico',d:'Tiene <b>3 bobinas en el primario y 3 en el secundario</b>, una por fase. Se conectan en estrella, triángulo o zig-zag.',g:()=>{let s='';
+   ['L1','L2','L3'].forEach((l,i)=>{const x=250+i*150;s+=`<path d="M${x-40} 110 q15 10 0 20 q15 10 0 20 q15 10 0 20 q15 10 0 20 q15 10 0 20" fill="none" stroke="${P}" stroke-width="5"/><path d="M${x+40} 110 q-15 10 0 20 q-15 10 0 20 q-15 10 0 20 q-15 10 0 20 q-15 10 0 20" fill="none" stroke="${S}" stroke-width="5"/><line x1="${x-3}" y1="100" x2="${x-3}" y2="220" stroke="${K}" stroke-width="3"/><line x1="${x+3}" y1="100" x2="${x+3}" y2="220" stroke="${K}" stroke-width="3"/>`+T(x,260,'fase '+(i+1),15,'var(--muted)');});
+   return s+T(400,330,'3 bobinas primarias + 3 secundarias',17)+T(400,360,'(primario en estrella, triángulo o zig-zag)',15,'var(--muted)');}},
+ {k:'col',n:'Monofásico de columnas',d:'Cada devanado va en <b>una columna distinta</b> del núcleo. Ocupa más; se usa poco.',g:()=>core(250,80,300,320,60)+block(280,140,200,90,P)+block(520,140,200,90,S)+T(280,440,'primario')+T(520,440,'secundario')},
+ {k:'acor',n:'Monofásico acorazado',d:'Los dos devanados van en la <b>columna central</b>, que es el doble de ancha que las de los lados. <b>El más usado</b> en monofásicos.',g:()=>`<path d="M200 80h400v320h-400z M250 130v220h100v-220z M450 130v220h100v-220z" fill="${FE}" fill-rule="evenodd" stroke="${K}" stroke-width="1.5"/>`+block(400,145,190,150,S)+block(400,160,160,118,P)+`<rect x="350" y="130" width="100" height="220" fill="${FE}" stroke="${K}" stroke-width="1.5"/>`+T(400,440,'columna central doble: primario dentro, secundario fuera',15)},
+ {k:'t3',n:'Trifásico de 3 columnas',d:'<b>Una fase en cada columna</b>: en cada una van su primario y su secundario. <b>El más usado</b> en trifásicos.',g:()=>{let s=`<path d="M160 80h480v320h-480z M215 135v210h160v-210z M425 135v210h160v-210z" fill="${FE}" fill-rule="evenodd" stroke="${K}" stroke-width="1.5"/>`;[187,400,613].forEach((x,i)=>{s+=block(x,140,200,100,S)+block(x,160,160,78,P)+`<rect x="${x-27}" y="135" width="54" height="210" fill="${FE}" stroke="${K}" stroke-width="1.2"/>`+T(x,440,'fase '+(i+1),15,'var(--muted)');});return s;}},
+ {k:'t5',n:'Trifásico de 5 columnas',d:'Los devanados van en las <b>3 columnas centrales</b>; las de los extremos solo sirven para cerrar el flujo.',g:()=>{let s=`<path d="M110 80h580v320h-580z M150 125v230h110v-230z M310 125v230h70v-230z M420 125v230h70v-230z M540 125v230h110v-230z" fill="${FE}" fill-rule="evenodd" stroke="${K}" stroke-width="1.5"/>`;
+   [285,400,515].forEach(x=>{s+=block(x,140,200,70,S)+block(x,155,170,54,P)+`<rect x="${x-25}" y="125" width="50" height="230" fill="${FE}" stroke="${K}" stroke-width="1.2"/>`;});return s+T(130,440,'cierra',14,'var(--muted)')+T(670,440,'cierra',14,'var(--muted)')+T(400,440,'3 columnas con devanados',15);}},
+ {k:'tacor',n:'Trifásico acorazado',d:'Es como <b>tres acorazados unidos</b>. Se usa para <b>muy alta potencia</b> (centrales eléctricas).',g:()=>{let s='';[130,310,490].forEach((x,i)=>{s+=`<path d="M${x} 110h180v260h-180z M${x+30} 150v180h45v-180z M${x+105} 150v180h45v-180z" fill="${FE}" fill-rule="evenodd" stroke="${K}" stroke-width="1.5"/>`+block(x+90,160,160,60,S)+block(x+90,175,130,44,P)+`<rect x="${x+75}" y="150" width="30" height="180" fill="${FE}" stroke="${K}" stroke-width="1.2"/>`+T(x+90,410,'fase '+(i+1),15,'var(--muted)');});return s;}},
+ {k:'toro',n:'Toroidal',d:'El núcleo tiene forma de <b>anillo</b> (toro). Tiene más rendimiento, hace menos ruido y ocupa menos, pero es más caro.',g:()=>{let s=`<circle cx="400" cy="240" r="150" fill="${FE}" stroke="${K}" stroke-width="1.5"/><circle cx="400" cy="240" r="85" fill="var(--card)" stroke="${K}" stroke-width="1.5"/>`;
+   for(let i=0;i<18;i++){const a=(100+i*9)*Math.PI/180;s+=`<line x1="${400+75*Math.cos(a)}" y1="${240+75*Math.sin(a)}" x2="${400+162*Math.cos(a)}" y2="${240+162*Math.sin(a)}" stroke="${P}" stroke-width="6" stroke-linecap="round"/>`;}
+   for(let i=0;i<14;i++){const a=(-60+i*9)*Math.PI/180;s+=`<line x1="${400+75*Math.cos(a)}" y1="${240+75*Math.sin(a)}" x2="${400+162*Math.cos(a)}" y2="${240+162*Math.sin(a)}" stroke="${S}" stroke-width="6" stroke-linecap="round"/>`;}
+   return s+T(170,245,'primario',16,'#C0602B')+T(640,245,'secundario',16,'var(--force)');}},
+ {k:'auto',n:'Autotransformador',d:'Tiene <b>un solo devanado</b> con una <b>toma común</b> para el primario y el secundario. Una parte del devanado es de los dos a la vez.',g:()=>core(300,80,200,320,55)+coil(327,120,240,70,P,14)+`<rect x="292" y="245" width="70" height="120" fill="${S}" opacity=".35"/>`+wire('M292 120H180 M292 360H180 M362 245H620 M362 360H620')+term(180,120)+term(180,360)+term(620,245)+term(620,360)+T(150,245,'entrada')+T(650,305,'salida',16,K,'start')+T(420,255,'toma',15,'var(--muted)','start')},
+ {k:'variac',n:'Autotransformador regulable (Variac)',d:'Es un autotransformador en el que la toma es una <b>escobilla que se mueve</b>: permite <b>regular la tensión</b> de salida. <b>Arrastra la escobilla.</b>',g:()=>{const y=vy;let s=core(300,80,200,320,55)+coil(327,120,240,70,P,14)+wire('M292 120H180 M292 360H180')+term(180,120)+term(180,360)+T(150,245,'230 V');
+   s+=`<g id="brush" style="cursor:ns-resize"><rect x="360" y="${y-10}" width="90" height="20" fill="transparent"/><polygon points="365,${y} 385,${y-10} 385,${y+10}" fill="${K}"/><line x1="385" y1="${y}" x2="440" y2="${y}" stroke="${K}" stroke-width="3"/></g>`+wire(`M440 ${y}H620 M362 360H620`)+term(620,y)+term(620,360);
+   const v=Math.round(230*(360-y)/240);s+=`<rect x="580" y="410" width="130" height="46" rx="8" fill="#1d2b22"/><text x="645" y="442" text-anchor="middle" font-size="24" font-weight="700" fill="#8CF08C" font-family="monospace">${v} V</text>`+T(470,250,'↕',22,'var(--muted)');return s;}},
+];
+let sel='mono', quiz=false, qAns=null, ok=0, tot=0, vy=200;
+function show(k){const t=TYPES.find(x=>x.k===k);$('gA').innerHTML=t.g()+(quiz?'':T(400,40,t.n,24,'var(--acc)'));
+  if(!quiz)$('exp').innerHTML='<h2>'+t.n+'</h2><p>'+t.d+'</p>';
+  const br=document.getElementById('brush');if(br){let dr=false;const sv=$('sv');
+    br.onpointerdown=e=>{dr=true;sv.setPointerCapture(e.pointerId);};
+    sv.onpointermove=e=>{if(!dr)return;const p=sv.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const q=p.matrixTransform(sv.getScreenCTM().inverse());vy=Math.max(125,Math.min(355,q.y));show('variac');};
+    sv.onpointerup=()=>dr=false;}}
+function list(){$('list').innerHTML=TYPES.map(t=>`<button data-k="${t.k}" aria-pressed="${t.k===sel}" style="font:inherit;font-size:.9rem;font-weight:700;padding:8px;border-radius:9px;border:2px solid var(--line);background:${t.k===sel?'var(--acc)':'var(--card)'};color:${t.k===sel?'#fff':'var(--ink)'};cursor:pointer;text-align:left">${t.n}</button>`).join('');
+  document.querySelectorAll('#list button').forEach(b=>b.onclick=()=>{sel=b.dataset.k;list();show(sel);});}
+function newQ(){const pool=TYPES.filter(t=>t.k!=='sim');qAns=pool[Math.floor(Math.random()*pool.length)];
+  const opts=[qAns];while(opts.length<3){const c=pool[Math.floor(Math.random()*pool.length)];if(!opts.includes(c))opts.push(c);}opts.sort(()=>Math.random()-.5);
+  show(qAns.k);$('qres').innerHTML='';$('exp').innerHTML='<h2>Modo examen</h2><p>Mira el dibujo y elige su nombre. Después pulsa en "Otra" para seguir.</p>';
+  $('opts').innerHTML=opts.map(o=>`<button data-k="${o.k}" style="font:inherit;font-weight:700;padding:10px;border-radius:9px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;text-align:left">${o.n}</button>`).join('');
+  document.querySelectorAll('#opts button').forEach(b=>b.onclick=()=>{if($('qres').dataset.done==='1')return;tot++;const good=b.dataset.k===qAns.k;if(good)ok++;
+    b.style.background=good?'#3F8F2A':'#D9362E';b.style.color='#fff';$('qres').dataset.done='1';
+    $('qres').innerHTML=(good?'¡Correcto!':'No: es el <b>'+qAns.n+'</b>.')+' <button id="bNext" style="font:inherit;font-weight:700;margin-left:6px;padding:6px 12px;border-radius:8px;border:2px solid var(--acc);background:var(--card);color:var(--acc);cursor:pointer">Otra</button>';
+    $('score').textContent=`Aciertos: ${ok} de ${tot}`;$('exp').innerHTML='<h2>'+qAns.n+'</h2><p>'+qAns.d+'</p>';$('bNext').onclick=()=>{$('qres').dataset.done='0';newQ();};});}
+$('bQuiz').onclick=()=>{quiz=!quiz;$('bQuiz').textContent=quiz?'Volver a la lista':'Modo examen: ¿cómo se llama?';$('list').style.display=quiz?'none':'grid';$('quiz').style.display=quiz?'':'none';
+  if(quiz){ok=0;tot=0;$('score').textContent='';$('qres').dataset.done='0';newQ();}else show(sel);};
+list();show(sel);
+
+</script>
+</body>
+</html>

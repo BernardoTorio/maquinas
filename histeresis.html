@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Histéresis magnética</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{font:inherit;font-weight:700;padding:10px 18px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--acc);background:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage>svg{display:block;width:100%;height:auto;touch-action:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button{font:inherit;font-weight:700;padding:12px 14px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 140px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.sl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700}
+input[type=range]{width:100%;accent-color:var(--acc)}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box ul{margin:0;padding-left:18px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.fl{fill:none;stroke:var(--field);stroke-width:2;stroke-linecap:round}
+.fl.run{stroke-dasharray:9 9;animation:run .9s linear infinite}
+@keyframes run{to{stroke-dashoffset:-18}}
+.arr{fill:var(--field)}
+@media (prefers-reduced-motion:reduce){.fl.run{animation:none}}
+
+.back{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 1 · Punto 1.10</small><h1>Histéresis magnética</h1><p class="sub">Conecta la corriente alterna y mira cómo se dibuja el ciclo. Luego quita la corriente: ¿se desimana el material?</p></header>
+  
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 800 480" role="img" aria-label="Ciclo de histéresis y dominios del material"><g id="gA"></g></svg><div class="legend"><span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#C0602B" stroke-width="3"/></svg> ciclo de histéresis</span>
+<span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#8a939c" stroke-width="2" stroke-dasharray="4 4"/></svg> primera imanación</span>
+<span><svg width="18" height="14"><rect x="1" y="1" width="16" height="12" fill="#C0602B" opacity=".25"/></svg> área = calor perdido en cada ciclo</span></div></div>
+      <div class="boxes"><div class="box" id="exp"></div>
+<div class="box blue"><h2>Puntos del ciclo</h2><ul>
+<li><b>M</b> y <b>m</b>: saturación, positiva y negativa.</li>
+<li><b>B<sub>r</sub> (remanencia)</b>: el magnetismo que le queda al material cuando la corriente vale cero.</li>
+<li><b>H<sub>c</sub> (campo coercitivo)</b>: el campo en sentido contrario que hace falta para quitar la remanencia.</li>
+<li>Con corriente alterna de 50 Hz el ciclo se recorre <b>50 veces por segundo</b>. En cada vuelta se pierde energía en forma de calor: cuanto más <b>ancho</b> el ciclo, más calor.</li>
+<li><b>Blandos</b> (ciclo estrecho): núcleos de trafos, motores y contactores. <b>Duros</b> (ciclo ancho): imanes permanentes.</li></ul></div></div>
+    </div>
+    <aside class="panel"><div class="ctrl">
+  <button id="bRun" class="main">Conectar corriente alterna</button>
+  <button id="bOff">Quitar la corriente</button>
+</div>
+<div class="ctrl">
+  <button data-m="blando" aria-pressed="true">Material blando</button>
+  <button data-m="duro" aria-pressed="false">Material duro</button>
+</div>
+<div class="inset" style="padding:10px 12px">
+  <div style="font-weight:700;margin-bottom:4px">Calor en el núcleo</div>
+  <div style="height:16px;background:var(--line);border-radius:8px;overflow:hidden"><i id="heat" style="display:block;height:100%;width:0;background:linear-gradient(90deg,#F2B400,#D9362E);transition:width .4s"></i></div>
+  <p class="cap" id="cap"></p></div></aside>
+  </div>
+</main>
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;};
+
+const MT={blando:{hc:0.12,a:0.16,n:'blando'},duro:{hc:0.45,a:0.2,n:'duro'}};
+let m='blando', state='virgin', H=0, dir=1, Bv=0, th=0, trace=[], virgin=[], cycles=0, last=performance.now(), off=false;
+const BS=1.5, X0=260,Y0=240,SX=200,SY=140;
+const px=h=>X0+h*SX, py=b=>Y0-b*SY;
+function Bup(h){const M=MT[m];return BS*Math.tanh((h-M.hc)/M.a);}
+function Bdn(h){const M=MT[m];return BS*Math.tanh((h+M.hc)/M.a);}
+let seed=9;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const DOM=[];for(let r=0;r<6;r++)for(let c=0;c<4;c++)DOM.push({x:610+c*40,y:120+r*40,a:rnd()*360});
+function Bnow(){
+  if(state==='virgin') return BS*Math.tanh(H/0.3)*0.95;
+  return dir>0?Math.min(Bup(H),Bprev(H)):Math.max(Bdn(H),Bprev(H));
+}
+let Bmem=0; function Bprev(){return Bmem;}
+function step(dt){
+  if(state==='stop')return;
+  if(off){ // la corriente baja hasta cero y se queda
+    const h2=H*Math.max(0,1-dt*2.5); moveTo(h2); if(Math.abs(H)<0.004){moveTo(0);state='stop';} return;}
+  th+=dt*1.4; const h2=Math.sin(th); moveTo(h2);
+}
+function moveTo(h2){
+  const d=Math.sign(h2-H)||dir;
+  if(state==='virgin'&&h2<H){state='loop';}
+  if(d!==dir){dir=d;}
+  H=h2;
+  let b;
+  if(state==='virgin'){b=BS*Math.tanh(H/0.3)*0.96;virgin.push([H,b]);}
+  else{ b=dir>0?Bup(H):Bdn(H); // rama del ciclo
+    // transición suave desde el valor anterior
+    b=Bmem+(b-Bmem)*0.35; }
+  Bmem=b;
+  if(state!=='virgin'){trace.push([H,b]);if(trace.length>900)trace.shift();}
+}
+function draw(){
+  let s='';
+  const M=MT[m];
+  // ejes
+  s+=`<line x1="${X0-230}" y1="${Y0}" x2="${X0+230}" y2="${Y0}" stroke="var(--ink)" stroke-width="2"/><line x1="${X0}" y1="${Y0+200}" x2="${X0}" y2="${Y0-210}" stroke="var(--ink)" stroke-width="2"/>`;
+  s+=`<text x="${X0+228}" y="${Y0+22}" text-anchor="end" font-size="15" fill="var(--ink)">H</text><text x="${X0+10}" y="${Y0-196}" font-size="15" fill="var(--ink)">B</text>`;
+  // ciclo completo de referencia y área (tras la primera vuelta)
+  if(cycles>0||state==='stop'&&trace.length>200){
+    const up=[],dn=[];for(let h=-1;h<=1.0001;h+=0.02){up.push([h,Bup(h)]);dn.push([h,Bdn(h)]);}
+    const poly=up.concat(dn.reverse()).map(p=>`${px(p[0]).toFixed(1)},${py(p[1]).toFixed(1)}`).join(' ');
+    s+=`<polygon points="${poly}" fill="#C0602B" opacity=".15"/>`;
+    // puntos notables
+    const br=Bdn(0), hc=M.hc;
+    const mk=(x,y,t,dx,dy)=>`<circle cx="${x}" cy="${y}" r="5.5" fill="var(--card)" stroke="#C0602B" stroke-width="2.5"/><text x="${x+dx}" y="${y+dy}" font-size="15" font-weight="700" fill="var(--ink)">${t}</text>`;
+    s+=mk(px(0),py(br),'B<tspan font-size="11" dy="4">r</tspan>',-30,-6)+mk(px(0),py(-br),'−B<tspan font-size="11" dy="4">r</tspan>',8,18);
+    s+=mk(px(-hc),py(0),'−H<tspan font-size="11" dy="4">c</tspan>',-34,-8)+mk(px(hc),py(0),'H<tspan font-size="11" dy="4">c</tspan>',8,18);
+    s+=mk(px(1),py(Bup(1)),'M',8,-4)+mk(px(-1),py(Bdn(-1)),'m',-20,16);
+  }
+  if(virgin.length>1)s+=`<polyline points="${virgin.map(p=>`${px(p[0]).toFixed(1)},${py(p[1]).toFixed(1)}`).join(' ')}" fill="none" stroke="#8a939c" stroke-width="2.5" stroke-dasharray="5 5"/>`;
+  if(trace.length>1)s+=`<polyline points="${trace.map(p=>`${px(p[0]).toFixed(1)},${py(p[1]).toFixed(1)}`).join(' ')}" fill="none" stroke="#C0602B" stroke-width="3.5"/>`;
+  s+=`<circle cx="${px(H)}" cy="${py(Bmem)}" r="9" fill="#C0602B" stroke="var(--card)" stroke-width="2.5"/>`;
+  // dominios
+  const f=Bmem/BS;
+  s+=`<text x="670" y="82" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">Dentro del material</text><rect x="585" y="96" width="170" height="250" rx="10" fill="none" stroke="var(--line)" stroke-width="2"/>`;
+  for(const d of DOM){const tgt=f>=0?0:180;let da=((tgt-d.a+540)%360)-180;const a=d.a+da*Math.min(1,Math.abs(f));
+    s+=`<g transform="translate(${d.x} ${d.y}) rotate(${a.toFixed(1)})"><polygon points="14,0 -10,-6 -10,6" fill="#D9362E"/><rect x="-14" y="-3" width="6" height="6" fill="#8a939c"/></g>`;}
+  const hw=Math.abs(H);
+  s+=`<text x="670" y="372" text-anchor="middle" font-size="13" fill="var(--muted)">corriente de la bobina</text>`;
+  if(hw>0.02){const x1=670-hw*80,x2=670+hw*80;s+=H>0?`<line x1="${x1}" y1="395" x2="${x2-10}" y2="395" stroke="var(--field)" stroke-width="4"/><polygon points="${x2},395 ${x2-14},388 ${x2-14},402" fill="var(--field)"/>`:`<line x1="${x1+10}" y1="395" x2="${x2}" y2="395" stroke="var(--field)" stroke-width="4"/><polygon points="${x1},395 ${x1+14},388 ${x1+14},402" fill="var(--field)"/>`;}
+  else s+=`<text x="670" y="400" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">cero</text>`;
+  $('gA').innerHTML=s;
+}
+let lastT='';
+function texts(){
+  let t;
+  if(state==='stop'&&trace.length>0) t=`Has quitado la corriente, pero el material <b>no se ha desimanado del todo</b>: se ha quedado en la <b>remanencia (B<sub>r</sub>)</b>. Los "imanes" internos siguen casi todos colocados. Para desimanarlo haría falta un campo al revés: el <b>campo coercitivo</b>. ${m==='duro'?'En un material duro la remanencia es grande y difícil de quitar: así son los imanes permanentes.':''}`;
+  else if(state==='virgin') t='El material empieza sin imanar. Al subir la corriente por primera vez sigue la curva de <b>primera imanación</b> (de trazos) hasta saturarse en <b>M</b>.';
+  else if(state==='loop') t='Con corriente alterna, la corriente sube y baja sin parar y la inducción dibuja un <b>ciclo</b>. Al bajar, la inducción <b>no vuelve por el mismo camino</b>: va con retraso. Ese retraso es la <b>histéresis</b>. A los "imanes" internos les cuesta girar y en cada vuelta se pierde energía que calienta el núcleo.';
+  else t='Pulsa <b>Conectar corriente alterna</b> y mira cómo se dibuja la curva.';
+  if(t!==lastT){$('exp').innerHTML='<h2>Qué pasa</h2><p>'+t+'</p>';lastT=t;}
+  const heat=state==='loop'&&!off?(m==='duro'?95:30):0;
+  $('heat').style.width=heat+'%';
+  $('cap').textContent=heat?(m==='duro'?'Ciclo ancho: mucho calor. No sirve para núcleos.':'Ciclo estrecho: poco calor. Ideal para núcleos.'):'Sin corriente alterna no se calienta.';
+}
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;
+  if(state==='virgin'||state==='loop'){const before=th;step(dt);if(state==='loop'&&Math.floor((th-Math.PI/2)/(2*Math.PI))>Math.floor((before-Math.PI/2)/(2*Math.PI)))cycles++;}
+  else if(state==='stop'){}
+  draw();texts();requestAnimationFrame(frame);}
+function reset(){state='idle';H=0;Bmem=0;th=0;trace=[];virgin=[];cycles=0;off=false;dir=1;}
+$('bRun').onclick=()=>{if(state==='idle'||state==='stop'&&trace.length===0){reset();state='virgin';}else if(state==='stop'){off=false;state='loop';th=Math.asin(0);}
+  off=false;$('bRun').textContent='Corriente alterna conectada';};
+$('bOff').onclick=()=>{if(state==='virgin'||state==='loop'){off=true;$('bRun').textContent='Volver a conectar';}};
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{m=b.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.setAttribute('aria-pressed',x===b));reset();$('bRun').textContent='Conectar corriente alterna';lastT='';});
+reset();requestAnimationFrame(frame);
+
+</script>
+</body>
+</html>

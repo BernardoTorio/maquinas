@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculadora de transformadores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{font:inherit;font-weight:700;padding:10px 18px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--acc);background:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage>svg{display:block;width:100%;height:auto;touch-action:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button{font:inherit;font-weight:700;padding:12px 14px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 140px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.sl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700}
+input[type=range]{width:100%;accent-color:var(--acc)}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box ul{margin:0;padding-left:18px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.fl{fill:none;stroke:var(--field);stroke-width:2;stroke-linecap:round}
+.fl.run{stroke-dasharray:9 9;animation:run .9s linear infinite}
+@keyframes run{to{stroke-dashoffset:-18}}
+.arr{fill:var(--field)}
+.back{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+@media (prefers-reduced-motion:reduce){.fl.run{animation:none}}
+
+.fgrid{display:grid;grid-template-columns:1fr 100px;gap:6px 10px;align-items:center;font-size:.93rem}
+.fgrid .fh{grid-column:1/-1;font-weight:700;color:var(--acc);margin-top:8px;border-bottom:1px solid var(--line)}
+.fgrid input{font:inherit;padding:6px 8px;border:2px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);width:100%}
+.fgrid input:focus{border-color:var(--acc);outline:none}
+.rt{width:100%;border-collapse:collapse;font-size:.93rem}
+.rt td,.rt th{padding:5px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+.rt td.v{font-weight:700}.rt td.v.big{font-size:1.1rem;color:var(--acc)}
+.rt .u{font-weight:400;color:var(--muted)}.rt td.fm{color:var(--muted);font-size:.82rem}
+.okb{color:var(--force);font-weight:700}.badb{color:#D9362E;font-weight:700}
+.ctrl button[aria-pressed="true"]{background:var(--acc);color:#fff}
+
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Taller · Práctica P1: cálculo y construcción de un trafo</small><h1>Calculadora de transformadores del aula</h1><p class="sub">Carrete de 40 × 40 mm. Pon la potencia, la tensión, las chapas que metes, las espiras y el hilo que tienes: salen todos los datos y si el trafo va a funcionar.</p></header>
+  
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 800 400" role="img" aria-label="Chapa E-I de 40 mm con el carrete y los bobinados a escala"><g id="gA"></g></svg><div class="legend"><span><svg width="26" height="12"><rect x="1" y="1" width="24" height="10" fill="#9aa5b1"/></svg> chapas E-I (C = 40 mm)</span>
+<span><svg width="26" height="12"><rect x="1" y="1" width="24" height="10" fill="#F2E3B3"/></svg> carrete y papel</span>
+<span><svg width="26" height="12"><rect x="1" y="1" width="24" height="10" fill="#E07A5F"/></svg> primario</span>
+<span><svg width="26" height="12"><rect x="1" y="1" width="24" height="10" fill="#7FB069"/></svg> secundario</span>
+<span>Bobinados dibujados a escala dentro de la ventana</span></div></div>
+      <div class="box" id="bNucleo" style="margin-top:16px"></div>
+      
+    </div>
+    <aside class="panel">
+<div class="ctrl" style="gap:6px" id="pre"></div>
+<div class="fgrid">
+  <div class="fh">Datos del trafo</div>
+  <label for="iS">Potencia S (VA)</label><input id="iS" type="number" min="10" max="400" step="5" value="150">
+  <label for="iV1">Tensión que ponemos al primario (V)</label><input id="iV1" type="number" min="1" step="1" value="110">
+  <label for="iB">Inducción de diseño B (T)</label><input id="iB" type="number" min="0.5" max="1.8" step="0.1" value="1.5">
+  <div class="fh">Núcleo (carrete de 40 × 40 mm)</div>
+  <label for="iE">Espesor de la chapa (mm)</label><input id="iE" type="number" min="0.2" max="1" step="0.05" value="0.5">
+  <label for="iNc">Chapas que metemos</label><input id="iNc" type="number" min="1" step="1" value="80">
+  <div class="fh" style="color:#C0602B">Primario</div>
+  <label for="iN1">Espiras que damos</label><input id="iN1" type="number" min="1" step="1" value="262">
+  <label for="iD1">Diámetro del hilo (mm)</label><input id="iD1" type="number" min="0.1" max="3" step="0.01" value="0.8">
+  <div class="fh" style="color:var(--force)">Secundario</div>
+  <label for="iN2">Espiras que damos</label><input id="iN2" type="number" min="1" step="1" value="119">
+  <label for="iD2">Diámetro del hilo (mm)</label><input id="iD2" type="number" min="0.1" max="3" step="0.01" value="1.12">
+</div>
+<details style="margin-top:10px"><summary style="cursor:pointer;font-weight:700">Más ajustes del bobinado</summary>
+<div class="fgrid" style="margin-top:8px">
+  <label for="iL">Largo útil del carrete para bobinar (mm)</label><input id="iL" type="number" min="20" max="80" step="1" value="57">
+  <label for="iP">Papel entre capas (mm)</label><input id="iP" type="number" min="0" max="1" step="0.05" value="0.1">
+</div></details>
+<details style="margin-top:8px" open><summary style="cursor:pointer;font-weight:700">¿Cuántas espiras necesito?</summary>
+<div class="fgrid" style="margin-top:8px">
+  <label for="iV2">Tensión del secundario que quiero (V)</label><input id="iV2" type="number" min="1" step="1" value="50">
+</div><p class="cap" id="need"></p>
+<div class="ctrl" style="margin-top:6px"><button id="bUse">Usar las espiras con mi núcleo</button></div></details></aside>
+  </div>
+  <div class="box" id="bBob" style="margin-top:16px"></div>
+</main>
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;};
+
+// Tablas del formulario
+const TP=[50,100,150,200,250,400,500,600,700,750,900,1000];
+const KCU=[1.15,1.08,1.07,1.06,1.05,1.04,1.04,1.04,1.03,1.03,1.03,1.02];
+const JT=[3.5,3,2.75,2.5,2.45,2.3,2.25,2.2,2.125,2.1,2.06,2];
+const ETA=[84,89,91,92,93,94,95,95,95,95,96,96];
+const K=1.1, KAP=0.9, F=50, A=40, HC=40, WALL=1.5, WIN=A/2, RHO=0.0175;
+const HILOS=[0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.1,1.2,1.3,1.4,1.5,1.6,1.8,2];
+// Trafos calculados el curso pasado + el que se construyó
+const PRE=[{n:'Trafo 1',t:'50 VA · 28/15 V',S:50,V1:28,V2:15,B:1},{n:'Trafo 2',t:'100 VA · 66/38 V',S:100,V1:66,V2:38,B:1.5},{n:'Trafo 3',t:'150 VA · 109/63 V',S:150,V1:109,V2:63,B:1.5},{n:'Trafo 4',t:'200 VA · 158/94 V',S:200,V1:158,V2:94,B:1.7},
+  {n:'Trafo construido',t:'150 VA · 110/48 V, tal como quedó',S:150,V1:110,V2:48,B:1.5,real:{E:0.5,Nc:55,N1:266,N2:115,d1:0.96,d2:1.41}}];
+const f=(v,d=2)=>isFinite(v)?v.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const val=id=>parseFloat(String($(id).value).replace(',','.'));
+const fila=S=>{let i=TP.findIndex(p=>p>=S);return i<0?TP.length-1:i;};
+function core(E,Nc){const stack=Math.min(HC,Nc*E); const gross=A*stack/100, fe=gross*KAP; return {stack,gross,fe,full:Math.floor(HC/E)};}
+function bob(N,d,L,P){const de=d*1.06, vpc=Math.max(1,Math.floor(L/de)), capas=Math.ceil(N/vpc); return {vpc,capas,esp:capas*de+capas*P};}
+function calc(){
+  const S=val('iS'),V1=val('iV1'),B=val('iB'),E=val('iE'),Nc=val('iNc'),N1=val('iN1'),N2=val('iN2'),d1=val('iD1'),d2=val('iD2'),L=val('iL'),P=val('iP'),V2w=val('iV2');
+  const i=fila(S),kcu=KCU[i],J=JT[i],eta=ETA[i]/100;
+  const Sn=K*Math.sqrt(S), Snr=Sn/KAP, c=core(E,Nc), Smax=Math.pow(core(E,c.full).fe/K,2);
+  const Vesp=4.44*F*B*c.fe/10000;               // con el hierro que hay de verdad
+  const VespM=4.44*F*B*Sn/10000;                 // con el método (Sn = 1,1·√S)
+  const N1t=N1/kcu, N2t=N2/kcu;
+  const Breal=V1/(4.44*F*N1t*c.fe/10000);        // inducción a la que trabaja con la tensión que ponemos
+  const V2=V1*N2/N1;
+  const I1=S/V1, I2=eta*S/V2;
+  const sh1=Math.PI*d1*d1/4, sh2=Math.PI*d2*d2/4, Imax1=sh1*J, Imax2=sh2*J;
+  const d1n=Math.sqrt(4*I1/J/Math.PI), d2n=Math.sqrt(4*I2/J/Math.PI);
+  const b1=bob(N1,d1,L,P), b2=bob(N2,d2,L,P), total=b1.esp+P*2+b2.esp+P, room=WIN-WALL-0.5;
+  const lm1=(2*(A+c.stack)+4*WALL*2+Math.PI*b1.esp)/1000, lm2=(2*(A+c.stack)+4*WALL*2+Math.PI*(2*b1.esp+b2.esp+2*P))/1000;
+  const R1=RHO*N1*lm1/sh1, R2=RHO*N2*lm2/sh2;
+  return {S,V1,B,E,Nc,N1,N2,d1,d2,L,P,V2w,i,kcu,J,eta,Sn,Snr,c,Smax,Vesp,VespM,N1t,N2t,Breal,V2,I1,I2,sh1,sh2,Imax1,Imax2,d1n,d2n,b1,b2,total,room,R1,R2};
+}
+const row=(l,v,u,fm)=>`<tr><td>${l}</td><td class="v">${v} <span class="u">${u}</span></td><td class="fm">${fm||''}</td></tr>`;
+const tag=(b,t1,t2)=>`<span class="${b?'okb':'badb'}">${b?'✔ '+t1:'✖ '+t2}</span>`;
+const nh=v=>HILOS.find(h=>h>=v)||2;
+function render(){
+  const r=calc();
+  if(!(r.S>0&&r.V1>0&&r.B>0&&r.E>0&&r.Nc>0&&r.N1>0&&r.N2>0&&r.d1>0&&r.d2>0)){$('bNucleo').innerHTML='<p>Rellena todos los datos.</p>';return;}
+  const coreOk=r.c.gross>=r.Snr-0.01, sat=r.Breal>1.7, hot=r.Breal>1.55;
+  $('bNucleo').innerHTML=`<h2>Núcleo</h2><table class="rt">
+  ${row('Sección que pide el método S<sub>n</sub>',f(r.Sn),'cm²','1,1 · √S')}
+  ${row('Sección real necesaria',f(r.Snr),'cm²','S<sub>n</sub> / 0,9')}
+  ${row('Fondo del paquete de chapas',f(r.c.stack,1),'mm',`${r.Nc} chapas × ${f(r.E,2)} mm (caben ${r.c.full})`)}
+  ${row('Sección de nuestro núcleo',f(r.c.gross),'cm²','40 mm × fondo')}
+  ${row('Hierro de verdad',f(r.c.fe),'cm²','× 0,9 (apilamiento)')}
+  ${row('Tensión por espira V<sub>esp</sub>',f(r.Vesp,3),'V','4,44 · f · B · hierro')}
+  ${row('<b>Inducción real</b> con '+f(r.V1,0)+' V',`<span style="color:${sat?'#D9362E':hot?'#C0602B':'var(--force)'}">${f(r.Breal)}</span>`,'T','V<sub>1</sub> / (4,44 · f · N<sub>1t</sub> · hierro)')}
+  </table>
+  <p style="margin:8px 0 0">${coreOk?tag(true,'El núcleo tiene sección suficiente para '+r.S+' VA.'):tag(false,'','Falta hierro para '+r.S+' VA: '+(r.Nc<r.c.full?'mete más chapas (hasta '+r.c.full+').':'con un carrete de 40 × 40 lo máximo son unos '+Math.floor(r.Smax/5)*5+' VA.'))}</p>
+  <p style="margin:6px 0 0">${sat?tag(false,'','<b>El núcleo se satura</b>: la corriente de vacío se dispara y el trafo se calienta. Faltan espiras en el primario o faltan chapas.'):hot?'<span style="color:#C0602B;font-weight:700">⚠ Trabaja muy cerca de la saturación: corriente de vacío alta.</span>':tag(true,'La inducción está bien.')}</p>
+  <p class="cap">Tablas usadas (fila de ${TP[r.i]} VA): K<sub>cu</sub> = ${f(r.kcu)}, J = ${f(r.J,3)} A/mm², rendimiento = ${Math.round(r.eta*100)} %. Con este carrete, lleno de chapas, se llega a unos ${Math.floor(r.Smax/5)*5} VA.</p>`;
+  $('bBob').innerHTML=`<h2>Bobinados</h2><table class="rt">
+  <tr><th></th><th style="color:#C0602B">Primario</th><th style="color:var(--force)">Secundario</th></tr>
+  <tr><td>Espiras que damos (teóricas = N / K<sub>cu</sub>)</td><td class="v">${r.N1} <span class="u">(${f(r.N1t,0)})</span></td><td class="v">${r.N2} <span class="u">(${f(r.N2t,0)})</span></td></tr>
+  <tr><td><b>Tensión</b></td><td class="v big">${f(r.V1,1)} V</td><td class="v big">${f(r.V2,1)} V</td></tr>
+  <tr><td>Corriente (S/V<sub>1</sub>; rend·S/V<sub>2</sub>)</td><td class="v">${f(r.I1)} A</td><td class="v">${f(r.I2)} A</td></tr>
+  <tr><td>Hilo que tenemos</td><td class="v">Ø ${f(r.d1)} · ${f(r.sh1,3)} mm²</td><td class="v">Ø ${f(r.d2)} · ${f(r.sh2,3)} mm²</td></tr>
+  <tr><td>Corriente máxima del hilo (S<sub>hilo</sub> · J)</td><td class="v">${f(r.Imax1)} A</td><td class="v">${f(r.Imax2)} A</td></tr>
+  <tr><td>Hilo necesario (I / J)</td><td class="v">Ø ${f(r.d1n)} <span class="u">(comercial ${f(nh(r.d1n))})</span></td><td class="v">Ø ${f(r.d2n)} <span class="u">(comercial ${f(nh(r.d2n))})</span></td></tr>
+  <tr><td></td><td>${tag(r.Imax1>=r.I1,'vale','muy fino')}</td><td>${tag(r.Imax2>=r.I2,'vale','muy fino')}</td></tr>
+  <tr><td>Vueltas por capa · capas</td><td class="v">${r.b1.vpc} · ${r.b1.capas}</td><td class="v">${r.b2.vpc} · ${r.b2.capas}</td></tr>
+  <tr><td>Grueso del bobinado</td><td class="v">${f(r.b1.esp,1)} mm</td><td class="v">${f(r.b2.esp,1)} mm</td></tr>
+  <tr><td>Resistencia aproximada del devanado</td><td class="v">${f(r.R1)} Ω</td><td class="v">${f(r.R2)} Ω</td></tr>
+  </table>
+  <p style="margin:8px 0 0">${r.total<=r.room?tag(true,`Cabe en la ventana: ${f(r.total,1)} mm de ${f(r.room,1)} mm libres.`):tag(false,'',`No cabe: el bobinado ocupa ${f(r.total,1)} mm y en la ventana solo hay ${f(r.room,1)} mm.`)}</p>
+  <p class="cap">Relación de transformación: ${f(r.V1/r.V2)} (${r.V1>=r.V2?'reductor':'elevador'}). La resistencia es orientativa, para compararla con la que midáis con el polímetro.</p>`;
+  // espiras necesarias
+  const N1n=Math.ceil(r.V1/r.Vesp*r.kcu), N2n=Math.ceil(r.V2w/r.Vesp*r.kcu), N1m=Math.ceil(r.V1/r.VespM*r.kcu), N2m=Math.ceil(r.V2w/r.VespM*r.kcu);
+  $('need').innerHTML=`Con <b>tu núcleo</b> (${f(r.c.fe)} cm² de hierro): primario <b>${N1n}</b> y secundario <b>${N2n}</b> espiras.<br>Con el <b>método del formulario</b> (S<sub>n</sub> = 1,1·√S): primario ${N1m} y secundario ${N2m}.<br>Hilo comercial mínimo: primario Ø ${f(nh(Math.sqrt(4*(r.S/r.V1)/r.J/Math.PI)))} mm · secundario Ø ${f(nh(Math.sqrt(4*(r.eta*r.S/r.V2w)/r.J/Math.PI)))} mm.`;
+  draw(r);
+}
+function draw(r){
+  const k=3.1, X=400-60*k, Y=40, c=40*k;
+  let s='';
+  s+=`<path d="M${X} ${Y}h${120*k}v${80*k}h${-20*k}v${-60*k}h${-20*k}v${60*k}h${-40*k}v${-60*k}h${-20*k}v${60*k}h${-20*k}z" fill="#9aa5b1" stroke="var(--ink)" stroke-width="1.5"/>`;
+  s+=`<rect x="${X}" y="${Y+80*k+4}" width="${120*k}" height="${20*k}" fill="#9aa5b1" stroke="var(--ink)" stroke-width="1.5"/>`;
+  // ventanas: carrete + primario + secundario (a escala; si no cabe, se sale en rojo)
+  for(const side of [-1,1]){
+    const col=side<0?X+40*k:X+80*k; // borde de la columna central
+    const dir=side<0?-1:1;
+    const x=w=>side<0?col-w*k:col; // devuelve x de un rectángulo que crece hacia fuera
+    let acc=0; const put=(w,fill,op=1)=>{const x0=side<0?col-(acc+w)*k:col+acc*k;s+=`<rect x="${x0}" y="${Y+20*k+2}" width="${w*k}" height="${60*k-4}" fill="${fill}" opacity="${op}" stroke="var(--ink)" stroke-width=".6"/>`;acc+=w;};
+    put(WALL,'#F2E3B3');put(r.P*2,'#F2E3B3');put(Math.min(r.b1.esp,40),'#E07A5F');put(r.P,'#F2E3B3');put(Math.min(r.b2.esp,40),'#7FB069');
+    if(r.total>r.room){const xs=side<0?col-WIN*k:col+WIN*k;s+=`<line x1="${xs}" y1="${Y+18*k}" x2="${xs}" y2="${Y+82*k}" stroke="#D9362E" stroke-width="3" stroke-dasharray="6 4"/>`;}
+  }
+  const dim=(x1,y1,x2,y2,t,vert)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--acc)" stroke-width="1.5" marker-start="url(#ar)" marker-end="url(#ar)"/><text x="${(x1+x2)/2+(vert?8:0)}" y="${(y1+y2)/2+(vert?4:-6)}" ${vert?'':'text-anchor="middle"'} font-size="14" font-weight="700" fill="var(--acc)">${t}</text>`;
+  s=`<defs><marker id="ar" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9z" fill="var(--acc)"/></marker></defs>`+s;
+  s+=dim(X+40*k,Y-12,X+80*k,Y-12,'C = 40 mm')+dim(X+80*k,Y-12,X+100*k,Y-12,'20');
+  s+=dim(X+120*k+16,Y,X+120*k+16,Y+80*k,'80 mm',true)+dim(X-16,Y+20*k,X-16,Y+80*k,'',true)+`<text x="${X-22}" y="${Y+50*k}" text-anchor="end" font-size="14" font-weight="700" fill="var(--acc)">ventana 60</text>`;
+  s+=`<text x="400" y="${Y+100*k+34}" text-anchor="middle" font-size="15" fill="var(--muted)">Paquete de ${r.Nc} chapas de ${f(r.E,2)} mm = ${f(r.c.stack,1)} mm de fondo (el carrete admite 40 mm)</text>`;
+  $('gA').innerHTML=s;
+}
+$('pre').innerHTML=PRE.map((p,i)=>`<button data-p="${i}" style="flex:1 1 45%;padding:8px 10px;font-size:.88rem">${p.n}<br><span style="font-weight:400">${p.t}</span></button>`).join('');
+document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const p=PRE[+b.dataset.p];
+  $('iS').value=p.S;$('iB').value=p.B;$('iV1').value=p.V1;$('iV2').value=p.V2;
+  if(p.real){const q=p.real;$('iE').value=q.E;$('iNc').value=q.Nc;$('iN1').value=q.N1;$('iN2').value=q.N2;$('iD1').value=q.d1;$('iD2').value=q.d2;}
+  else{ // como en el método: carrete de 40, chapas de 0,35 mm, las justas para la sección que pide
+    const E=0.35;$('iE').value=E;const i=fila(p.S),Snr=K*Math.sqrt(p.S)/KAP;$('iNc').value=Math.min(Math.floor(HC/E),Math.ceil(Snr*100/A/E));
+    const r=calc();$('iN1').value=Math.ceil(p.V1/r.Vesp*KCU[i]);$('iN2').value=Math.ceil(p.V2/r.Vesp*KCU[i]);
+    $('iD1').value=nh(Math.sqrt(4*(p.S/p.V1)/JT[i]/Math.PI));$('iD2').value=nh(Math.sqrt(4*(ETA[i]/100*p.S/p.V2)/JT[i]/Math.PI));}
+  document.querySelectorAll('[data-p]').forEach(x=>x.setAttribute('aria-pressed',x===b));render();});
+$('bUse').onclick=()=>{const r=calc();$('iN1').value=Math.ceil(r.V1/r.Vesp*r.kcu);$('iN2').value=Math.ceil(r.V2w/r.Vesp*r.kcu);render();};
+document.querySelectorAll('input').forEach(x=>x.addEventListener('input',render));
+document.querySelector('[data-p="4"]').click();
+
+</script>
+</body>
+</html>

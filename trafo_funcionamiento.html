@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Principio de funcionamiento del transformador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{font:inherit;font-weight:700;padding:10px 18px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--acc);background:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage>svg{display:block;width:100%;height:auto;touch-action:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button{font:inherit;font-weight:700;padding:12px 14px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 140px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.sl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700}
+input[type=range]{width:100%;accent-color:var(--acc)}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box ul{margin:0;padding-left:18px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.fl{fill:none;stroke:var(--field);stroke-width:2;stroke-linecap:round}
+.fl.run{stroke-dasharray:9 9;animation:run .9s linear infinite}
+@keyframes run{to{stroke-dashoffset:-18}}
+.arr{fill:var(--field)}
+@media (prefers-reduced-motion:reduce){.fl.run{animation:none}}
+
+.back{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 3 · Punto 3.12</small><h1>Cómo funciona un transformador</h1><p class="sub">Conecta el transformador, cambia las espiras del secundario y prueba después con corriente continua.</p></header>
+  
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 800 480" role="img" aria-label="Transformador con primario, secundario, núcleo y bombilla"><g id="gA"></g></svg><div class="legend"><span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#2E75B6" stroke-width="3" stroke-dasharray="6 5"/></svg> flujo en el núcleo</span>
+<span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#D9362E" stroke-width="3"/></svg> primario</span>
+<span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#3F8F2A" stroke-width="3"/></svg> secundario</span></div></div>
+      <div class="boxes"><div class="box" id="exp"></div>
+<div class="box blue"><h2>Cómo funciona</h2><ul>
+<li>La corriente alterna del <b>primario</b> crea en el núcleo un <b>flujo que cambia</b> sin parar (1ª ley).</li>
+<li>El núcleo de hierro lleva ese flujo hasta el <b>secundario</b>. Entre primario y secundario <b>no hay unión eléctrica</b>: lo que pasa es flujo.</li>
+<li>El flujo que cambia <b>induce una tensión</b> en el secundario (3ª ley).</li>
+<li>Si el secundario tiene <b>más espiras</b> que el primario, da <b>más tensión</b> (elevador). Si tiene <b>menos</b>, da menos (reductor).</li></ul></div></div>
+    </div>
+    <aside class="panel"><div class="ctrl"><button id="bOn" class="main">Conectar</button>
+<button data-f="ca" aria-pressed="true">Corriente alterna</button><button data-f="cc" aria-pressed="false">Corriente continua</button></div>
+<div class="sl"><label for="rN1">Espiras del primario</label><input id="rN1" type="range" min="100" max="600" step="50" value="400">
+<label for="rN2">Espiras del secundario</label><input id="rN2" type="range" min="50" max="800" step="50" value="200"></div>
+<div class="inset"><svg id="osc" viewBox="0 0 300 150" aria-hidden="true"></svg><p class="cap">Tensión del <b style="color:#D9362E">primario</b> y del <b style="color:var(--force)">secundario</b>.</p></div></aside>
+  </div>
+</main>
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;};
+
+let on=false, f='ca', t=0, tOn=0, last=performance.now();
+const V1=230;
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;if(on)tOn+=dt;draw();requestAnimationFrame(frame);}
+function vals(){
+  const N1=+$('rN1').value,N2=+$('rN2').value;
+  if(!on)return {N1,N2,phi:0,v2:0,V2:0,dir:0};
+  if(f==='ca'){const s=Math.sin(t*3);return {N1,N2,phi:s,v2:s,V2:Math.round(V1*N2/N1),dir:Math.sign(s)};}
+  const e=Math.exp(-tOn*4); // continua: solo un pico al conectar
+  return {N1,N2,phi:1,v2:e,V2:Math.round(V1*N2/N1*e),dir:1};
+}
+function coil(x,y,h,n,col){let s='';const k=Math.max(4,Math.min(16,Math.round(n/40)));for(let i=0;i<k;i++){const yy=y+i*h/(k-1);s+=`<rect x="${x-6}" y="${yy-3}" width="${62}" height="6" rx="3" fill="${col}" stroke="var(--ink)" stroke-width=".6"/>`;}return s;}
+function draw(){
+  const v=vals();let s='';
+  const x0=260,y0=80,W=280,H=300,t2=56;
+  s+=`<path d="M${x0} ${y0}h${W}v${H}h${-W}z M${x0+t2} ${y0+t2}v${H-2*t2}h${W-2*t2}v${-(H-2*t2)}z" fill="#9aa5b1" fill-rule="evenodd" stroke="var(--ink)" stroke-width="1.5"/>`;
+  if(on&&Math.abs(v.phi)>0.02){
+    const op=f==='ca'?Math.abs(v.phi):1;
+    s+=`<path d="M${x0+t2/2} ${y0+H-t2/2}V${y0+t2/2}H${x0+W-t2/2}V${y0+H-t2/2}Z" fill="none" stroke="var(--field)" stroke-width="4" stroke-dasharray="12 9" opacity="${(0.25+0.75*op).toFixed(2)}" style="${f==='ca'?`animation:run .7s linear infinite ${v.dir>0?'':'reverse'}`:''}"/>`;
+    s+=`<text x="${x0+W/2}" y="${y0+t2/2+5}" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">flujo${f==='cc'?' (fijo)':''}</text>`;
+  }
+  s+=coil(x0,y0+t2+10,H-2*t2-20,v.N1,'#E07A5F')+coil(x0+W-t2,y0+t2+10,H-2*t2-20,v.N2,'#7FB069');
+  // fuente y cables del primario
+  s+=`<path d="M${x0-6} ${y0+t2+10}H150V${y0+t2+60} M150 ${y0+H-t2-60}V${y0+H-t2-10}H${x0-6}" fill="none" stroke="#D9362E" stroke-width="3"/>`;
+  s+=`<circle cx="150" cy="${y0+H/2}" r="44" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/>`;
+  s+=f==='ca'?`<path d="M122 ${y0+H/2} q14 -26 28 0 t28 0" fill="none" stroke="var(--ink)" stroke-width="3"/>`:`<line x1="126" y1="${y0+H/2-6}" x2="174" y2="${y0+H/2-6}" stroke="var(--ink)" stroke-width="3"/><line x1="126" y1="${y0+H/2+6}" x2="174" y2="${y0+H/2+6}" stroke="var(--ink)" stroke-width="3" stroke-dasharray="7 5"/>`;
+  s+=`<text x="150" y="${y0+H/2+70}" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">${on?V1+' V':'0 V'} ${f==='ca'?'~':'='}</text>`;
+  s+=`<text x="${x0+28}" y="${y0+H+26}" text-anchor="middle" font-size="15" font-weight="700" fill="#D9362E">primario</text><text x="${x0+W-28}" y="${y0+H+26}" text-anchor="middle" font-size="15" font-weight="700" fill="var(--force)">secundario</text>`;
+  s+=`<text x="${x0+28}" y="${y0+H+44}" text-anchor="middle" font-size="13" fill="var(--muted)">${v.N1} espiras</text><text x="${x0+W-28}" y="${y0+H+44}" text-anchor="middle" font-size="13" fill="var(--muted)">${v.N2} espiras</text>`;
+  // secundario y bombilla
+  const bx=660,by=y0+H/2, br=on?Math.min(1.3,Math.abs(v.V2)/230):0;
+  s+=`<path d="M${x0+W+56} ${y0+t2+10}H${bx}V${by-26} M${bx} ${by+26}V${y0+H-t2-10}H${x0+W+56}" fill="none" stroke="var(--force)" stroke-width="3"/>`;
+  s+=`<circle cx="${bx}" cy="${by}" r="${30+br*40}" fill="#FFD84D" opacity="${(br*0.55).toFixed(2)}"/><circle cx="${bx}" cy="${by}" r="24" fill="${br>0.05?'#FFE680':'var(--card)'}" stroke="var(--ink)" stroke-width="2.5"/><path d="M${bx-9} ${by+5}l6 -11 6 11 6 -11" fill="none" stroke="var(--ink)" stroke-width="2"/>`;
+  // voltímetro
+  s+=`<rect x="${bx+40}" y="${by-22}" width="96" height="44" rx="8" fill="#1d2b22" stroke="var(--ink)" stroke-width="2"/><text x="${bx+88}" y="${by+9}" text-anchor="middle" font-size="22" font-weight="700" fill="#8CF08C" font-family="monospace">${v.V2} V</text>`;
+  s+=`<text x="${bx+88}" y="${by+42}" text-anchor="middle" font-size="13" fill="var(--muted)">voltímetro</text>`;
+  if(on&&f==='ca')s+=`<text x="${x0+W/2}" y="40" text-anchor="middle" font-size="20" font-weight="700" fill="var(--acc)">${v.N2>v.N1?'Elevador: sube la tensión':v.N2<v.N1?'Reductor: baja la tensión':'Misma tensión'}</text>`;
+  if(br>1.05)s+=`<text x="${bx}" y="${by-64}" text-anchor="middle" font-size="14" font-weight="700" fill="#D9362E">¡demasiada tensión para la bombilla!</text>`;
+  $('gA').innerHTML=s;
+  // osciloscopio
+  let o='<line x1="0" y1="75" x2="300" y2="75" stroke="var(--line)"/>';
+  if(on){const N=v.N2/v.N1;const p1=[],p2=[];for(let i=0;i<=150;i++){const tt=t-(150-i)*0.02;let a,b;
+      if(f==='ca'){a=Math.sin(tt*3);b=a*N;}else{const to=tOn-(150-i)*0.02;a=to>0?1:0;b=to>0?Math.exp(-to*4)*N:0;}
+      p1.push(`${i*2},${(75-a*30).toFixed(1)}`);p2.push(`${i*2},${(75-Math.max(-2.2,Math.min(2.2,b))*30).toFixed(1)}`);}
+    o+=`<polyline points="${p1.join(' ')}" fill="none" stroke="#D9362E" stroke-width="2.5"/><polyline points="${p2.join(' ')}" fill="none" stroke="var(--force)" stroke-width="2.5"/>`;}
+  $('osc').innerHTML=o;
+}
+function texts(){
+  let t;
+  if(!on)t='El transformador tiene dos bobinas en el mismo núcleo de hierro. Pulsa <b>Conectar</b>.';
+  else if(f==='ca')t='La corriente alterna del primario crea un flujo que <b>cambia de sentido sin parar</b>. Ese flujo atraviesa el secundario y le <b>induce una tensión</b>: la bombilla luce. Cambia las espiras del secundario y mira el voltímetro: <b>más espiras, más tensión</b>.';
+  else t='Con <b>corriente continua</b> el flujo se queda <b>fijo</b>: no cambia, así que <b>no induce tensión</b> en el secundario (solo un pequeño pico al conectar) y la bombilla no luce. Además, el primario se calienta mucho. <b>El transformador solo funciona con corriente alterna.</b>';
+  $('exp').innerHTML='<h2>Qué pasa</h2><p>'+t+'</p>';
+  $('bOn').textContent=on?'Desconectar':'Conectar';$('bOn').classList.toggle('on',on);
+}
+$('bOn').onclick=()=>{on=!on;tOn=0;texts();};
+document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{f=b.dataset.f;tOn=0;document.querySelectorAll('[data-f]').forEach(x=>x.setAttribute('aria-pressed',x===b));texts();});
+texts();requestAnimationFrame(frame);
+
+</script>
+</body>
+</html>

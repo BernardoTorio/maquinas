@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tensión y corriente inducidas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{font:inherit;font-weight:700;padding:10px 18px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--acc);background:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage>svg{display:block;width:100%;height:auto;touch-action:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button{font:inherit;font-weight:700;padding:12px 14px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 140px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.sl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700}
+input[type=range]{width:100%;accent-color:var(--acc)}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box ul{margin:0;padding-left:18px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.fl{fill:none;stroke:var(--field);stroke-width:2;stroke-linecap:round}
+.flow{stroke-dashoffset:0;animation:run .6s linear infinite}
+.fl.run{stroke-dasharray:9 9;animation:run .9s linear infinite}
+@keyframes run{to{stroke-dashoffset:-18}}
+.arr{fill:var(--field)}
+.back{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+@media (prefers-reduced-motion:reduce){.flow{stroke-dashoffset:0;animation:run .6s linear infinite}
+.fl.run{animation:none}}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 1 · Punto 1.8</small><h1>Tensión y corriente inducidas</h1><p class="sub">Mueve el imán dentro y fuera de la bobina y mira la aguja. Después prueba con un electroimán de corriente alterna y con una espira que gira.</p></header>
+  <nav class="tabs" role="tablist"><button role="tab" data-c="iman" aria-selected="true">1. Imán y bobina</button><button role="tab" data-c="ca" aria-selected="false">2. Electroimán con corriente alterna</button><button role="tab" data-c="alt" aria-selected="false">3. Espira que gira (alternador)</button></nav>
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 800 480" role="img" aria-label="Inducción: imán y bobina con galvanómetro, o espira que gira en un imán">
+<g id="gA"></g></svg><div class="legend"><span><svg width="22" height="22" viewBox="-11 -11 22 22"><circle r="9" fill="#C87533" stroke="currentColor" stroke-width="1.5"/><circle r="2.8" fill="currentColor"/></svg> la corriente sale hacia ti</span>
+<span><svg width="22" height="22" viewBox="-11 -11 22 22"><circle r="9" fill="#C87533" stroke="currentColor" stroke-width="1.5"/><path d="M-5-5L5 5M5-5L-5 5" stroke="currentColor" stroke-width="2"/></svg> la corriente entra</span>
+<span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#D9362E" stroke-width="3" stroke-dasharray="4 4"/></svg> corriente inducida</span></div></div>
+      <div class="boxes"><div class="box" id="exp"></div>
+<div class="box blue"><h2>3ª ley (ley de Faraday)</h2><ul>
+<li>Solo hay tensión inducida <b>mientras el flujo cambia</b>. Con el imán quieto no hay nada, aunque esté dentro.</li>
+<li>Cuanto <b>más rápido</b> cambia el flujo y <b>más espiras</b> tiene la bobina, <b>más tensión</b>.</li>
+<li><b>Ley de Lenz</b>: la corriente inducida <b>se opone a la causa</b> que la produce.</li>
+<li>El sentido de la corriente inducida se saca con la <b>regla de la mano derecha</b>.</li>
+<li>Se usa en <b>alternadores</b>, <b>dinamos</b> y <b>transformadores</b>.</li></ul></div></div>
+    </div>
+    <aside class="panel"><div class="ctrl" id="cIman">
+  <button id="bIn" class="main">Meter el imán</button>
+  <button id="bOut">Sacar el imán</button>
+  <button id="bFlip">Dar la vuelta al imán</button>
+</div>
+<div id="cCA" style="display:none"><div class="ctrl">
+  <button id="bCon" class="main">Conectar</button>
+  <button data-ty="ca" aria-pressed="true">Corriente alterna</button>
+  <button data-ty="cc" aria-pressed="false">Corriente continua</button>
+</div><div class="ctrl"><button id="bFe" aria-pressed="false">Meter núcleo de hierro</button></div></div>
+<div class="ctrl" id="cAlt" style="display:none">
+  <button id="bRun" class="main">Girar</button>
+</div>
+<div class="sl"><label for="rV">Velocidad</label><input id="rV" type="range" min="1" max="5" step="1" value="2"></div>
+<div class="inset"><svg id="plot" viewBox="0 0 300 150" aria-hidden="true"></svg><p class="cap" id="cap">Tensión inducida en los últimos segundos.</p></div></aside>
+  </div>
+</main>
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;};
+
+let cur='iman', caOn=false, caTy='ca', fe=false, I1=0, tCA=0, prevF=0, mx=150, target=150, pol=1, prevPhi=0, emf=0, run=false, phi=0.3, t=0, hist=[], last=performance.now();
+const CC=470, CY=190; // centro de la bobina
+const V=()=>+$('rV').value;
+function phiIman(x){return pol*Math.exp(-(((x-CC)/95)**2));}
+function drawIman(){
+  const g=$('gA');let h='';
+  // bobina: espiras (atrás)
+  for(let i=0;i<9;i++){const x=CC-90+i*22;h+=`<path d="M${x} ${CY-55} A10 55 0 0 0 ${x} ${CY+55}" fill="none" stroke="var(--cu)" stroke-width="4" opacity=".4"/>`;}
+  // imán
+  const nR=pol>0;
+  h+=`<g><rect x="${mx-80}" y="${CY-22}" width="80" height="44" fill="${nR?'#8a939c':'#D9362E'}"/><rect x="${mx}" y="${CY-22}" width="80" height="44" fill="${nR?'#D9362E':'#8a939c'}"/>
+  <rect x="${mx-80}" y="${CY-22}" width="160" height="44" rx="3" fill="none" stroke="var(--ink)" stroke-width="2"/>
+  <text x="${mx-40}" y="${CY+10}" text-anchor="middle" font-size="28" font-weight="700" fill="#fff">${nR?'S':'N'}</text><text x="${mx+40}" y="${CY+10}" text-anchor="middle" font-size="28" font-weight="700" fill="#fff">${nR?'N':'S'}</text></g>`;
+  // bobina: espiras (delante)
+  for(let i=0;i<9;i++){const x=CC-90+i*22;h+=`<path d="M${x} ${CY-55} A10 55 0 0 1 ${x} ${CY+55}" fill="none" stroke="var(--cu)" stroke-width="4"/>`;}
+  // cables al galvanómetro
+  const gx=CC, gy=390;
+  const path=`M${CC-90} ${CY+55} V${gy} H${gx-62} M${gx+62} ${gy} H${CC+86} V${CY+55}`;
+  h+=`<path d="${path}" fill="none" stroke="var(--ink)" stroke-width="2.5"/>`;
+  const on=Math.abs(emf)>0.02;
+  if(on){const dir=emf>0?1:-1;
+    h+=`<path d="${dir>0?`M${CC-90} ${CY+55} V${gy} H${gx-62}`:`M${gx-62} ${gy} H${CC-90} V${CY+55}`}" fill="none" stroke="#D9362E" stroke-width="3" stroke-dasharray="6 8" class="flow"/>`;
+    h+=`<path d="${dir>0?`M${gx+62} ${gy} H${CC+86} V${CY+55}`:`M${CC+86} ${CY+55} V${gy} H${gx+62}`}" fill="none" stroke="#D9362E" stroke-width="3" stroke-dasharray="6 8" class="flow"/>`;
+    // polos de la bobina (Lenz)
+    const leftN=emf>0; // el flujo sube: la bobina crea un campo que lo frena
+    const p=(x,t)=>`<circle cx="${x}" cy="${CY-86}" r="17" fill="${t==='N'?'#D9362E':'#8a939c'}"/><text x="${x}" y="${CY-79}" text-anchor="middle" font-size="19" font-weight="700" fill="#fff">${t}</text>`;
+    const lp=pol>0?(leftN?'N':'S'):(leftN?'S':'N');
+    h+=p(CC-104,lp)+p(CC+104,lp==='N'?'S':'N');
+    h+=`<text x="${CC}" y="${CY-80}" text-anchor="middle" font-size="14" fill="var(--muted)">polos de la bobina</text>`;
+  }
+  // galvanómetro
+  const ang=Math.max(-65,Math.min(65,emf*70));
+  h+=`<circle cx="${gx}" cy="${gy}" r="62" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/>`;
+  for(let a=-60;a<=60;a+=20){const r=a*Math.PI/180;h+=`<line x1="${gx+48*Math.sin(r)}" y1="${gy-48*Math.cos(r)}" x2="${gx+56*Math.sin(r)}" y2="${gy-56*Math.cos(r)}" stroke="var(--ink)" stroke-width="${a?1.5:3}"/>`;}
+  h+=`<line x1="${gx}" y1="${gy}" x2="${gx+46*Math.sin(ang*Math.PI/180)}" y2="${gy-46*Math.cos(ang*Math.PI/180)}" stroke="#D9362E" stroke-width="3.5" stroke-linecap="round"/><circle cx="${gx}" cy="${gy}" r="5" fill="var(--ink)"/>`;
+  h+=`<text x="${gx}" y="${gy+30}" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">G</text>`;
+  h+=`<text x="${mx}" y="${CY+50}" text-anchor="middle" font-size="13" fill="var(--muted)">arrástrame ↔</text>`;
+  g.innerHTML=h;
+}
+function drawAlt(){
+  const g=$('gA');let h='';
+  h+=`<rect x="0" y="20" width="90" height="380" rx="8" fill="#D9362E"/><rect x="710" y="20" width="90" height="380" rx="8" fill="#8a939c"/>`;
+  h+=`<text x="45" y="226" text-anchor="middle" font-size="48" font-weight="700" fill="#fff">N</text><text x="755" y="226" text-anchor="middle" font-size="48" font-weight="700" fill="#fff">S</text>`;
+  for(let y=45;y<=380;y+=30)h+=`<line x1="95" y1="${y}" x2="705" y2="${y}" stroke="var(--field)" stroke-width="1.6" stroke-dasharray="9 9" opacity=".7"/><polygon points="${560},${y} ${550},${y-5} ${550},${y+5}" fill="var(--field)" opacity=".7"/>`;
+  const R=120,cx=400,cy=210, ax=cx+R*Math.cos(phi), ay=cy-R*Math.sin(phi), bx=cx-R*Math.cos(phi), by=cy+R*Math.sin(phi);
+  h+=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--line)" stroke-dasharray="4 6"/>`;
+  h+=`<line x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}" stroke="var(--cu)" stroke-width="5" opacity=".55"/>`;
+  const sA=Math.cos(phi)<0?1:-1, show=run&&Math.abs(Math.cos(phi))>0.15; // lado A: sale si cos<0 (regla de la mano derecha)
+  const w=(x,y,s)=>`<circle cx="${x}" cy="${y}" r="16" fill="var(--cu)" stroke="var(--ink)" stroke-width="2"/>`+(!show?'':s>0?`<circle cx="${x}" cy="${y}" r="4.5" fill="#1a1a1a"/>`:`<path d="M${x-7} ${y-7}l14 14m0-14l-14 14" stroke="#1a1a1a" stroke-width="2.6"/>`);
+  h+=w(ax,ay,sA)+w(bx,by,-sA)+`<circle cx="${cx}" cy="${cy}" r="6" fill="var(--ink)"/>`;
+  // bombilla
+  const br=Math.min(1,Math.abs(emf)/1);
+  h+=`<g transform="translate(400 440)"><circle r="${22+br*18}" fill="#FFD84D" opacity="${(br*0.6).toFixed(2)}"/><circle r="16" fill="${br>0.05?'#FFE680':'var(--card)'}" stroke="var(--ink)" stroke-width="2"/><path d="M-6 4 L-2 -4 L2 4 L6 -4" fill="none" stroke="var(--ink)" stroke-width="1.5"/></g>`;
+  h+=`<text x="440" y="446" font-size="15" fill="var(--muted)">bombilla</text>`;
+  g.innerHTML=h;
+}
+
+function drawCA(){
+  const g=$('gA');let h='';const y=190, x1=250, x2=550;
+  // núcleo de hierro que une las dos bobinas
+  if(fe)h+=`<rect x="${x1-110}" y="${y-18}" width="${x2-x1+220}" height="36" rx="4" fill="#9aa5b1" stroke="var(--ink)" stroke-width="1.5"/>`;
+  // líneas de campo del electroimán
+  const fl=I1*(fe?1:0.35), a=Math.min(1,Math.abs(I1));
+  if(a>0.03){const dir=I1>0?1:-1;
+    if(fe){h+=`<line x1="${x1-100}" y1="${y}" x2="${x2+100}" y2="${y}" stroke="var(--field)" stroke-width="${2+4*a}" stroke-dasharray="10 8" opacity="${(0.3+0.7*a).toFixed(2)}" style="animation:run .6s linear infinite ${dir>0?'':'reverse'}"/>`;}
+    for(const k of [1,2,3]){const ry=40+k*30, rx=150+k*30, reach=fe?0.3:1;
+      const o=(0.15+0.6*a)*(fe?0.35:1)/k;
+      h+=`<ellipse cx="${x1+(fe?0:60*k)}" cy="${y}" rx="${fe?90+k*20:rx}" ry="${ry}" fill="none" stroke="var(--field)" stroke-width="2" stroke-dasharray="9 9" opacity="${o.toFixed(2)}" style="animation:run .8s linear infinite ${dir>0?'':'reverse'}"/>`;}
+    h+=`<text x="${(x1+x2)/2}" y="${y-(fe?30:86)}" text-anchor="middle" font-size="14" font-weight="700" fill="var(--field)" opacity="${(0.4+0.6*a).toFixed(2)}">flujo ${dir>0?'→':'←'}</text>`;}
+  // bobinas
+  const coil=(x,col,n)=>{let s='';for(let i=0;i<n;i++){const xx=x-80+i*(160/(n-1));s+=`<path d="M${xx} ${y-50} A9 50 0 0 1 ${xx} ${y+50}" fill="none" stroke="${col}" stroke-width="4"/>`;}return s;};
+  h+=coil(x1,'#E07A5F',9)+coil(x2,'var(--cu)',9);
+  // polos del electroimán
+  if(a>0.1){const nR=I1>0;const p=(x,t)=>`<circle cx="${x}" cy="${y-72}" r="15" fill="${t==='N'?'#D9362E':'#8a939c'}"/><text x="${x}" y="${y-66}" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">${t}</text>`;h+=p(x1-95,nR?'S':'N')+p(x1+95,nR?'N':'S');}
+  // fuente del electroimán
+  h+=`<path d="M${x1-80} ${y+50} V330 H${x1-50} M${x1+50} 330 H${x1+80} V${y+50}" fill="none" stroke="#D9362E" stroke-width="2.5"/>`;
+  h+=`<circle cx="${x1}" cy="330" r="48" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/>`;
+  h+=caTy==='ca'?`<path d="M${x1-24} 330 q12 -22 24 0 t24 0" fill="none" stroke="var(--ink)" stroke-width="3"/>`:`<line x1="${x1-22}" y1="324" x2="${x1+22}" y2="324" stroke="var(--ink)" stroke-width="3"/><line x1="${x1-22}" y1="336" x2="${x1+22}" y2="336" stroke="var(--ink)" stroke-width="3" stroke-dasharray="7 5"/>`;
+  h+=`<text x="${x1}" y="400" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">${caTy==='ca'?'corriente alterna':'corriente continua'} · ${caOn?'conectada':'desconectada'}</text>`;
+  h+=`<text x="${x1}" y="${y+76}" text-anchor="middle" font-size="14" fill="var(--muted)">electroimán</text><text x="${x2}" y="${y+76}" text-anchor="middle" font-size="14" fill="var(--muted)">bobina quieta</text>`;
+  // galvanómetro
+  const gx=x2, gy=360;
+  h+=`<path d="M${x2-80} ${y+50} V${gy} H${gx-52} M${gx+52} ${gy} H${x2+80} V${y+50}" fill="none" stroke="var(--ink)" stroke-width="2.5"/>`;
+  if(Math.abs(emf)>0.02)h+=`<path d="${emf>0?`M${x2-80} ${y+50} V${gy} H${gx-52}`:`M${gx-52} ${gy} H${x2-80} V${y+50}`}" fill="none" stroke="#D9362E" stroke-width="3" stroke-dasharray="6 8" class="flow"/>`;
+  const ang=Math.max(-65,Math.min(65,emf*70));
+  h+=`<circle cx="${gx}" cy="${gy}" r="52" fill="var(--card)" stroke="var(--ink)" stroke-width="2.5"/>`;
+  for(let d=-60;d<=60;d+=20){const r=d*Math.PI/180;h+=`<line x1="${gx+40*Math.sin(r)}" y1="${gy-40*Math.cos(r)}" x2="${gx+47*Math.sin(r)}" y2="${gy-47*Math.cos(r)}" stroke="var(--ink)" stroke-width="${d?1.5:3}"/>`;}
+  h+=`<line x1="${gx}" y1="${gy}" x2="${gx+38*Math.sin(ang*Math.PI/180)}" y2="${gy-38*Math.cos(ang*Math.PI/180)}" stroke="#D9362E" stroke-width="3.5" stroke-linecap="round"/><circle cx="${gx}" cy="${gy}" r="5" fill="var(--ink)"/><text x="${gx}" y="${gy+26}" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">G</text>`;
+  g.innerHTML=h;
+}
+function plot(){
+  let h='<line x1="0" y1="75" x2="300" y2="75" stroke="var(--line)" stroke-width="1.5"/>';
+  h+='<text x="4" y="14" font-size="12" fill="var(--muted)">tensión</text><text x="296" y="90" text-anchor="end" font-size="12" fill="var(--muted)">tiempo →</text>';
+  if(hist.length>1)h+=`<polyline points="${hist.map((v,i)=>`${(300-(hist.length-1-i)*2).toFixed(1)},${(75-Math.max(-1.2,Math.min(1.2,v))*55).toFixed(1)}`).join(' ')}" fill="none" stroke="#D9362E" stroke-width="2.5"/>`;
+  $('plot').innerHTML=h;
+}
+function frame(now){
+  const dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;
+  if(cur==='iman'){
+    mx+=Math.sign(target-mx)*Math.min(Math.abs(target-mx),V()*90*dt);
+    const ph=phiIman(mx), d=(ph-prevPhi)/dt; prevPhi=ph; emf+=((d*0.45)-emf)*Math.min(1,dt*18); drawIman();
+  }else if(cur==='ca'){
+    tCA+=dt;
+    let tgt; if(caTy==='ca') tgt=caOn?Math.sin(tCA*V()*2.2):0; else tgt=caOn?1:0;
+    if(caTy==='ca') I1=caOn?tgt:I1+(0-I1)*Math.min(1,dt*6); else I1+=(tgt-I1)*Math.min(1,dt*5); // la corriente continua sube y baja con un pequeño retraso
+    const fl=I1*(fe?1:0.35), d=(fl-prevF)/dt; prevF=fl; emf=-d*(caTy==='ca'?0.35/V()*1.6:0.3); drawCA();
+  }else{
+    const w=run?V()*1.3:0; phi+=w*dt; const e=run?-Math.cos(phi)*w/3.2:0; emf=e; drawAlt();
+  }
+  hist.push(emf); if(hist.length>151)hist.shift(); plot(); texts();
+  requestAnimationFrame(frame);
+}
+let lastTxt='';
+function texts(){
+  let s;
+  if(cur==='iman'){
+    const moving=Math.abs(emf)>0.02, inside=Math.abs(mx-CC)<100;
+    s=moving?(emf>0?'El flujo en la bobina <b>está subiendo</b>: aparece una tensión inducida, circula corriente y la aguja se mueve. La bobina se convierte en un imán que <b>frena</b> al imán que entra: por eso su polo más cercano es igual al del imán (se repelen). Es la <b>ley de Lenz</b>.':'El flujo en la bobina <b>está bajando</b>: la corriente va al revés y la aguja se mueve hacia el otro lado. Ahora la bobina <b>tira</b> del imán que se va: se atraen. También es la <b>ley de Lenz</b>.')
+      :(inside?'El imán está <b>quieto dentro</b> de la bobina: hay mucho flujo, pero <b>no cambia</b>. No hay tensión inducida y la aguja está en el cero.':'El imán está quieto. Arrástralo hacia la bobina o pulsa <b>Meter el imán</b>. Prueba también a moverlo más rápido.');
+  }else if(cur==='ca'){
+    const mov=Math.abs(emf)>0.02;
+    if(!caOn&&!mov) s='La bobina de la izquierda es un <b>electroimán</b>. La de la derecha está enfrente, <b>quieta</b>, con el galvanómetro. Aquí no se mueve nada: pulsa <b>Conectar</b>.';
+    else if(caTy==='ca') s='Con <b>corriente alterna</b>, el electroimán cambia de polos sin parar: su flujo sube, baja y cambia de sentido todo el rato. Aunque <b>nada se mueve</b>, el flujo que atraviesa la otra bobina <b>cambia</b> y se induce una tensión alterna: la aguja va de un lado a otro. '+(fe?'Con el <b>núcleo de hierro</b> casi todo el flujo pasa por la segunda bobina y la tensión es mucho mayor: <b>así funciona un transformador</b>.':'Prueba a meter un <b>núcleo de hierro</b>.');
+    else s=mov?'Con <b>corriente continua</b> solo hay tensión inducida <b>justo al conectar o al desconectar</b>, mientras el flujo sube o baja. Fíjate en que al desconectar la aguja se va <b>al otro lado</b>.':'Con <b>corriente continua</b> el flujo del electroimán es <b>fijo</b>: no cambia, así que <b>no hay tensión inducida</b> y la aguja está en el cero. Prueba a desconectar y volver a conectar.';
+  }else{
+    s=run?'La espira gira dentro del imán: el flujo que la atraviesa cambia todo el rato, así que se induce una tensión. Unas veces la corriente va en un sentido y otras en el contrario: es <b>corriente alterna</b>. Es el principio del <b>alternador</b>. Cuanto más rápido gira, más tensión y más luce la bombilla.':'Esta espira está dentro de un imán y puede girar. Pulsa <b>Girar</b>.';
+  }
+  if(s!==lastTxt){$('exp').innerHTML='<h2>Qué pasa</h2><p>'+s+'</p>';lastTxt=s;}
+}
+// arrastrar el imán
+const sv=$('sv');let drag=false,off=0;
+const toSvg=e=>{const p=sv.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(sv.getScreenCTM().inverse());};
+sv.addEventListener('pointerdown',e=>{if(cur!=='iman')return;const p=toSvg(e);if(Math.abs(p.x-mx)<85&&Math.abs(p.y-CY)<30){drag=true;off=p.x-mx;sv.setPointerCapture(e.pointerId);}});
+sv.addEventListener('pointermove',e=>{if(!drag)return;const p=toSvg(e);target=mx=Math.max(90,Math.min(710,p.x-off));});
+sv.addEventListener('pointerup',()=>drag=false);
+$('bIn').onclick=()=>{target=CC;};
+$('bOut').onclick=()=>{target=150;};
+$('bFlip').onclick=()=>{pol=-pol;prevPhi=phiIman(mx);};
+$('bRun').onclick=()=>{run=!run;$('bRun').textContent=run?'Parar':'Girar';$('bRun').classList.toggle('on',run);};
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));cur=b.dataset.c;
+  $('cIman').style.display=cur==='iman'?'':'none';$('cAlt').style.display=cur==='alt'?'':'none';$('cCA').style.display=cur==='ca'?'':'none';hist=[];emf=0;prevPhi=phiIman(mx);lastTxt='';});
+$('bCon').onclick=()=>{caOn=!caOn;tCA=0;$('bCon').textContent=caOn?'Desconectar':'Conectar';$('bCon').classList.toggle('on',caOn);lastTxt='';};
+document.querySelectorAll('[data-ty]').forEach(b=>b.onclick=()=>{caTy=b.dataset.ty;tCA=0;document.querySelectorAll('[data-ty]').forEach(x=>x.setAttribute('aria-pressed',x===b));lastTxt='';});
+$('bFe').onclick=()=>{fe=!fe;prevF=I1*(fe?1:0.35);$('bFe').setAttribute('aria-pressed',fe);$('bFe').textContent=fe?'Quitar el núcleo de hierro':'Meter núcleo de hierro';lastTxt='';};
+prevPhi=phiIman(mx);requestAnimationFrame(frame);
+
+</script>
+</body>
+</html>

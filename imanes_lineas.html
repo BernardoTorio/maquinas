@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Imanes y líneas de fuerza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{font:inherit;font-weight:700;padding:10px 18px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--acc);background:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage>svg{display:block;width:100%;height:auto;touch-action:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button{font:inherit;font-weight:700;padding:12px 14px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 140px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.sl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700}
+input[type=range]{width:100%;accent-color:var(--acc)}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box ul{margin:0;padding-left:18px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.fl{fill:none;stroke:var(--field);stroke-width:2;stroke-linecap:round}
+.fl.run{stroke-dasharray:9 9;animation:run .9s linear infinite}
+@keyframes run{to{stroke-dashoffset:-18}}
+.arr{fill:var(--field)}
+@media (prefers-reduced-motion:reduce){.fl.run{animation:none}}
+
+.back{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 1 · Punto 1.2</small><h1>Imanes y líneas de fuerza</h1><p class="sub">Mueve la brújula alrededor del imán y activa las limaduras. Luego acerca dos imanes.</p></header>
+  <nav class="tabs" role="tablist"><button role="tab" data-c="uno" aria-selected="true">1. Un imán</button><button role="tab" data-c="atraen" aria-selected="false">2. Se atraen</button><button role="tab" data-c="repelen" aria-selected="false">3. Se repelen</button></nav>
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 800 480" role="img" aria-label="Imanes con líneas de fuerza, limaduras y brújula">
+  <g id="gFil"></g><g id="gLines"></g><g id="gMag"></g><g id="gCmp"></g></svg><div class="legend"><span><svg width="30" height="14"><rect x="1" y="2" width="14" height="10" fill="#D9362E"/><rect x="15" y="2" width="14" height="10" fill="#8a939c"/></svg> polo N rojo, polo S gris</span>
+<span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#2E75B6" stroke-width="2.5"/></svg> líneas de fuerza</span>
+<span><svg width="22" height="22" viewBox="-11 -11 22 22"><circle r="10" fill="none" stroke="#8a939c"/><polygon points="0,-8 3,0 -3,0" fill="#D9362E"/><polygon points="0,8 3,0 -3,0" fill="#8a939c"/></svg> brújula: arrástrala</span></div></div>
+      <div class="boxes"><div class="box" id="exp"></div>
+<div class="box blue"><h2>Las líneas de fuerza</h2><ul>
+<li>Por fuera del imán <b>salen del polo N y entran por el S</b>. Por dentro se cierran: son líneas cerradas.</li>
+<li><b>Nunca se cruzan.</b></li>
+<li>Donde van <b>más juntas</b>, el campo es <b>más fuerte</b>: cerca de los polos.</li>
+<li>El <b>flujo magnético (Φ)</b> es el número total de líneas. Se mide en <b>weber (Wb)</b>.</li></ul></div></div>
+    </div>
+    <aside class="panel"><div class="ctrl">
+  <button id="bLines" aria-pressed="true">Líneas de fuerza</button>
+  <button id="bFil" aria-pressed="false">Limaduras de hierro</button>
+</div>
+<div class="sl" id="slBox"><label for="rG">Separación</label><input id="rG" type="range" min="30" max="220" step="5" value="110"></div>
+<div class="inset"><svg id="ins" viewBox="0 0 260 120" aria-hidden="true"></svg><p class="cap" id="cap"></p></div></aside>
+  </div>
+</main>
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;};
+
+let cur='uno', showL=true, showF=false, gap=110, cmp={x:560,y:110};
+function magnets(){
+  if(cur==='uno') return [{cx:400,cy:250,w:240,flip:false}];
+  const w=190, a={cx:400-gap/2-w/2,cy:250,w,flip:false}, b={cx:400+gap/2+w/2,cy:250,w,flip:cur==='repelen'};
+  return [a,b];
+}
+// cada polo: 5 cargas repartidas en la cara del polo
+function charges(){
+  const q=[];
+  for(const m of magnets()){
+    const xN=m.cx+(m.flip?-1:1)*(m.w/2-10), xS=m.cx-(m.flip?-1:1)*(m.w/2-10);
+    for(const dy of [-20,-10,0,10,20]){q.push({x:xN,y:m.cy+dy,s:1});q.push({x:xS,y:m.cy+dy,s:-1});}
+  }
+  return q;
+}
+let Q=[],M=[];
+function B(x,y){let bx=0,by=0;for(const c of Q){const dx=x-c.x,dy=y-c.y,r2=dx*dx+dy*dy+4;bx+=c.s*dx/r2;by+=c.s*dy/r2;}return [bx,by];}
+const inside=(x,y)=>M.some(m=>Math.abs(x-m.cx)<m.w/2-1&&Math.abs(y-m.cy)<29);
+function trace(x0,y0){
+  const h=3,pts=[[x0,y0]];let x=x0,y=y0;
+  const f=(X,Y)=>{const b=B(X,Y),n=Math.hypot(b[0],b[1])||1e-12;return [b[0]/n,b[1]/n];};
+  for(let i=0;i<1400;i++){
+    const k1=f(x,y),k2=f(x+h/2*k1[0],y+h/2*k1[1]),k3=f(x+h/2*k2[0],y+h/2*k2[1]),k4=f(x+h*k3[0],y+h*k3[1]);
+    x+=h/6*(k1[0]+2*k2[0]+2*k3[0]+k4[0]);y+=h/6*(k1[1]+2*k2[1]+2*k3[1]+k4[1]);
+    if(x<-60||x>860||y<-60||y>540)break;
+    if(i>2&&inside(x,y)){pts.push([x,y]);break;}
+    if(cur==='repelen'&&Math.sign(x-400)!==Math.sign(x0-400)){break;} // los dos polos N se empujan: las líneas no pasan al otro lado
+    pts.push([x,y]);
+  }
+  return pts;
+}
+function drawMag(){
+  const g=$('gMag');g.innerHTML='';
+  for(const m of M){
+    const x0=m.cx-m.w/2, nLeft=m.flip;
+    el('rect',{x:x0,y:m.cy-30,width:m.w/2,height:60,fill:nLeft?'#D9362E':'#8a939c'},g);
+    el('rect',{x:m.cx,y:m.cy-30,width:m.w/2,height:60,fill:nLeft?'#8a939c':'#D9362E'},g);
+    el('rect',{x:x0,y:m.cy-30,width:m.w,height:60,fill:'none',stroke:'var(--ink)','stroke-width':2,rx:3},g);
+    const t1=el('text',{x:m.cx-m.w/4,y:m.cy+12,'text-anchor':'middle','font-size':34,'font-weight':700,fill:'#fff'},g);t1.textContent=nLeft?'N':'S';
+    const t2=el('text',{x:m.cx+m.w/4,y:m.cy+12,'text-anchor':'middle','font-size':34,'font-weight':700,fill:'#fff'},g);t2.textContent=nLeft?'S':'N';
+  }
+}
+function drawLines(){
+  const g=$('gLines');g.innerHTML='';if(!showL)return;
+  for(const m of M){
+    const out=m.flip?-1:1, edge=m.cx+out*m.w/2, seeds=[];
+    for(const dy of (cur==='repelen'?[-22,-11,11,22]:[-22,-11,0,11,22])) seeds.push([edge+out*3,m.cy+dy]);
+    for(const dx of [12,38,70]) for(const sy of [-1,1]) seeds.push([edge-out*dx,m.cy+sy*32]);
+    for(const [sx,sy] of seeds){
+      if(inside(sx,sy)) continue;
+      const p=trace(sx,sy); if(p.length<5) continue;
+      el('path',{d:'M'+p.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join('L'),class:'fl run'},g);
+      const k=Math.floor(p.length*0.4); if(k>1&&k<p.length){const [x1,y1]=p[k-1],[x2,y2]=p[k];if(x2>5&&x2<795&&y2>5&&y2<475)
+        el('polygon',{points:'7,0 -5,-5.5 -5,5.5',class:'arr',transform:`translate(${x2.toFixed(1)} ${y2.toFixed(1)}) rotate(${(Math.atan2(y2-y1,x2-x1)*180/Math.PI).toFixed(1)})`},g);}
+    }
+  }
+}
+let seed=3;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+function drawFil(){
+  const g=$('gFil');g.innerHTML='';if(!showF)return;seed=3;
+  for(let y=8;y<480;y+=15)for(let x=8;x<800;x+=15){
+    const px=x+(rnd()-.5)*8,py=y+(rnd()-.5)*8;if(inside(px,py))continue;
+    const b=B(px,py),n=Math.hypot(b[0],b[1]);const op=Math.min(.7,n*30);if(op<.18)continue;
+    const ux=b[0]/n*5,uy=b[1]/n*5;
+    el('line',{x1:(px-ux).toFixed(1),y1:(py-uy).toFixed(1),x2:(px+ux).toFixed(1),y2:(py+uy).toFixed(1),stroke:'var(--ink)','stroke-width':1.2,opacity:op.toFixed(2),'stroke-linecap':'round'},g);
+  }
+}
+function drawCmp(){
+  const g=$('gCmp');g.innerHTML='';
+  const c=el('g',{transform:`translate(${cmp.x} ${cmp.y})`,id:'cmp',style:'cursor:grab',tabindex:0,role:'button','aria-label':'Brújula: arrástrala o muévela con las flechas'},g);
+  el('circle',{r:30,fill:'var(--card)',stroke:'var(--gray)','stroke-width':2.5},c);
+  el('circle',{r:26,fill:'none',stroke:'var(--line)','stroke-width':1},c);
+  const b=B(cmp.x,cmp.y),a=Math.atan2(b[1],b[0])*180/Math.PI+90;
+  const n=el('g',{transform:`rotate(${a.toFixed(1)})`},c);
+  el('polygon',{points:'0,-25 6,0 -6,0',fill:'#D9362E'},n);el('polygon',{points:'0,25 6,0 -6,0',fill:'#8a939c'},n);
+  el('circle',{r:3,fill:'#555'},c);
+}
+const TXT={
+  uno:'Un imán tiene dos polos: <b>norte (N)</b> y <b>sur (S)</b>. Alrededor está su <b>campo magnético</b>: la zona donde se notan sus fuerzas. No se ve, pero las limaduras de hierro y la brújula lo "dibujan". Mueve la brújula: su punta roja sigue las líneas de fuerza.',
+  atraen:'Polos <b>distintos</b> enfrentados (N frente a S): las líneas <b>pasan de un imán al otro</b>, del N de uno al S del otro. Es como si tiraran de ellos: los imanes <b>se atraen</b>. Cuanto más cerca, más líneas pasan y más fuerte es la atracción.',
+  repelen:'Polos <b>iguales</b> enfrentados (N frente a N): las líneas de los dos polos <b>chocan y se apartan</b>, porque nunca se cruzan. En medio queda una zona casi sin líneas. Los imanes <b>se repelen</b>.'
+};
+function inset(){
+  let h='';const C={uno:'Un imán solo',atraen:'N frente a S: se atraen',repelen:'N frente a N: se repelen'}[cur];
+  const bar=(x,flip)=>`<rect x="${x}" y="40" width="40" height="26" fill="${flip?'#D9362E':'#8a939c'}"/><rect x="${x+40}" y="40" width="40" height="26" fill="${flip?'#8a939c':'#D9362E'}"/><text x="${x+20}" y="59" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">${flip?'N':'S'}</text><text x="${x+60}" y="59" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">${flip?'S':'N'}</text>`;
+  const arr=(x1,x2)=>`<line x1="${x1}" y1="92" x2="${x2}" y2="92" stroke="var(--force)" stroke-width="4"/><polygon points="${x2},92 ${x2-Math.sign(x2-x1)*10},86 ${x2-Math.sign(x2-x1)*10},98" fill="var(--force)"/>`;
+  if(cur==='uno') h=bar(90,false);
+  else if(cur==='atraen') h=bar(20,false)+bar(160,false)+arr(60,118)+arr(200,142);
+  else h=bar(20,false)+bar(160,true)+arr(80,22)+arr(180,238);
+  h+=`<text x="130" y="22" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">${C}</text>`;
+  $('ins').innerHTML=h;
+  $('cap').textContent=cur==='uno'?'Si partes un imán por la mitad, tienes dos imanes, cada uno con su N y su S.':'Las flechas verdes indican hacia dónde empuja cada imán.';
+}
+function render(){Q=charges();M=magnets();drawMag();drawFil();drawLines();drawCmp();inset();$('exp').innerHTML='<h2>Qué ves</h2><p>'+TXT[cur]+'</p>';$('slBox').style.display=cur==='uno'?'none':'';}
+// arrastrar la brújula
+const sv=$('sv');let drag=false;
+const toSvg=e=>{const p=sv.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(sv.getScreenCTM().inverse());};
+sv.addEventListener('pointerdown',e=>{if(!e.target.closest('#cmp'))return;drag=true;sv.setPointerCapture(e.pointerId);});
+sv.addEventListener('pointermove',e=>{if(!drag)return;const p=toSvg(e);let x=Math.max(32,Math.min(768,p.x)),y=Math.max(32,Math.min(448,p.y));if(inside(x,y))return;cmp={x,y};drawCmp();});
+sv.addEventListener('pointerup',()=>{drag=false;});
+sv.addEventListener('keydown',e=>{if(!e.target.closest('#cmp'))return;const k={ArrowLeft:[-10,0],ArrowRight:[10,0],ArrowUp:[0,-10],ArrowDown:[0,10]}[e.key];if(!k)return;e.preventDefault();const x=cmp.x+k[0],y=cmp.y+k[1];if(!inside(x,y)){cmp={x,y};drawCmp();$('cmp').focus();}});
+$('bLines').onclick=()=>{showL=!showL;$('bLines').setAttribute('aria-pressed',showL);render();};
+$('bFil').onclick=()=>{showF=!showF;$('bFil').setAttribute('aria-pressed',showF);render();};
+$('rG').oninput=e=>{gap=+e.target.value;render();};
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));cur=b.dataset.c;render();});
+render();
+
+</script>
+</body>
+</html>

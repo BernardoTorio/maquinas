@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Curva de magnetización</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{font:inherit;font-weight:700;padding:10px 18px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--acc);background:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage>svg{display:block;width:100%;height:auto;touch-action:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button{font:inherit;font-weight:700;padding:12px 14px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 140px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.sl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700}
+input[type=range]{width:100%;accent-color:var(--acc)}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box ul{margin:0;padding-left:18px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.fl{fill:none;stroke:var(--field);stroke-width:2;stroke-linecap:round}
+.fl.run{stroke-dasharray:9 9;animation:run .9s linear infinite}
+@keyframes run{to{stroke-dashoffset:-18}}
+.arr{fill:var(--field)}
+@media (prefers-reduced-motion:reduce){.fl.run{animation:none}}
+
+.back{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 1 · Punto 1.9</small><h1>Curva de magnetización y saturación</h1><p class="sub">Sube la corriente de la bobina y mira cuánta inducción consigue cada material.</p></header>
+  
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 800 480" role="img" aria-label="Curva de magnetización B-H y dominios magnéticos del material"><g id="gA"></g></svg><div class="legend"><span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#C0602B" stroke-width="3"/></svg> material elegido</span>
+<span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#8a939c" stroke-width="2" stroke-dasharray="4 4"/></svg> los otros materiales</span>
+<span><svg width="30" height="14"><polygon points="2,7 20,2 20,12" fill="#D9362E"/></svg> "imanes" internos del material</span></div></div>
+      <div class="boxes"><div class="box" id="exp"></div>
+<div class="box blue"><h2>Tipos de materiales</h2><ul>
+<li><b>Ferromagnéticos</b> (hierro, níquel, cobalto y sus aleaciones): se imanan muchísimo. Con ellos se hacen los núcleos.</li>
+<li><b>Paramagnéticos</b> (aire, aluminio): se imanan tan poco que en las máquinas se consideran <b>amagnéticos</b>.</li>
+<li><b>Diamagnéticos</b> (cobre, plata): rechazan un poquito el campo.</li></ul>
+<p style="margin-top:8px">La <b>chapa de grano orientado</b> admite más inducción que la normal antes de saturarse: por eso se usa en los buenos transformadores.</p></div></div>
+    </div>
+    <aside class="panel"><div class="sl"><label for="rH">Corriente de la bobina</label><input id="rH" type="range" min="0" max="100" step="1" value="12"></div>
+<div class="ctrl">
+  <button data-m="go" aria-pressed="true">Chapa de grano orientado</button>
+  <button data-m="gno" aria-pressed="false">Chapa normal</button>
+  <button data-m="aire" aria-pressed="false">Aire</button>
+</div>
+<div class="ctrl"><button id="bAuto" class="main">Recorrer la curva</button></div>
+<div class="inset" style="padding:10px 12px"><div id="zona" style="font-size:1.05rem"></div></div></aside>
+  </div>
+</main>
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;};
+
+const MAT={go:{n:'Chapa de grano orientado',bs:1.9,k:0.8},gno:{n:'Chapa normal (grano no orientado)',bs:1.55,k:0.45},aire:{n:'Aire',bs:null,k:0}};
+let m='go', auto=false;
+const X0=70,Y0=410,W=420,Hh=360, BMAX=2.0;
+const Bof=(key,h)=>{const M=MAT[key];if(!M.bs)return h*0.0016;return M.bs*Math.tanh(M.k*h/M.bs*0.1);}; // h de 0 a 100
+const px=h=>X0+h/100*W, py=b=>Y0-b/BMAX*Hh;
+let seed=5;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const DOM=[];for(let r=0;r<6;r++)for(let c=0;c<5;c++){DOM.push({x:590+c*38,y:120+r*42,a:rnd()*360});}
+function draw(){
+  const h=+$('rH').value, b=Bof(m,h), M=MAT[m];
+  let s='';
+  // zonas (solo para materiales ferromagnéticos)
+  if(M.bs){
+    const hz1=hFor(0.55*M.bs), hz2=hFor(0.93*M.bs);
+    s+=`<rect x="${X0}" y="${Y0-Hh}" width="${px(hz1)-X0}" height="${Hh}" fill="#2E75B6" opacity=".08"/>`;
+    s+=`<rect x="${px(hz1)}" y="${Y0-Hh}" width="${px(hz2)-px(hz1)}" height="${Hh}" fill="#F2B400" opacity=".10"/>`;
+    s+=`<rect x="${px(hz2)}" y="${Y0-Hh}" width="${X0+W-px(hz2)}" height="${Hh}" fill="#D9362E" opacity=".08"/>`;
+    const lab=(x,t)=>`<text x="${x}" y="${Y0-Hh+18}" text-anchor="middle" font-size="13" font-weight="700" fill="var(--muted)">${t}</text>`;
+    s+=lab((X0+px(hz1))/2,'1) recta')+lab((px(hz1)+px(hz2))/2,'2) codo')+lab((px(hz2)+X0+W)/2,'3) saturación');
+    // punto de saturación
+    s+=`<circle cx="${px(hz2)}" cy="${py(Bof(m,hz2))}" r="6" fill="none" stroke="#D9362E" stroke-width="2.5"/><text x="${px(hz2)+8}" y="${py(Bof(m,hz2))+22}" font-size="13" fill="#D9362E" font-weight="700">punto de saturación</text>`;
+  }
+  // ejes
+  s+=`<line x1="${X0}" y1="${Y0}" x2="${X0+W+10}" y2="${Y0}" stroke="var(--ink)" stroke-width="2"/><line x1="${X0}" y1="${Y0}" x2="${X0}" y2="${Y0-Hh-10}" stroke="var(--ink)" stroke-width="2"/>`;
+  s+=`<text x="${X0+W}" y="${Y0+30}" text-anchor="end" font-size="15" fill="var(--ink)">Intensidad de campo H (Av/m) →</text>`;
+  s+=`<text x="${X0-12}" y="${Y0-Hh-18}" font-size="15" fill="var(--ink)">Inducción B (T)</text>`;
+  for(let v=0.5;v<=2;v+=0.5)s+=`<line x1="${X0-5}" y1="${py(v)}" x2="${X0+W}" y2="${py(v)}" stroke="var(--line)" stroke-width="1"/><text x="${X0-9}" y="${py(v)+5}" text-anchor="end" font-size="13" fill="var(--muted)">${v.toLocaleString('es-ES')}</text>`;
+  // curvas
+  for(const k of Object.keys(MAT)){
+    const pts=[];for(let hh=0;hh<=100;hh+=1)pts.push(`${px(hh).toFixed(1)},${py(Bof(k,hh)).toFixed(1)}`);
+    const sel=k===m;
+    s+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${sel?'#C0602B':'#8a939c'}" stroke-width="${sel?4:2}" ${sel?'':'stroke-dasharray="5 5"'}/>`;
+    if(!sel)s+=`<text x="${px(100)-4}" y="${py(Bof(k,100))-6}" text-anchor="end" font-size="12" fill="var(--muted)">${MAT[k].n.split(' (')[0]}</text>`;
+  }
+  // punto actual
+  s+=`<line x1="${px(h)}" y1="${Y0}" x2="${px(h)}" y2="${py(b)}" stroke="#C0602B" stroke-dasharray="3 4"/><line x1="${X0}" y1="${py(b)}" x2="${px(h)}" y2="${py(b)}" stroke="#C0602B" stroke-dasharray="3 4"/>`;
+  s+=`<circle cx="${px(h)}" cy="${py(b)}" r="8" fill="#C0602B" stroke="var(--card)" stroke-width="2"/>`;
+  s+=`<text x="${X0+8}" y="${py(b)-8}" font-size="14" font-weight="700" fill="#C0602B">${b.toLocaleString('es-ES',{maximumFractionDigits:2,minimumFractionDigits:2})} T</text>`;
+  // dominios
+  const f=M.bs?b/M.bs:b/0.16*0.02; // fracción de "imanes" alineados
+  s+=`<text x="666" y="80" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">Dentro del material</text>`;
+  s+=`<rect x="562" y="95" width="210" height="260" rx="10" fill="none" stroke="var(--line)" stroke-width="2"/>`;
+  for(const d of DOM){
+    let a=d.a; let da=((0-a+540)%360)-180; a=a+da*Math.min(1,f); // gira hacia la derecha (sentido del campo)
+    s+=`<g transform="translate(${d.x} ${d.y}) rotate(${a.toFixed(1)})"><polygon points="14,0 -10,-6 -10,6" fill="#D9362E"/><rect x="-14" y="-3" width="6" height="6" fill="#8a939c"/></g>`;
+  }
+  s+=`<text x="666" y="378" text-anchor="middle" font-size="13" fill="var(--muted)">${M.bs?Math.round(f*100)+' % alineados':'el aire casi no se imana'}</text>`;
+  s+=`<line x1="590" y1="410" x2="745" y2="410" stroke="var(--field)" stroke-width="${2+h/25}"/><polygon points="760,410 744,402 744,418" fill="var(--field)"/><text x="666" y="440" text-anchor="middle" font-size="13" fill="var(--muted)">campo de la bobina</text>`;
+  $('gA').innerHTML=s;
+  // textos
+  let z;
+  if(!M.bs) z='<b>Aire:</b> la inducción es casi cero por mucha corriente que metas. Por eso los núcleos se hacen de hierro.';
+  else if(b<0.55*M.bs) z='<b>1) Zona recta:</b> si subes la corriente, la inducción sube mucho y a la vez. Los "imanes" internos se van colocando.';
+  else if(b<0.93*M.bs) z='<b>2) Codo:</b> la inducción sube cada vez menos. Las máquinas se diseñan para trabajar aquí, cerca de la saturación pero sin llegar.';
+  else z='<b>3) Saturación:</b> aunque subas mucho la corriente, la inducción <b>casi no sube</b>: ya están casi todos los "imanes" internos alineados. La corriente se dispara y el núcleo se calienta.';
+  $('zona').innerHTML=z;
+  $('exp').innerHTML='<h2>Qué ves</h2><p>La <b>curva de magnetización</b> dice cuánta inducción consigue un material según la intensidad de campo que le da la bobina. Dentro del hierro hay muchos "imanes" diminutos desordenados. El campo de la bobina los va girando: cuantos más se alinean, más inducción.</p><p>Mueve la corriente y fíjate en el punto: sube deprisa, luego se dobla (el codo) y al final se queda casi plano.</p>';
+}
+function hFor(bt){let lo=0,hi=100;for(let i=0;i<40;i++){const mid=(lo+hi)/2;Bof(m,mid)<bt?lo=mid:hi=mid;}return (lo+hi)/2;}
+$('rH').oninput=draw;
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{m=b.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.setAttribute('aria-pressed',x===b));draw();});
+let tA=null;$('bAuto').onclick=()=>{if(tA){clearInterval(tA);tA=null;$('bAuto').textContent='Recorrer la curva';return;}$('rH').value=0;$('bAuto').textContent='Parar';tA=setInterval(()=>{const r=$('rH');r.value=+r.value+1;draw();if(+r.value>=100){clearInterval(tA);tA=null;$('bAuto').textContent='Recorrer la curva';}},70);};
+draw();
+
+</script>
+</body>
+</html>
