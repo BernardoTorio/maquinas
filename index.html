@@ -102,7 +102,8 @@ for(const a of ANIM){
   L.appendChild(card);
 }
 // Herramientas para el taller (no van con un punto concreto)
-const HERR=[{f:'calculadora_trafo.html',t:'Calculadora de transformadores pequeños',d:'Carrete de 40 × 40 mm. Pon la potencia, la tensión, las chapas, las espiras y el hilo que tienes: salen tensiones, corrientes, inducción real, capas del bobinado y si cabe y funciona. Método del formulario de la práctica P1.'}];
+const HERR=[{f:'medir.html',t:'Cómo medir con calibre y micrómetro',d:'Calibres de 0,05 y 0,02 mm y micrómetros de 0–25 a 75–100 mm: escala ampliada, lectura paso a paso y práctica con medidas al azar, como en las fichas.'},
+  {f:'calculadora_trafo.html',t:'Calculadora de transformadores pequeños',d:'Carrete de 40 × 40 mm. Pon la potencia, la tensión, las chapas, las espiras y el hilo que tienes: salen tensiones, corrientes, inducción real, capas del bobinado y si cabe y funciona. Método del formulario de la práctica P1.'}];
 {const h=document.createElement('h2');h.className='tema';h.textContent='Taller: construcción de transformadores';L.appendChild(h);
  for(const a of HERR){const c=document.createElement('a');c.className='card';c.href=a.f;c.innerHTML=`<div class="num"><small>Taller</small>🔧</div><div><h3>${a.t}</h3><p>${a.d}</p></div>`;L.appendChild(c);}}
 </script>

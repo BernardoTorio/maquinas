@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cómo medir con calibre y micrómetro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{font:inherit;font-weight:700;padding:10px 18px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--acc);background:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage>svg{display:block;width:100%;height:auto;touch-action:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button{font:inherit;font-weight:700;padding:12px 14px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 140px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.sl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700}
+input[type=range]{width:100%;accent-color:var(--acc)}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box ul{margin:0;padding-left:18px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.fl{fill:none;stroke:var(--field);stroke-width:2;stroke-linecap:round}
+.fl.run{stroke-dasharray:9 9;animation:run .9s linear infinite}
+@keyframes run{to{stroke-dashoffset:-18}}
+.arr{fill:var(--field)}
+.back{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+@media (prefers-reduced-motion:reduce){.fl.run{animation:none}}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Taller</small><h1>Cómo medir con calibre y micrómetro</h1><p class="sub">Mueve el instrumento, mira la escala ampliada y aprende a leerla. Después practica con medidas al azar, como en las fichas.</p></header>
+  <nav class="tabs" role="tablist"><button role="tab" data-c="cal" aria-selected="true">1. Calibre (pie de rey)</button><button role="tab" data-c="mic" aria-selected="false">2. Micrómetro</button></nav>
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 800 460" role="img" aria-label="Instrumento de medida con su escala ampliada" style="touch-action:none"><g id="gA"></g></svg><div class="legend"><span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#3F8F2A" stroke-width="4"/></svg> rayas que coinciden</span>
+<span>Arrastra la pieza móvil o usa el deslizador</span></div></div>
+      <div class="boxes"><div class="box blue" id="how"></div><div class="box" id="tips"></div></div>
+    </div>
+    <aside class="panel">
+<div id="pCal"><div class="ctrl" style="gap:6px"><b style="align-self:center">Nonio:</b>
+<button data-r="0.05" aria-pressed="true">Calibre de 0,05 mm</button><button data-r="0.02" aria-pressed="false">Calibre de 0,02 mm</button></div></div>
+<div id="pMic" style="display:none"><div class="ctrl" style="gap:6px"><b style="align-self:center">Micrómetro de:</b>
+<button data-b="0" aria-pressed="true">0–25</button><button data-b="25" aria-pressed="false">25–50</button><button data-b="50" aria-pressed="false">50–75</button><button data-b="75" aria-pressed="false">75–100</button></div></div>
+<div class="sl"><label for="rV">Abrir / cerrar</label><input id="rV" type="range" min="0" max="140" step="0.01" value="40"></div>
+<div class="ctrl" style="gap:6px" id="objs"></div>
+<div class="inset" style="padding:10px 12px">
+  <div id="lect" style="font-size:1.6rem;font-weight:700;color:var(--acc)"></div>
+  <div class="ctrl" style="margin:8px 0 0"><button id="bPrac" class="main">Practicar: medida al azar</button></div>
+  <div id="prac" style="display:none;margin-top:6px"><label for="iAns" style="font-weight:700">¿Cuánto mide? (mm)</label>
+    <div style="display:flex;gap:8px;margin-top:6px"><input id="iAns" type="text" inputmode="decimal" style="font:inherit;padding:8px;border:2px solid var(--line);border-radius:8px;width:120px;background:var(--card);color:var(--ink)"><button id="bChk" style="font:inherit;font-weight:700;padding:8px 14px;border-radius:9px;border:2px solid var(--acc);background:var(--card);color:var(--acc);cursor:pointer">Comprobar</button></div>
+    <p id="res" style="margin:8px 0 0"></p><p class="cap" id="score"></p></div>
+</div></aside>
+  </div>
+</main>
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;};
+
+let cur='cal', v=40, R=0.05, base=0, prac=false, ok=0, tot=0, showSteps=true;
+const OBJ={cal:[['Carrete del aula',40],['Paquete de 55 chapas',27.5],['Columna de la chapa E',40],['Tornillo M6',5.9]],
+           mic:[['Hilo del primario',0.96],['Hilo del secundario',1.41],['Chapa de 0,35',0.35],['Chapa de 0,5',0.5]]};
+let objName='Carrete del aula';
+const fmt=(x,d)=>x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+const dec=()=>cur==='mic'?2:(R===0.1?1:2);
+const q=x=>Math.round(x/(cur==='mic'?0.01:R))*(cur==='mic'?0.01:R);
+// ---------------- CALIBRE ----------------
+function drawCal(){
+  const n=Math.round(1/R), Lv=R===0.05?39:49; // como los calibres del taller: 20 divisiones en 39 mm (0,05) o 50 divisiones en 49 mm (0,02)
+  let s='';
+  // vista general
+  const X0=60,P=4.9, xm=X0+v*P;
+  s+=`<rect x="30" y="70" width="740" height="34" rx="4" fill="#c9ced4" stroke="var(--ink)" stroke-width="1.5"/>`;
+  for(let mm=0;mm<=140;mm++){const x=X0+mm*P, l=mm%10?(mm%5?5:8):12;s+=`<line x1="${x}" y1="70" x2="${x}" y2="${70+l}" stroke="#222" stroke-width="${mm%10?0.8:1.4}"/>`;if(mm%10===0)s+=`<text x="${x}" y="${95}" text-anchor="middle" font-size="10" fill="#222">${mm/10}</text>`;}
+  s+=`<path d="M30 70 V40 H${X0} V200 L48 180 H30 Z" fill="#b8bec5" stroke="var(--ink)" stroke-width="1.5"/>`; // boca fija
+  // pieza medida
+  if(v>0.3)s+=`<rect x="${X0}" y="118" width="${v*P}" height="62" fill="#E7A95B" stroke="var(--ink)" stroke-width="1.2" opacity=".9"/><text x="${X0+v*P/2}" y="154" text-anchor="middle" font-size="12" fill="#1a1a1a">${objName}</text>`;
+  s+=`<g id="jaw" style="cursor:ew-resize"><path d="M${xm} 40 H${xm+(Lv+6)*P} V104 H${xm+30} V200 L${xm+12} 180 H${xm} Z" fill="#b8bec5" stroke="var(--ink)" stroke-width="1.5" opacity=".95"/>`;
+  s+=`<rect x="${xm}" y="104" width="${(Lv+2)*P}" height="10" fill="#e8ebee" stroke="var(--ink)" stroke-width=".8"/></g>`;
+  s+=`<rect x="${xm-6}" y="100" width="${(Lv+14)*P}" height="30" fill="none" stroke="#F2B400" stroke-width="2.5" stroke-dasharray="5 4"/>`;
+  s+=`<text x="400" y="230" text-anchor="middle" font-size="14" fill="var(--muted)">Zona ampliada (recuadro amarillo)</text>`;
+  // zoom
+  const Z=R===0.05?16.5:14.2, mid=v+Lv/2, X=mm=>400+(mm-mid)*Z, y0=260, y1=350;
+  s+=`<rect x="20" y="${y0}" width="760" height="170" rx="10" fill="#dfe3e7" stroke="var(--ink)" stroke-width="1.5"/>`;
+  const kc=Math.round((v-Math.floor(v+1e-9))/R)%n, mc=Math.floor(v+1e-9)+kc*(1)*(Lv/n)*0+kc*Lv/n; // mm de la raya fija que coincide
+  const mmCo=v+kc*Lv/n;
+  for(let mm=Math.floor(mid-400/Z)-1;mm<=Math.ceil(mid+400/Z)+1;mm++){ if(mm<0)continue; const x=X(mm); if(x<24||x>776)continue;
+    const l=mm%10?(mm%5?16:24):34, co=showSteps&&Math.abs(mm-mmCo)<1e-6;
+    s+=`<line x1="${x}" y1="${y0+62-l}" x2="${x}" y2="${y0+62}" stroke="${co?'#3F8F2A':'#222'}" stroke-width="${co?4:mm%10?1.2:2}"/>`;
+    if(mm%10===0)s+=`<text x="${x}" y="${y0+22}" text-anchor="middle" font-size="16" font-weight="700" fill="#222">${mm/10}</text>`;
+    else if(false)s+=`<text x="${x}" y="${y0+22}" text-anchor="middle" font-size="10" fill="#666">${mm%10}</text>`;}
+  s+=`<text x="30" y="${y0+18}" font-size="11" fill="#555">cm</text><text x="30" y="${y0+76}" font-size="11" fill="#555">regla fija (mm)</text>`;
+  // nonio
+  s+=`<rect x="${X(v)-10}" y="${y0+64}" width="${Lv*Z+20}" height="72" fill="#f4f6f7" stroke="var(--ink)" stroke-width="1"/>`;
+  const labEvery=Math.round(n/10);
+  for(let k=0;k<=n;k++){const x=X(v+k*Lv/n), big=k%labEvery===0, co=showSteps&&k===kc;
+    s+=`<line x1="${x}" y1="${y0+64}" x2="${x}" y2="${y0+64+(big?26:16)}" stroke="${co?'#3F8F2A':'#222'}" stroke-width="${co?4:big?1.8:1.1}"/>`;
+    if(big)s+=`<text x="${x}" y="${y0+108}" text-anchor="middle" font-size="15" font-weight="700" fill="#222">${k/labEvery}</text>`;}
+  s+=`<text x="${X(v)+Lv*Z/2}" y="${y0+130}" text-anchor="middle" font-size="12" fill="#555">nonio: cada división vale ${fmt(R,R===0.1?1:2)} mm · los números son décimas de mm</text>`;
+  if(showSteps)s+=`<line x1="${X(v)}" y1="${y0+30}" x2="${X(v)}" y2="${y0+64}" stroke="#D9362E" stroke-width="2.5" stroke-dasharray="3 3"/><text x="${X(v)}" y="${y0+158}" text-anchor="middle" font-size="12" font-weight="700" fill="#D9362E">cero del nonio</text>`;
+  $('gA').innerHTML=s;
+  const jw=document.getElementById('jaw');if(jw)jw.onpointerdown=startDrag;
+  return {mmInt:Math.floor(v+1e-9),kc,n};
+}
+// ---------------- MICRÓMETRO ----------------
+function drawMic(){
+  let s=''; const vA=v; v=v-base; // posición dentro del rango del micrómetro
+  // vista general (pequeña)
+  const O=14, ax=150, yo=105, xe=ax+v*O, se=ax+25*O+30;
+  s+=`<path d="M${ax-10} ${yo-8} H${ax-50} C${ax-110} ${yo-8} ${ax-110} ${yo+90} ${ax-40} ${yo+90} H${ax+120} C${ax+160} ${yo+90} ${ax+170} ${yo+60} ${ax+170} ${yo+30} V${yo+14} H${ax+140} V${yo+30} C${ax+140} ${yo+55} ${ax+130} ${yo+62} ${ax+110} ${yo+62} H${ax-40} C${ax-80} ${yo+62} ${ax-80} ${yo+20} ${ax-50} ${yo+20} H${ax-10} Z" fill="#8a939c" stroke="var(--ink)" stroke-width="1.5"/>`;
+  s+=`<rect x="${ax-12}" y="${yo-14}" width="12" height="28" fill="#b8bec5" stroke="var(--ink)"/>`;
+  if(v>0.02)s+=`<rect x="${ax}" y="${yo-24}" width="${Math.max(2,v*O)}" height="48" fill="#C87533" stroke="var(--ink)" stroke-width="1"/>`;
+  s+=`<rect x="${xe}" y="${yo-8}" width="${se-xe}" height="16" fill="#d5d9dd" stroke="var(--ink)"/>`;
+  s+=`<rect x="${ax+140}" y="${yo-18}" width="${se-ax-140}" height="36" fill="#e4e7ea" stroke="var(--ink)"/>`;
+  s+=`<rect x="${Math.max(xe,ax+140)+0}" y="${yo-26}" width="90" height="52" rx="6" fill="#cfd4d9" stroke="var(--ink)"/>`;
+  s+=`<rect x="${Math.max(xe,ax+140)+90}" y="${yo-18}" width="44" height="36" rx="6" fill="#b8bec5" stroke="var(--ink)"/>`;
+  s+=`<text x="${ax-30}" y="${yo+110}" text-anchor="middle" font-size="12" fill="var(--muted)">arco</text><text x="${ax+v*O/2}" y="${yo-32}" text-anchor="middle" font-size="12" fill="var(--muted)">pieza</text><text x="${Math.max(xe,ax+140)+112}" y="${yo+40}" text-anchor="middle" font-size="12" fill="var(--muted)">carraca</text>`;
+  s+=`<rect x="${Math.max(xe,ax+140)-60}" y="${yo-34}" width="130" height="68" fill="none" stroke="#F2B400" stroke-width="2.5" stroke-dasharray="5 4"/>`;
+  s+=`<text x="${ax-30}" y="${yo+128}" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">${base}–${base+25} mm</text><text x="620" y="${yo+4}" font-size="14" fill="var(--muted)">Zona ampliada</text><text x="620" y="${yo+22}" font-size="14" fill="var(--muted)">(recuadro amarillo)</text>`;
+  // zoom
+  const P=46, XE=520, yR=335, X=mm=>XE+(mm-v)*P, th=190;
+  s+=`<rect x="20" y="${yR-110}" width="760" height="225" rx="10" fill="#dfe3e7" stroke="var(--ink)" stroke-width="1.5"/>`;
+  s+=`<rect x="24" y="${yR-34}" width="${XE-24}" height="68" fill="#eef0f2" stroke="var(--ink)" stroke-width="1"/>`;
+  s+=`<line x1="24" y1="${yR}" x2="${XE}" y2="${yR}" stroke="#222" stroke-width="1.8"/>`;
+  const halfOn=(v-Math.floor(v+1e-9))>=0.5-1e-9, mmI=Math.floor(v+1e-9);
+  for(let mm=Math.max(0,Math.floor(v)-12);mm<=Math.floor(v)+1;mm++){
+    const x=X(mm); if(x<28)continue;
+    if(x<=XE+0.5){const co=showSteps&&mm===mmI;
+      s+=`<line x1="${x}" y1="${yR-(mm%5?16:26)}" x2="${x}" y2="${yR}" stroke="${co?'#3F8F2A':'#222'}" stroke-width="${co?4:1.6}"/>`;
+      if(mm%5===0)s+=`<text x="${x}" y="${yR-30}" text-anchor="middle" font-size="16" font-weight="700" fill="#222">${mm+base}</text>`;}
+    const xh=X(mm+0.5); if(xh>=28&&xh<=XE+0.5){const coh=showSteps&&halfOn&&mm===mmI;
+      s+=`<line x1="${xh}" y1="${yR}" x2="${xh}" y2="${yR+16}" stroke="${coh?'#3F8F2A':'#222'}" stroke-width="${coh?4:1.4}"/>`;}
+  }
+  s+=`<text x="32" y="${yR+52}" font-size="12" fill="#555">cilindro fijo: arriba milímetros · abajo medios milímetros</text>`;
+  // tambor móvil
+  const pos=((v%0.5)+0.5)%0.5/0.01, SP=15;
+  s+=`<g id="jaw" style="cursor:ew-resize"><rect x="${XE}" y="${yR-th/2}" width="170" height="${th}" rx="12" fill="#cfd4d9" stroke="var(--ink)" stroke-width="1.8"/>`;
+  s+=`<rect x="${XE+170}" y="${yR-th/2+18}" width="70" height="${th-36}" rx="10" fill="#b8bec5" stroke="var(--ink)" stroke-width="1.5"/>`;
+  for(let m=Math.floor(pos)-7;m<=Math.ceil(pos)+7;m++){const y=yR+(pos-m)*SP; if(y<yR-th/2+8||y>yR+th/2-8)continue; const mm=((m%50)+50)%50, co=showSteps&&m===Math.round(pos);
+    s+=`<line x1="${XE}" y1="${y}" x2="${XE+(mm%5?18:30)}" y2="${y}" stroke="${co?'#3F8F2A':'#222'}" stroke-width="${co?4:1.5}"/>`;
+    if(mm%5===0)s+=`<text x="${XE+36}" y="${y+6}" font-size="16" font-weight="700" fill="#222">${mm}</text>`;}
+  s+=`<text x="${XE+85}" y="${yR+th/2-6}" text-anchor="middle" font-size="12" fill="#555">tambor: 50 div. = 0,5 mm</text></g>`;
+  if(showSteps)s+=`<line x1="${XE-60}" y1="${yR}" x2="${XE+2}" y2="${yR}" stroke="#D9362E" stroke-width="3" stroke-dasharray="5 3"/><text x="${XE-8}" y="${yR+34}" text-anchor="end" font-size="13" font-weight="700" fill="#D9362E">línea de referencia</text>`;
+  $('gA').innerHTML=s;
+  const jw=document.getElementById('jaw');if(jw)jw.onpointerdown=startDrag;
+  v=vA; s='';
+  return {mmI:mmI+base,halfOn,div:Math.round(pos)%50};
+}
+function draw(){
+  v=q(v);
+  const r=cur==='cal'?drawCal():drawMic();
+  $('lect').innerHTML=prac?'¿?':fmt(v,dec())+' mm';
+  let h;
+  if(cur==='cal'){
+    const a=r.mmInt, b=r.kc*R;
+    h=`<h2>Cómo se lee el calibre</h2><ol style="margin:0;padding-left:20px">
+    <li>Mira el <b style="color:#D9362E">cero del nonio</b>: la última raya de la regla fija que ha pasado son los <b>milímetros enteros</b>: <b>${prac?'?':a+' mm'}</b>.</li>
+    <li>Busca la raya del nonio que <b style="color:#3F8F2A">coincide</b> con una raya de la regla fija. Es la división <b>${prac?'?':r.kc}</b>, y cada una vale ${fmt(R,R===0.1?1:2)} mm: <b>${prac?'?':fmt(b,dec())+' mm'}</b>.</li>
+    <li>Súmalo: <b>${prac?'?':a+' + '+fmt(b,dec())+' = '+fmt(v,dec())+' mm'}</b>.</li></ol>`;
+  }else{
+    const a=r.mmI, hf=r.halfOn?0.5:0, c=r.div*0.01;
+    h=`<h2>Cómo se lee el micrómetro</h2><ol style="margin:0;padding-left:20px">
+    <li>En el cilindro fijo, la última raya de <b>arriba</b> que se ve son los <b>milímetros</b>: <b>${prac?'?':a+' mm'}</b>.</li>
+    <li>Si después se ve una raya de <b>abajo</b>, suma <b>0,5 mm</b>: <b>${prac?'?':(r.halfOn?'sí, + 0,5 mm':'no se ve, + 0')}</b>.</li>
+    <li>En el tambor, la raya que coincide con la <b style="color:#D9362E">línea de referencia</b> son las <b>centésimas</b>: división <b>${prac?'?':r.div}</b> → <b>${prac?'?':fmt(c,2)+' mm'}</b>.</li>
+    <li>Súmalo: <b>${prac?'?':a+' + '+fmt(hf,1)+' + '+fmt(c,2)+' = '+fmt(v,2)+' mm'}</b>.</li></ol>`;
+  }
+  $('how').innerHTML=h;
+}
+function tips(){
+  $('tips').innerHTML=cur==='cal'?`<h2>En el taller</h2><ul>
+  <li>El <b>calibre</b> (pie de rey) mide medidas exteriores, interiores (con las bocas de arriba) y profundidades (con la varilla).</li>
+  <li>Úsalo para el <b>carrete</b> (40 × 40 mm), la <b>columna de la chapa</b> y el <b>fondo del paquete de chapas</b>. Con ese fondo sabes cuántas chapas has metido.</li>
+  <li>Cierra las bocas sin apretar y mira la escala <b>de frente</b>, no de lado.</li>
+  <li>Antes de medir, comprueba que con las bocas cerradas marca <b>0</b>.</li>
+  <li><b>Fichas de ejercicios</b>: las del 1 al 12 son de un calibre de <b>0,05 mm</b> y las del 13 al 20, de <b>0,02 mm</b>. Para comprobar una, elige ese calibre, mueve la boca hasta que quede como en el dibujo de la ficha y mira la lectura.</li></ul>`
+  :`<h2>En el taller</h2><ul>
+  <li>El <b>micrómetro</b> mide con precisión de <b>0,01 mm</b>: sirve para el <b>diámetro del hilo</b> y el <b>espesor de la chapa</b>.</li>
+  <li>Gira el tambor hasta que casi toque y termina con la <b>carraca</b> (el trinquete del final) hasta que haga "clic": así no aprietas de más.</li>
+  <li>El <b>esmalte</b> del hilo también mide: para saber el cobre, lija la punta y mide ahí.</li>
+  <li>Comprueba el <b>cero</b> con las puntas juntas antes de medir.</li>
+  <li><b>Fichas de ejercicios</b>: fíjate en el <b>rango</b> que pone cada micrómetro (0–25, 25–50, 50–75 o 75–100). Para comprobar una, elige ese rango, mueve el tambor hasta que quede como en el dibujo y mira la lectura.</li></ul>`;
+}
+function objs(){$('objs').innerHTML=OBJ[cur].map(([n,val],i)=>`<button data-o="${i}" style="flex:1 1 45%;padding:8px;font-size:.9rem">${n}</button>`).join('');
+  document.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{const o=OBJ[cur][+b.dataset.o];if(cur==='mic')setBase(0);objName=o[0];v=o[1];$('rV').value=v;draw();});}
+// arrastrar
+const sv=$('sv');let drag=null;
+function toSvg(e){const p=sv.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(sv.getScreenCTM().inverse());}
+function startDrag(e){drag={x:toSvg(e).x,v};sv.setPointerCapture(e.pointerId);}
+sv.addEventListener('pointermove',e=>{if(!drag)return;const P=cur==='cal'?4.9:46;v=cur==='cal'?Math.max(0,Math.min(140,drag.v+(toSvg(e).x-drag.x)/P)):Math.max(base,Math.min(base+25,drag.v+(toSvg(e).x-drag.x)/P));$('rV').value=v;draw();});
+sv.addEventListener('pointerup',()=>drag=null);
+$('rV').oninput=e=>{v=+e.target.value;objName=cur==='cal'?'pieza':'pieza';draw();};
+function setBase(b){base=b;const r=$('rV');r.min=b;r.max=b+25;if(v<b||v>b+25)v=b+(v%25);r.value=v;document.querySelectorAll('[data-b]').forEach(x=>x.setAttribute('aria-pressed',+x.dataset.b===b));}
+document.querySelectorAll('[data-b]').forEach(x=>x.onclick=()=>{setBase(+x.dataset.b);objName='pieza';if(prac)nuevo();else draw();});
+document.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{R=+b.dataset.r;document.querySelectorAll('[data-r]').forEach(x=>x.setAttribute('aria-pressed',x===b));if(prac)nuevo();else draw();});
+$('bPrac').onclick=()=>{prac=!prac;showSteps=!prac;$('prac').style.display=prac?'':'none';$('bPrac').textContent=prac?'Volver a ver la lectura':'Practicar: medida al azar';
+  if(prac){ok=0;tot=0;$('score').textContent='';nuevo();}else draw();};
+function nuevo(){v=cur==='cal'?q(2+Math.random()*120):q(base+0.2+Math.random()*24.5);objName='pieza';$('rV').value=v;$('iAns').value='';$('res').innerHTML='';showSteps=false;draw();$('iAns').focus();}
+$('bChk').onclick=()=>{const a=parseFloat($('iAns').value.replace(',','.'));if(isNaN(a))return;tot++;const good=Math.abs(a-v)<(cur==='mic'?0.005:R/2);if(good)ok++;
+  $('res').innerHTML=(good?'<b style="color:var(--force)">¡Correcto!</b>':`<b style="color:#D9362E">No.</b> Mide <b>${fmt(v,dec())} mm</b>.`)+' <button id="bNext" style="font:inherit;font-weight:700;margin-left:6px;padding:4px 10px;border-radius:8px;border:2px solid var(--acc);background:var(--card);color:var(--acc);cursor:pointer">Otra</button>';
+  $('score').textContent=`Aciertos: ${ok} de ${tot}`;showSteps=true;const keep=prac;prac=false;draw();prac=keep;$('lect').innerHTML=fmt(v,dec())+' mm';$('bNext').onclick=nuevo;};
+$('iAns').addEventListener('keydown',e=>{if(e.key==='Enter')$('bChk').click();});
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));cur=b.dataset.c;
+  $('pCal').style.display=cur==='cal'?'':'none';$('pMic').style.display=cur==='mic'?'':'none';base=0;document.querySelectorAll('[data-b]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.b==='0'));const r=$('rV');r.min=0;r.max=cur==='cal'?140:25;r.step=cur==='cal'?0.01:0.005;
+  v=OBJ[cur][0][1];objName=OBJ[cur][0][0];r.value=v;prac=false;showSteps=true;$('prac').style.display='none';$('bPrac').textContent='Practicar: medida al azar';objs();tips();draw();});
+objs();tips();draw();
+
+</script>
+</body>
+</html>
