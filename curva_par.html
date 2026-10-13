@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Curvas de par e intensidad del motor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<script>try{const t=localStorage.getItem('maq-tema');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;--ph1:#D9362E;--ph2:#2E75B6;--ph3:#3F8F2A;--steel:#9aa5b1;--steel2:#c3cbd3;--warn:#C00000;--ok:#3F8F2A;--grid:#e3e8ee;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:16px 16px 36px}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.back{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+.crumbs{font-size:.88rem;color:var(--muted);flex:1 1 auto}
+.crumbs a{color:var(--muted)} .crumbs b{color:var(--ink)}
+.theme{font:inherit;font-size:.9rem;font-weight:700;padding:7px 12px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage svg{display:block;width:100%;height:auto;touch-action:manipulation;user-select:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button,.seg button{font:inherit;font-weight:700;padding:11px 12px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 120px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}
+.seg button{flex:1 1 70px;padding:8px 8px;font-size:.92rem;border-width:2px}
+.seg button[aria-pressed="true"],.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.lab{font-weight:700;font-size:.95rem;margin:2px 0 2px}
+.sl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700} .sl output{font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
+.sl input{grid-column:1/3}
+input[type=range]{width:100%;accent-color:var(--acc);height:28px}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.read{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
+.read div{border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.read small{display:block;color:var(--muted);font-size:.8rem}
+.read b{font-size:1.25rem;font-variant-numeric:tabular-nums}
+.state{border-radius:10px;padding:8px 12px;font-weight:700;margin-bottom:10px;background:var(--grid)}
+.state.ok{background:rgba(63,143,42,.16);color:var(--ok)} .state.bad{background:rgba(217,54,46,.15);color:var(--warn)} .state.mid{background:rgba(242,180,0,.2)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box.green{background:rgba(63,143,42,.10);border-left:6px solid var(--force)}
+.box ul,.box ol{margin:0;padding-left:20px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.box li.on{background:rgba(242,180,0,.25);border-radius:6px}
+.hint{font-size:.88rem;color:var(--muted);margin:6px 4px 0}
+svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif}
+.hit{cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+.therm{height:14px;border-radius:7px;background:var(--grid);overflow:hidden;margin:4px 0 12px;border:1px solid var(--line)}
+.therm i{display:block;height:100%;width:0;background:linear-gradient(90deg,#3F8F2A,#F2B400 60%,#D9362E)}
+.chk{display:flex;gap:8px;align-items:center;font-size:.95rem;margin:0 0 10px}
+.chk input{width:20px;height:20px;accent-color:var(--acc)}
+
+</style>
+</head>
+<body>
+<main>
+  <nav class="bar" aria-label="Navegación">
+    <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › Tema 5 › <b>5.4.2 · 5.5 · 5.8 Curvas del motor</b></span>
+    <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
+  </nav>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 5 · Puntos 5.4.2, 5.5 y 5.8</small><h1>Par, velocidad y corriente del motor</h1><p class="sub">Arranca el motor, ponle carga y mira dónde se queda trabajando. Prueba también a bajar la tensión o cambiar la frecuencia.</p></header>
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 640 540" role="img" aria-label="Curva de par y curva de intensidad del motor frente a la velocidad, con la carga y el punto de funcionamiento"><g id="g"></g></svg>
+        <div class="legend"><span><b style="color:var(--field)">━</b> par del motor</span><span><b style="color:var(--cur)">━</b> par de la carga</span><span><b style="color:var(--cu)">━</b> corriente</span><span>● punto de funcionamiento</span></div></div>
+      <div class="boxes">
+        <div class="box" id="exp"></div>
+        <div class="box blue"><h2>Las claves</h2><ul>
+          <li>El motor acelera mientras su par es <b>mayor</b> que el de la carga. Se queda donde <b>se cruzan</b> las dos curvas.</li>
+          <li>Más carga → <b>menos velocidad</b>, <b>más deslizamiento</b> y <b>más corriente</b>.</li>
+          <li>Si la carga pide más que el <b>par máximo</b>, el motor se frena y se para: vuelve a la corriente de arranque y <b>salta el térmico</b>.</li>
+          <li>Con la <b>frecuencia</b> la curva entera se mueve a otra velocidad. Bajando la <b>tensión</b> la velocidad casi no cambia, pero el motor pierde mucha fuerza.</li></ul>
+          <p class="hint">Primera vez: pulsa <b>Conectar</b> y luego mueve la <b>carga</b> poco a poco.</p></div>
+      </div>
+    </div>
+    <aside class="panel">
+      <div class="ctrl"><button id="bOn" class="main">Conectar</button></div>
+      <div class="state" id="st">Motor parado</div>
+      <div class="sl"><label for="rL">Carga (par resistente)</label><output id="oL">50 %</output><input id="rL" type="range" min="0" max="320" step="5" value="50"></div>
+      <div class="lab">Tensión</div>
+      <div class="seg" id="sV"><button data-v="1" aria-pressed="true">100 %</button><button data-v="0.8" aria-pressed="false">80 %</button><button data-v="0.6" aria-pressed="false">60 %</button></div>
+      <div class="sl"><label for="rF">Frecuencia (con variador)</label><output id="oF">50 Hz</output><input id="rF" type="range" min="10" max="80" step="5" value="50"></div>
+      <label class="chk"><input type="checkbox" id="cP" checked> Ver los 6 puntos (a 50 Hz y 100 %)</label>
+      <div class="read"><div><small>Velocidad</small><b id="vN">0 rpm</b></div><div><small>Deslizamiento</small><b id="vS">–</b></div>
+        <div><small>Par del motor</small><b id="vM">–</b></div><div><small>Corriente</small><b id="vI">–</b></div></div>
+      <div class="lab">Temperatura del motor</div><div class="therm"><i id="th"></i></div>
+    </aside>
+  </div>
+
+</main>
+<script>
+// navegación y tema (común a todas las páginas)
+document.addEventListener('keydown',e=>{if(e.key==='Escape')location.href='index.html';});
+(function(){const b=document.getElementById('themeBtn'),r=document.documentElement;
+ const cur=()=>r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+ const lab=()=>{b.textContent=cur()==='dark'?'☀ Modo claro':'☾ Modo oscuro';};
+ b.onclick=()=>{const n=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('maq-tema',n);}catch(e){}lab();};lab();})();
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmt=(x,d=0)=>x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+// ---- modelo del motor (4 polos, por unidad: par nominal = 1, corriente nominal = 1) ----
+const sk=0.217, sn=0.04;
+function Mk(s){s=Math.max(s,1e-6);return 2*2.8/(s/sk+sk/s)+0.95*Math.pow(s,1.6);}
+const MN=Mk(sn);
+const I0=0.4; let KA=0.3,KK=1; (function(){let lo=1e-3,hi=5;const g=a=>(sn/Math.hypot(sn,a))/(1/Math.hypot(1,a))-0.917/6.49;for(let i=0;i<60;i++){const m=(lo+hi)/2;(g(lo)*g(m)<=0)?hi=m:lo=m;}KA=(lo+hi)/2;KK=6.49*Math.hypot(1,KA);})();
+function Ik(s){const ir=KK*s/Math.hypot(s,KA);return Math.hypot(I0,ir);}
+let on=false,n=0,V=1,F=50,Mr=0.5,heat=0,tripped=false,last=performance.now(),tOn=0;
+const ns=()=>1500*F/50;
+function sEq(nn){return Math.max(1e-5,(ns()-nn)/1500);} // deslizamiento "en rpm" igual que a 50 Hz (V/f)
+function kf(){return F>50?Math.pow(50/F,2):1;}
+function Mot(nn){const s=sEq(nn);return Mk(Math.min(s,1.5))/MN*V*V*kf()*(nn<0?1:1);}
+function Imo(nn){return Ik(Math.min(sEq(nn),1.5))*V;}
+function step(dt){
+  if(on){tOn+=dt;
+    const acc=(Mot(n)-Mr)*900; n+=acc*dt; if(n<0)n=0; if(n>ns())n=ns()-0.5;
+    const I=Imo(n); heat+=Math.max(-0.04,(I*I-1.1)/50)*dt; if(I<1.05)heat-=0.04*dt;
+    if(heat>=1){heat=1;on=false;tripped=true;texts();}
+  }else{n=Math.max(0,n-dt*700);heat=Math.max(0,heat-0.05*dt);}
+  heat=Math.max(0,heat);
+}
+function frame(now){const dt=Math.min(.04,(now-last)/1000);last=now;for(let i=0;i<4;i++)step(dt/4);draw();requestAnimationFrame(frame);}
+// ---- dibujo ----
+const X0=62,X1=620,T0=24,T1=250,B0=290,B1=496;
+function draw(){
+  const ink=css('--ink'),mut=css('--muted'),ln=css('--line'),fld=css('--field'),cur=css('--cur'),cu=css('--cu'),gr=css('--grid');
+  const NX=F>55?2600:1600; const xp=v=>X0+(X1-X0)*v/NX;
+  const yT=v=>T1-(T1-T0)*v/3.4, yI=v=>B1-(B1-B0)*v/7.5;
+  let s='';
+  // ejes y rejilla
+  for(const [a,b,yf,max,stp,lab] of [[T0,T1,yT,3,1,'PAR (veces el nominal)'],[B0,B1,yI,7,1,'CORRIENTE (veces In)']]){
+    for(let v=0;v<=max;v+=stp){const y=yf(v);s+=`<line x1="${X0}" y1="${y}" x2="${X1}" y2="${y}" stroke="${gr}"/><text x="${X0-8}" y="${y+5}" text-anchor="end" font-size="13" fill="${mut}">${v}</text>`;}
+    s+=`<line x1="${X0}" y1="${a}" x2="${X0}" y2="${b}" stroke="${ink}" stroke-width="1.5"/><line x1="${X0}" y1="${b}" x2="${X1}" y2="${b}" stroke="${ink}" stroke-width="1.5"/>`;
+    s+=`<text x="${X0+6}" y="${a+2}" font-size="13" font-weight="700" fill="${mut}">${lab}</text>`;
+  }
+  for(let v=0;v<=NX;v+=500){const x=xp(v);s+=`<text x="${x}" y="${B1+18}" text-anchor="middle" font-size="13" fill="${mut}">${v}</text>`;}
+  s+=`<text x="${X1}" y="${B1+36}" text-anchor="end" font-size="13" fill="${mut}">velocidad del rótor (rpm)</text>`;
+  s+=`<line x1="${X0}" y1="${yT(1)}" x2="${X1}" y2="${yT(1)}" stroke="${mut}" stroke-dasharray="5 5"/><line x1="${X0}" y1="${yI(1)}" x2="${X1}" y2="${yI(1)}" stroke="${mut}" stroke-dasharray="5 5"/>`;
+  // velocidad del campo
+  const x5=xp(ns()); s+=`<line x1="${x5}" y1="${T0}" x2="${x5}" y2="${B1}" stroke="${fld}" stroke-dasharray="3 5" opacity=".7"/><text x="${x5-4}" y="${T0+16}" text-anchor="end" font-size="12" fill="${fld}">campo: ${fmt(ns())} rpm</text>`;
+  // curvas
+  let pm=[],pi=[];const n0=Math.max(0,ns()-1500);
+  for(let i=0;i<=300;i++){const nn=n0+(ns()-n0)*i/300;pm.push(`${xp(nn).toFixed(1)},${yT(Math.min(3.4,Mot(nn))).toFixed(1)}`);pi.push(`${xp(nn).toFixed(1)},${yI(Math.min(7.5,Imo(nn))).toFixed(1)}`);}
+  if(n0>0){pm.unshift(`${xp(0)},${yT(Math.min(3.4,Mot(n0)))}`);pi.unshift(`${xp(0)},${yI(Math.min(7.5,Imo(n0)))}`);}
+  s+=`<polyline points="${pm.join(' ')}" fill="none" stroke="${fld}" stroke-width="3.5"/>`;
+  s+=`<polyline points="${pi.join(' ')}" fill="none" stroke="${cu}" stroke-width="3.5"/>`;
+  // carga
+  s+=`<line x1="${X0}" y1="${yT(Mr)}" x2="${X1}" y2="${yT(Mr)}" stroke="${cur}" stroke-width="3"/><text x="${X1-4}" y="${yT(Mr)-6}" text-anchor="end" font-size="12" font-weight="700" fill="${cur}">carga</text>`;
+  // 6 puntos
+  if($('cP').checked&&F===50&&V===1){
+    const pts=[[1,sn],[2,sOf(1.6)],[3,sOf(2.35)],[4,sMax()],[5,1],[6,0.006]];
+    for(const [k,sv] of pts){const nn=1500*(1-sv);const x=xp(nn);
+      s+=`<circle cx="${x}" cy="${yT(Mot(nn))}" r="5" fill="${fld}"/><text x="${x+(k===6?-10:8)}" y="${yT(Mot(nn))-8}" font-size="14" font-weight="700" fill="${fld}">${k}</text>`;
+      s+=`<circle cx="${x}" cy="${yI(Imo(nn))}" r="5" fill="${cu}"/><text x="${x+(k===6?-12:8)}" y="${yI(Imo(nn))-8}" font-size="14" font-weight="700" fill="${cu}">${k}</text>`;}
+  }
+  // punto actual
+  if(on||n>1){const x=xp(n);
+    s+=`<line x1="${x}" y1="${T0}" x2="${x}" y2="${B1}" stroke="${ink}" stroke-width="1" stroke-dasharray="2 4"/>`;
+    s+=`<circle cx="${x}" cy="${yT(on?Mot(n):0)}" r="9" fill="${ink}" stroke="${css('--card')}" stroke-width="3"/>`;
+    s+=`<circle cx="${x}" cy="${yI(on?Imo(n):0)}" r="9" fill="${ink}" stroke="${css('--card')}" stroke-width="3"/>`;}
+  $('g').innerHTML=s;
+  // lecturas
+  const I=on?Imo(n):0, M=on?Mot(n):0;
+  $('vN').textContent=fmt(n)+' rpm'; $('vS').textContent=on?fmt((ns()-n)/ns()*100,1)+' %':'–';
+  $('vM').textContent=on?fmt(M*100)+' %':'–'; $('vI').textContent=on?fmt(I,1)+' × In':'–';
+  $('th').style.width=(heat*100).toFixed(0)+'%';
+  const st=$('st'); let c='',t='';
+  if(tripped&&!on){t='¡Ha saltado el relé térmico! Baja la carga y vuelve a conectar.';c='bad';}
+  else if(!on){t='Motor parado';}
+  else if(n<5&&Mot(0)<Mr){t='No arranca: la carga pide más par que el de arranque. Se calienta muy deprisa.';c='bad';}
+  else if(Math.abs(Mot(n)-Mr)>0.05&&tOn<6&&n<ns()*0.97){t='Acelerando: sobra par';c='mid';}
+  else if(Mr>Mot(n)+0.05){t='¡Se frena! La carga supera el par máximo';c='bad';}
+  else{const r=Mr; if(F!==50||V!==1){t=I>1.15?'Trabajando, pero con demasiada corriente':'Trabajando a '+fmt(n)+' rpm';c=I>1.15?'mid':'ok';}
+    else if(r<0.12){t='Punto 6: en vacío';c='ok';} else if(r<0.9){t='Entre vacío y nominal: va bien';c='ok';} else if(r<=1.08){t='Punto 1: nominal';c='ok';}
+    else if(r<1.9){t='Punto 2: sobrecarga. Se calienta';c='mid';} else if(r<2.6){t='Punto 3: gran sobrecarga. ¡Se puede quemar!';c='bad';} else {t='Punto 4: cerca del par máximo';c='bad';}}
+  st.textContent=t; st.className='state '+c;
+}
+function sOf(m){let lo=sn,hi=sk;for(let i=0;i<50;i++){const md=(lo+hi)/2;(Mk(md)/MN<m)?lo=md:hi=md;}return (lo+hi)/2;}
+function sMax(){let b=0,bs=0;for(let i=1;i<=1000;i++){const s=i/1000;if(Mk(s)>b){b=Mk(s);bs=s;}}return bs;}
+function texts(){
+  let m;
+  if(tripped&&!on) m='El motor ha estado demasiado tiempo con mucha corriente y el <b>relé térmico</b> lo ha desconectado para que no se queme.';
+  else if(!on) m='Pulsa <b>Conectar</b>. El motor arranca en el <b>punto 5</b>: velocidad cero y corriente altísima (unas 6 veces la nominal).';
+  else if(V<1) m=`Con el <b>${V*100} % de la tensión</b> la curva de par se hace mucho más baja, pero el punto de funcionamiento casi no cambia de velocidad. Para la misma carga el motor necesita <b>más corriente</b> y se calienta: por eso este método casi no se usa.`;
+  else if(F!==50) m=`A <b>${F} Hz</b> el campo gira a ${fmt(1500*F/50)} rpm y la curva entera se mueve. ${F>50?'Por encima de 50 Hz la tensión ya no puede subir: el <b>par máximo baja</b> (sobrevelocidad).':'El variador baja la tensión a la vez que la frecuencia, así que el motor <b>mantiene su par</b>.'}`;
+  else m='Mueve la <b>carga</b>: el punto negro se queda donde se cruzan la curva del motor y la línea de la carga. Fíjate en la corriente y en la temperatura.';
+  $('exp').innerHTML='<h2>Qué pasa</h2><p>'+m+'</p>';
+  $('bOn').textContent=on?'Desconectar':'Conectar';$('bOn').classList.toggle('on',on);
+  $('oL').textContent=Math.round(Mr*100)+' %'; $('oF').textContent=F+' Hz';
+}
+$('bOn').onclick=()=>{on=!on;if(on){tripped=false;n=0;tOn=0;}texts();};
+$('rL').oninput=e=>{Mr=+e.target.value/100;tOn=Math.min(tOn,4);texts();};
+$('rF').oninput=e=>{F=+e.target.value;tOn=0;texts();};
+$('cP').onchange=()=>draw();
+document.querySelectorAll('#sV button').forEach(b=>b.onclick=()=>{V=+b.dataset.v;tOn=0;document.querySelectorAll('#sV button').forEach(x=>x.setAttribute('aria-pressed',x===b));texts();});
+texts();requestAnimationFrame(frame);
+
+</script>
+</body>
+</html>

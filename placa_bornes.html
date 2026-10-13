@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Placa de bornes del motor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<script>try{const t=localStorage.getItem('maq-tema');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;--ph1:#D9362E;--ph2:#2E75B6;--ph3:#3F8F2A;--steel:#9aa5b1;--steel2:#c3cbd3;--warn:#C00000;--ok:#3F8F2A;--grid:#e3e8ee;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:16px 16px 36px}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.back{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+.crumbs{font-size:.88rem;color:var(--muted);flex:1 1 auto}
+.crumbs a{color:var(--muted)} .crumbs b{color:var(--ink)}
+.theme{font:inherit;font-size:.9rem;font-weight:700;padding:7px 12px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage svg{display:block;width:100%;height:auto;touch-action:manipulation;user-select:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button,.seg button{font:inherit;font-weight:700;padding:11px 12px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 120px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}
+.seg button{flex:1 1 70px;padding:8px 8px;font-size:.92rem;border-width:2px}
+.seg button[aria-pressed="true"],.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.lab{font-weight:700;font-size:.95rem;margin:2px 0 2px}
+.sl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700} .sl output{font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
+.sl input{grid-column:1/3}
+input[type=range]{width:100%;accent-color:var(--acc);height:28px}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.read{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
+.read div{border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.read small{display:block;color:var(--muted);font-size:.8rem}
+.read b{font-size:1.25rem;font-variant-numeric:tabular-nums}
+.state{border-radius:10px;padding:8px 12px;font-weight:700;margin-bottom:10px;background:var(--grid)}
+.state.ok{background:rgba(63,143,42,.16);color:var(--ok)} .state.bad{background:rgba(217,54,46,.15);color:var(--warn)} .state.mid{background:rgba(242,180,0,.2)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box.green{background:rgba(63,143,42,.10);border-left:6px solid var(--force)}
+.box ul,.box ol{margin:0;padding-left:20px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.box li.on{background:rgba(242,180,0,.25);border-radius:6px}
+.hint{font-size:.88rem;color:var(--muted);margin:6px 4px 0}
+svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif}
+.hit{cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+@keyframes humo{from{transform:translateY(0) scale(.6);opacity:.8}to{transform:translateY(-70px) scale(1.6);opacity:0}}
+.humo{animation:humo 1.6s linear infinite;transform-box:fill-box;transform-origin:center}
+
+</style>
+</head>
+<body>
+<main>
+  <nav class="bar" aria-label="Navegación">
+    <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › Tema 5 › <b>5.6 Placa de bornes</b></span>
+    <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
+  </nav>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 5 · Punto 5.6</small><h1>Conecta el motor: ¿estrella o triángulo?</h1><p class="sub">Toca los huecos de la caja de bornes para poner o quitar las chapas. Elige el motor y la red, y pulsa Conectar.</p></header>
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 660 470" role="img" aria-label="Caja de bornes con seis bornes y huecos para las chapas, esquema de las bobinas y motor"><g id="g"></g></svg>
+        <div class="legend"><span>Borne = <b>tornillo</b></span><span><b style="color:#C9A227">▬</b> chapa (puente)</span><span>▭ hueco vacío: tócalo para poner una chapa</span></div></div>
+      <div class="boxes">
+        <div class="box" id="exp"></div>
+        <div class="box blue"><h2>Regla de oro</h2><ul>
+          <li>La tensión <b>más baja</b> de la placa (230 V en un motor 230/400 V) es la que aguanta <b>cada bobina</b>.</li>
+          <li><b>Estrella</b>: cada bobina recibe menos tensión que la red (230 V con red de 400 V).</li>
+          <li><b>Triángulo</b>: cada bobina recibe la tensión de la red entera.</li>
+          <li>Abajo los bornes están <b>cruzados</b> (W2, U2, V2) para que las chapas del triángulo queden rectas. Activa "ver las bobinas" para entenderlo.</li></ul></div>
+      </div>
+    </div>
+    <aside class="panel">
+      <div class="ctrl"><button id="bOn" class="main">Conectar</button></div>
+      <div class="state" id="st">Desconectado</div>
+      <div class="lab">Motor (placa)</div>
+      <div class="seg" id="sM"><button data-v="230" aria-pressed="true">230/400 V</button><button data-v="400" aria-pressed="false">400/690 V</button></div>
+      <div class="lab">Tensión de la red (entre fases)</div>
+      <div class="seg" id="sR"><button data-v="400" aria-pressed="true">400 V</button><button data-v="230" aria-pressed="false">230 V</button></div>
+      <div class="ctrl"><button id="bY">Poner en estrella</button><button id="bD">Poner en triángulo</button><button id="bC">Quitar chapas</button></div>
+      <label class="lab" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="cIn" checked style="width:20px;height:20px;accent-color:var(--acc)"> Ver las bobinas por dentro</label>
+      <div class="read" style="margin-top:10px"><div><small>Tensión en cada bobina</small><b id="vB">–</b></div><div><small>La bobina aguanta</small><b id="vA">230 V</b></div></div>
+    </aside>
+  </div>
+
+</main>
+<script>
+// navegación y tema (común a todas las páginas)
+document.addEventListener('keydown',e=>{if(e.key==='Escape')location.href='index.html';});
+(function(){const b=document.getElementById('themeBtn'),r=document.documentElement;
+ const cur=()=>r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+ const lab=()=>{b.textContent=cur()==='dark'?'☀ Modo claro':'☾ Modo oscuro';};
+ b.onclick=()=>{const n=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('maq-tema',n);}catch(e){}lab();};lab();})();
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmt=(x,d=0)=>x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+let on=false,M=230,R=400,t=0,last=performance.now(),ang=0,burn=0;
+// huecos: 3 verticales (U1-W2, V1-U2, W1-V2) y 2 horizontales abajo (W2-U2, U2-V2)
+const SL=[{k:'v0',a:'U1',b:'W2'},{k:'v1',a:'V1',b:'U2'},{k:'v2',a:'W1',b:'V2'},{k:'h0',a:'W2',b:'U2'},{k:'h1',a:'U2',b:'V2'}];
+const ch={v0:false,v1:false,v2:false,h0:false,h1:false};
+const BX=[120,220,320], TY=150, BY=300;
+const POS={U1:[BX[0],TY],V1:[BX[1],TY],W1:[BX[2],TY],W2:[BX[0],BY],U2:[BX[1],BY],V2:[BX[2],BY]};
+function evalc(){
+  // unión de nodos por chapas
+  const par={};const f=x=>par[x]===undefined||par[x]===x?x:(par[x]=f(par[x]));const u=(a,b)=>{par[f(a)]=f(b);};
+  for(const s of SL) if(ch[s.k]) u(s.a,s.b);
+  if(f('U1')===f('V1')||f('V1')===f('W1')||f('U1')===f('W1')) return {t:'cc'};
+  const Y=ch.h0&&ch.h1&&!ch.v0&&!ch.v1&&!ch.v2, D=ch.v0&&ch.v1&&ch.v2&&!ch.h0&&!ch.h1;
+  if(Y) return {t:'Y',vb:Math.round(R/Math.sqrt(3))};
+  if(D) return {t:'D',vb:R};
+  if(!Object.values(ch).some(x=>x)) return {t:'nada'};
+  return {t:'inc'};
+}
+function result(){
+  const e=evalc(); if(e.t!=='Y'&&e.t!=='D') return e;
+  const r=e.vb/M; e.r=r; e.res=r>1.3?'quema':r<0.45?'muyflojo':r<0.8?'flojo':'ok'; return e;
+}
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;
+  const e=result(); if(on&&(e.res==='ok'||e.res==='flojo'||e.res==='muyflojo'))ang+=dt*(e.res==='ok'?9:e.res==='flojo'?3:1);
+  if(on&&e.res==='quema'){burn+=dt;if(burn>3.5){on=false;texts();}} draw();requestAnimationFrame(frame);}
+function zig(x1,y1,x2,y2,c,w,op){const L=Math.hypot(x2-x1,y2-y1),ux=(x2-x1)/L,uy=(y2-y1)/L;let d=`M${x1} ${y1}`;const n=10;
+  for(let i=0;i<=n;i++){const tt=0.25+0.5*i/n;const off=(i%2?1:-1)*9*(i>0&&i<n?1:0);d+=` L${(x1+ux*L*tt-uy*off).toFixed(1)} ${(y1+uy*L*tt+ux*off).toFixed(1)}`;}
+  d+=` L${x2} ${y2}`;return `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linejoin="round" opacity="${op}"/>`;}
+function draw(){
+  const ink=css('--ink'),mut=css('--muted'),card=css('--card'),ph=[css('--ph1'),css('--ph2'),css('--ph3')],cur=css('--cur');
+  const e=result(); let s='';
+  // líneas de la red
+  ['L1','L2','L3'].forEach((L,i)=>{const x=BX[i];s+=`<line x1="${x}" y1="22" x2="${x}" y2="${TY-18}" stroke="${on?cur:mut}" stroke-width="${on?4:2.5}"/><text x="${x}" y="16" text-anchor="middle" font-size="15" font-weight="700" fill="${ink}">${L}</text>`;});
+  s+=`<text x="${BX[2]+40}" y="40" font-size="14" fill="${mut}">red de ${R} V</text>`;
+  // caja
+  s+=`<rect x="60" y="${TY-55}" width="320" height="${BY-TY+110}" rx="18" fill="#3b3b3b" stroke="${ink}" stroke-width="2"/>`;
+  // bobinas por dentro
+  if($('cIn').checked){const pairs=[['U1','U2',0],['V1','V2',1],['W1','W2',2]];
+    for(const [a,b,i] of pairs){const [x1,y1]=POS[a],[x2,y2]=POS[b];s+=zig(x1,y1,x2,y2,ph[i],on&&e.vb?5:3.5,0.95);}}
+  // huecos y chapas
+  for(const sl of SL){const [x1,y1]=POS[sl.a],[x2,y2]=POS[sl.b];const v=sl.k[0]==='v';
+    const x=v?x1-13:Math.min(x1,x2)-8, y=v?y1-6:y1-13, w=v?26:Math.abs(x2-x1)+16, h=v?(y2-y1)+12:26;
+    if(ch[sl.k]) s+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="9" fill="#C9A227" stroke="#7a6000" stroke-width="2"/>`;
+    else s+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="9" fill="none" stroke="#bbb" stroke-width="2" stroke-dasharray="6 5"/>`;
+    s+=`<rect class="hit" data-k="${sl.k}" x="${x-4}" y="${y-4}" width="${w+8}" height="${h+8}" fill="transparent"><title>Poner o quitar chapa ${sl.a}-${sl.b}</title></rect>`;}
+  // bornes
+  for(const k in POS){const [x,y]=POS[k];s+=`<circle cx="${x}" cy="${y}" r="17" fill="#d0d0d0" stroke="#111" stroke-width="2" pointer-events="none"/><circle cx="${x}" cy="${y}" r="6" fill="#777" pointer-events="none"/>`;
+    s+=`<text x="${x}" y="${y+(y<200?-26:38)}" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" pointer-events="none">${k}</text>`;}
+  // esquema equivalente
+  const cx=520,cy=150;
+  s+=`<text x="${cx}" y="40" text-anchor="middle" font-size="15" font-weight="700" fill="${ink}">${e.t==='Y'?'ESTRELLA (Y)':e.t==='D'?'TRIÁNGULO (Δ)':e.t==='cc'?'¡CORTOCIRCUITO!':e.t==='nada'?'Sin chapas':'Conexión incompleta'}</text>`;
+  if(e.t==='Y'){const P=[[cx,cy-80],[cx-75,cy+50],[cx+75,cy+50]];P.forEach((p,i)=>{s+=zig(p[0],p[1],cx,cy+5,ph[i],3.5,1);s+=`<text x="${p[0]}" y="${p[1]-8}" text-anchor="middle" font-size="13" font-weight="700" fill="${ink}">${['U1','V1','W1'][i]}</text>`;});s+=`<circle cx="${cx}" cy="${cy+5}" r="5" fill="${ink}"/>`;}
+  else if(e.t==='D'){const P=[[cx,cy-80],[cx-85,cy+65],[cx+85,cy+65]];for(let i=0;i<3;i++){const a=P[i],b=P[(i+1)%3];s+=zig(a[0],a[1],b[0],b[1],ph[i],3.5,1);}P.forEach((p,i)=>{s+=`<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="${ink}"/><text x="${p[0]}" y="${p[1]+(i?24:-10)}" text-anchor="middle" font-size="13" font-weight="700" fill="${ink}">${['U1-W2','V1-U2','W1-V2'][i]}</text>`;});}
+  else s+=`<text x="${cx}" y="${cy}" text-anchor="middle" font-size="60" fill="${mut}">?</text>`;
+  // motor
+  const mx=520,my=360,res=e.res;
+  s+=`<circle cx="${mx}" cy="${my}" r="62" fill="${card}" stroke="${ink}" stroke-width="3"/>`;
+  if(on&&res==='quema'){s+=`<circle cx="${mx}" cy="${my}" r="${62+Math.min(burn,3)*6}" fill="${cur}" opacity="${(0.15+0.25*Math.min(1,burn/2)).toFixed(2)}"/>`;
+    for(let i=0;i<4;i++){const ph_=((t*0.7+i*0.25)%1);s+=`<circle cx="${mx-30+(i%3)*30+ph_*10}" cy="${my-60-ph_*80}" r="${10+ph_*18}" fill="#777" opacity="${(0.8*(1-ph_)).toFixed(2)}"/>`;}}
+  for(let i=0;i<3;i++){const a=ang+i*2*Math.PI/3;s+=`<path d="M${mx} ${my}L${mx+48*Math.cos(a-0.25)} ${my+48*Math.sin(a-0.25)}A48 48 0 0 1 ${mx+48*Math.cos(a+0.25)} ${my+48*Math.sin(a+0.25)}Z" fill="${css('--steel')}" stroke="${ink}"/>`;}
+  s+=`<circle cx="${mx}" cy="${my}" r="12" fill="${ink}"/><text x="${mx}" y="${my+86}" text-anchor="middle" font-size="14" fill="${mut}">motor ${M}/${M===230?400:690} V</text>`;
+  $('g').innerHTML=s;
+  $('vB').textContent=on&&e.vb?e.vb+' V':'–'; $('vA').textContent=M+' V';
+}
+function texts(){
+  const e=result(); const st=$('st'); let m='',c='',t='';
+  if(!on){t='Desconectado';
+    m=e.t==='cc'?'Cuidado: con estas chapas <b>unes dos fases</b>. Si conectas, habrá un <b>cortocircuito</b>.':e.t==='nada'?'Sin chapas las bobinas no cierran el circuito: no pasaría corriente. Pon las chapas en <b>estrella</b> o en <b>triángulo</b>.':e.t==='inc'?'Las chapas no forman ni estrella ni triángulo. Revisa: estrella = las 2 de abajo; triángulo = las 3 verticales.':
+      `Has puesto ${e.t==='Y'?'<b>estrella</b>':'<b>triángulo</b>'}. Cada bobina recibirá <b>${e.vb} V</b> y aguanta <b>${M} V</b>. ¿Qué crees que pasará? Pulsa <b>Conectar</b>.`;
+    if(burn>3.5){t='Ha saltado la protección';c='bad';m='Las bobinas recibían <b>demasiada tensión</b>: se han calentado hasta quemarse y ha saltado la protección. En la realidad, ese motor habría que rebobinarlo.';}}
+  else if(e.t==='cc'){t='¡Cortocircuito! Salta el magnetotérmico';c='bad';m='Las chapas unen dos fases de la red directamente: es un <b>cortocircuito</b>. Salta el magnetotérmico al instante.';setTimeout(()=>{on=false;texts();},900);}
+  else if(e.t==='nada'){t='No pasa nada';m='Sin chapas no se cierra el circuito de las bobinas: el motor no se entera.';}
+  else if(e.t==='inc'){t='Zumba y no arranca';c='bad';m='Con esta conexión el motor no recibe las tres fases bien repartidas: es como si le <b>faltara una fase</b>. Zumba, no arranca y se calienta.';}
+  else if(e.res==='ok'){t='¡Correcto! Gira bien';c='ok';m=`Cada bobina recibe <b>${e.vb} V</b>, justo lo que aguanta. Conexión correcta: <b>${e.t==='Y'?'estrella':'triángulo'}</b>.`;}
+  else if(e.res==='flojo'){t='Gira, pero muy flojo';c='mid';m=`Cada bobina recibe solo <b>${e.vb} V</b> de los ${M} V que necesita. El motor hace <b>la tercera parte de su par</b>: en vacío gira, pero con carga se frena y se calienta.`;}
+  else if(e.res==='muyflojo'){t='Casi no tiene fuerza';c='bad';m=`Cada bobina recibe <b>${e.vb} V</b> de los ${M} V que necesita: el motor apenas puede moverse con carga.`;}
+  else {t='¡Se quema!';c='bad';m=`Cada bobina recibe <b>${e.vb} V</b> y solo aguanta <b>${M} V</b>. La corriente se dispara y las bobinas <b>se queman</b>.`;}
+  st.textContent=t;st.className='state '+c;
+  $('exp').innerHTML='<h2>Qué pasa</h2><p>'+m+'</p>';
+  $('bOn').textContent=on?'Desconectar':'Conectar';$('bOn').classList.toggle('on',on);
+}
+$('bOn').onclick=()=>{on=!on;burn=0;texts();};
+function seg(id,cb){document.querySelectorAll('#'+id+' button').forEach(b=>b.onclick=()=>{cb(+b.dataset.v);document.querySelectorAll('#'+id+' button').forEach(x=>x.setAttribute('aria-pressed',x===b));on=false;burn=0;texts();});}
+seg('sM',v=>M=v); seg('sR',v=>R=v);
+$('bY').onclick=()=>{Object.assign(ch,{v0:false,v1:false,v2:false,h0:true,h1:true});on=false;burn=0;texts();};
+$('bD').onclick=()=>{Object.assign(ch,{v0:true,v1:true,v2:true,h0:false,h1:false});on=false;burn=0;texts();};
+$('bC').onclick=()=>{for(const k in ch)ch[k]=false;on=false;burn=0;texts();};
+$('cIn').onchange=()=>draw();
+$('sv').addEventListener('pointerdown',ev=>{const r=ev.target.closest('.hit');if(!r)return;ev.preventDefault();const k=r.dataset.k;ch[k]=!ch[k];on=false;burn=0;texts();});
+texts();requestAnimationFrame(frame);
+
+</script>
+</body>
+</html>

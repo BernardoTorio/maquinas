@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tipos de carga y variador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<script>try{const t=localStorage.getItem('maq-tema');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;--ph1:#D9362E;--ph2:#2E75B6;--ph3:#3F8F2A;--steel:#9aa5b1;--steel2:#c3cbd3;--warn:#C00000;--ok:#3F8F2A;--grid:#e3e8ee;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:16px 16px 36px}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.back{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+.crumbs{font-size:.88rem;color:var(--muted);flex:1 1 auto}
+.crumbs a{color:var(--muted)} .crumbs b{color:var(--ink)}
+.theme{font:inherit;font-size:.9rem;font-weight:700;padding:7px 12px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage svg{display:block;width:100%;height:auto;touch-action:manipulation;user-select:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button,.seg button{font:inherit;font-weight:700;padding:11px 12px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 120px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}
+.seg button{flex:1 1 70px;padding:8px 8px;font-size:.92rem;border-width:2px}
+.seg button[aria-pressed="true"],.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.lab{font-weight:700;font-size:.95rem;margin:2px 0 2px}
+.sl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700} .sl output{font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
+.sl input{grid-column:1/3}
+input[type=range]{width:100%;accent-color:var(--acc);height:28px}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.read{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
+.read div{border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.read small{display:block;color:var(--muted);font-size:.8rem}
+.read b{font-size:1.25rem;font-variant-numeric:tabular-nums}
+.state{border-radius:10px;padding:8px 12px;font-weight:700;margin-bottom:10px;background:var(--grid)}
+.state.ok{background:rgba(63,143,42,.16);color:var(--ok)} .state.bad{background:rgba(217,54,46,.15);color:var(--warn)} .state.mid{background:rgba(242,180,0,.2)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box.green{background:rgba(63,143,42,.10);border-left:6px solid var(--force)}
+.box ul,.box ol{margin:0;padding-left:20px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.box li.on{background:rgba(242,180,0,.25);border-radius:6px}
+.hint{font-size:.88rem;color:var(--muted);margin:6px 4px 0}
+svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif}
+.hit{cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+</style>
+</head>
+<body>
+<main>
+  <nav class="bar" aria-label="Navegación">
+    <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › Tema 6 › <b>6.3 Tipos de carga</b></span>
+    <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
+  </nav>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 6 · Punto 6.3</small><h1>¿Qué par pide cada máquina?</h1><p class="sub">Elige la máquina y mueve la frecuencia del variador. Compara el par que pide la carga con el que puede dar el motor.</p></header>
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 680 470" role="img" aria-label="Gráfica de par y potencia frente a la velocidad, con la máquina movida por el motor"><g id="g"></g></svg>
+        <div class="legend"><span><b style="color:var(--field)">━</b> par que PUEDE dar el motor</span><span><b style="color:var(--cur)">━</b> par que PIDE la carga</span><span><b style="color:var(--cu)">━</b> potencia que pide la carga</span></div></div>
+      <div class="boxes">
+        <div class="box" id="exp"></div>
+        <div class="box blue"><h2>Los tres tipos de carga</h2><ul>
+          <li><b>Par constante</b>: pide el mismo par a cualquier velocidad (cintas, grúas, bombas de pistón).</li>
+          <li><b>Par cuadrático</b>: casi nada a poca velocidad y mucho a mucha (ventiladores, bombas centrífugas). ¡Gran ahorro con variador!</li>
+          <li><b>Potencia constante</b>: mucho par despacio y poco deprisa (bobinadoras, tornos).</li>
+          <li><b>Sobrevelocidad</b> (más de 50 Hz): el motor gira más rápido, pero su par baja: al doble de velocidad, la mitad de par.</li></ul></div>
+      </div>
+    </div>
+    <aside class="panel">
+      <div class="lab">Máquina</div>
+      <div class="seg" id="sT"><button data-v="c" aria-pressed="true">Cinta (par constante)</button><button data-v="q" aria-pressed="false">Ventilador (par cuadrático)</button><button data-v="p" aria-pressed="false">Bobinadora (potencia constante)</button></div>
+      <div class="sl"><label for="rF">Frecuencia del variador</label><output id="oF">50 Hz</output><input id="rF" type="range" min="5" max="100" step="5" value="50"></div>
+      <div class="state" id="st">–</div>
+      <div class="read"><div><small>Velocidad</small><b id="vN">–</b></div><div><small>Potencia que pide</small><b id="vP">–</b></div>
+        <div><small>Par que pide la carga</small><b id="vD">–</b></div><div><small>Par que puede dar el motor</small><b id="vA">–</b></div></div>
+      <p class="hint">Los porcentajes son respecto a los valores nominales del motor (los de su placa, a 50 Hz).</p>
+    </aside>
+  </div>
+
+</main>
+<script>
+// navegación y tema (común a todas las páginas)
+document.addEventListener('keydown',e=>{if(e.key==='Escape')location.href='index.html';});
+(function(){const b=document.getElementById('themeBtn'),r=document.documentElement;
+ const cur=()=>r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+ const lab=()=>{b.textContent=cur()==='dark'?'☀ Modo claro':'☾ Modo oscuro';};
+ b.onclick=()=>{const n=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('maq-tema',n);}catch(e){}lab();};lab();})();
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmt=(x,d=0)=>x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+let T='c',F=50,t=0,last=performance.now(),ang=0,belt=0,roll=0;
+const avail=f=>f<=50?1:50/f;           // par disponible (por unidad)
+function dem(f){const n=f/50; if(T==='c')return 0.85; if(T==='q')return 0.9*n*n; return Math.min(2.5,0.85/Math.max(n,0.1));}
+const pow=f=>dem(f)*f/50;
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;const k=F/50;ang+=dt*k*2.2;belt+=dt*k*60;roll+=dt*0.05;if(roll>1)roll=0;draw();requestAnimationFrame(frame);}
+const X0=60,X1=410,Y0=36,Y1=300,P0=340,P1=440;
+function draw(){
+  const ink=css('--ink'),mut=css('--muted'),gr=css('--grid'),fld=css('--field'),cur=css('--cur'),cu=css('--cu'),card=css('--card');
+  const xp=f=>X0+(X1-X0)*f/100, yT=v=>Y1-(Y1-Y0)*Math.min(v,2.6)/2.6, yP=v=>P1-(P1-P0)*Math.min(v,2)/2;
+  let s='';
+  for(const v of [0,0.5,1,1.5,2,2.5]){s+=`<line x1="${X0}" y1="${yT(v)}" x2="${X1}" y2="${yT(v)}" stroke="${gr}"/><text x="${X0-6}" y="${yT(v)+4}" text-anchor="end" font-size="12" fill="${mut}">${v*100}%</text>`;}
+  s+=`<text x="${X0+4}" y="${Y0-10}" font-size="13" font-weight="700" fill="${mut}">PAR</text>`;
+  s+=`<line x1="${X0}" y1="${Y0}" x2="${X0}" y2="${Y1}" stroke="${ink}"/><line x1="${X0}" y1="${Y1}" x2="${X1}" y2="${Y1}" stroke="${ink}"/>`;
+  s+=`<rect x="${xp(50)}" y="${Y0}" width="${xp(100)-xp(50)}" height="${Y1-Y0}" fill="${cur}" opacity=".06"/><text x="${xp(75)}" y="${Y0+14}" text-anchor="middle" font-size="12" fill="${cur}">sobrevelocidad</text>`;
+  let pa=[],pd=[],pp=[];for(let i=1;i<=100;i++){const f=i;pa.push(`${xp(f)},${yT(avail(f))}`);pd.push(`${xp(f)},${yT(dem(f))}`);pp.push(`${xp(f)},${yP(pow(f))}`);}
+  s+=`<polyline points="${xp(0)},${yT(1)} ${pa.join(' ')}" fill="none" stroke="${fld}" stroke-width="3.5"/>`;
+  s+=`<polyline points="${pd.join(' ')}" fill="none" stroke="${cur}" stroke-width="3.5"/>`;
+  // potencia
+  for(const v of [0,1,2]){s+=`<line x1="${X0}" y1="${yP(v)}" x2="${X1}" y2="${yP(v)}" stroke="${gr}"/><text x="${X0-6}" y="${yP(v)+4}" text-anchor="end" font-size="12" fill="${mut}">${v*100}%</text>`;}
+  s+=`<text x="${X0+4}" y="${P0-8}" font-size="13" font-weight="700" fill="${mut}">POTENCIA</text><line x1="${X0}" y1="${P0}" x2="${X0}" y2="${P1}" stroke="${ink}"/><line x1="${X0}" y1="${P1}" x2="${X1}" y2="${P1}" stroke="${ink}"/>`;
+  s+=`<polyline points="${xp(0)},${yP(T==='p'?pow(5):0)} ${pp.join(' ')}" fill="none" stroke="${cu}" stroke-width="3"/>`;
+  for(const f of [0,25,50,75,100])s+=`<text x="${xp(f)}" y="${P1+16}" text-anchor="middle" font-size="12" fill="${mut}">${f} Hz</text>`;
+  // punto actual
+  const x=xp(F);s+=`<line x1="${x}" y1="${Y0}" x2="${x}" y2="${P1}" stroke="${ink}" stroke-dasharray="3 4"/>`;
+  s+=`<circle cx="${x}" cy="${yT(dem(F))}" r="8" fill="${cur}" stroke="${card}" stroke-width="2"/><circle cx="${x}" cy="${yT(avail(F))}" r="8" fill="${fld}" stroke="${card}" stroke-width="2"/><circle cx="${x}" cy="${yP(pow(F))}" r="7" fill="${cu}" stroke="${card}" stroke-width="2"/>`;
+  // máquina
+  const mx=545; s+=`<rect x="440" y="36" width="232" height="404" rx="12" fill="${gr}" opacity=".5"/>`;
+  s+=`<circle cx="${mx}" cy="400" r="26" fill="${card}" stroke="${ink}" stroke-width="2.5"/><text x="${mx}" y="405" text-anchor="middle" font-size="13" font-weight="700" fill="${ink}">M</text><text x="${mx}" y="436" text-anchor="middle" font-size="12" fill="${mut}">${fmt(F*30*0.97)} rpm</text>`;
+  s+=`<line x1="${mx}" y1="374" x2="${mx}" y2="330" stroke="${mut}" stroke-width="4" stroke-dasharray="6 4"/>`;
+  if(T==='c'){ // cinta con cajas
+    s+=`<rect x="458" y="250" width="196" height="26" rx="13" fill="#555" stroke="${ink}"/>`;
+    for(const cx of [471,641]){s+=`<circle cx="${cx}" cy="263" r="11" fill="${css('--steel')}" stroke="${ink}"/>`;const a=belt/12;s+=`<line x1="${cx}" y1="263" x2="${cx+10*Math.cos(a)}" y2="${263+10*Math.sin(a)}" stroke="${ink}" stroke-width="2"/>`;}
+    for(let i=0;i<3;i++){const bx=458+((belt+i*70)%210);if(bx<640)s+=`<rect x="${bx}" y="212" width="38" height="38" fill="#C9A227" stroke="#7a6000" stroke-width="2"/>`;}
+    s+=`<text x="${mx}" y="70" text-anchor="middle" font-size="15" font-weight="700" fill="${ink}">Cinta transportadora</text><text x="${mx}" y="92" text-anchor="middle" font-size="12" fill="${mut}">el peso es el mismo a</text><text x="${mx}" y="108" text-anchor="middle" font-size="12" fill="${mut}">cualquier velocidad</text>`;
+  }else if(T==='q'){ // ventilador
+    const cy=200;s+=`<circle cx="${mx}" cy="${cy}" r="80" fill="none" stroke="${ink}" stroke-width="2"/>`;
+    for(let i=0;i<4;i++){const a=ang*3+i*Math.PI/2;s+=`<ellipse cx="${mx+42*Math.cos(a)}" cy="${cy+42*Math.sin(a)}" rx="36" ry="14" transform="rotate(${a*180/Math.PI} ${mx+42*Math.cos(a)} ${cy+42*Math.sin(a)})" fill="${css('--steel')}" stroke="${ink}"/>`;}
+    s+=`<circle cx="${mx}" cy="${cy}" r="12" fill="${ink}"/>`;
+    const nw=Math.round(F/12);for(let i=0;i<nw;i++){const y=130+i*22;const ox=((t*F*4+i*37)%60);s+=`<path d="M${630+ox*0.3} ${y} q10 -6 20 0 t20 0" fill="none" stroke="${fld}" stroke-width="2" opacity=".7"/>`;}
+    s+=`<text x="${mx}" y="70" text-anchor="middle" font-size="15" font-weight="700" fill="${ink}">Ventilador</text><text x="${mx}" y="308" text-anchor="middle" font-size="12" fill="${mut}">más rápido = mucho más aire que empujar</text>`;
+  }else{ // bobinadora
+    const r=30+roll*60,cy=210;s+=`<circle cx="${mx}" cy="${cy}" r="${r}" fill="${css('--cu')}" opacity=".85" stroke="${ink}"/><circle cx="${mx}" cy="${cy}" r="14" fill="${ink}"/>`;
+    const a=ang*2;s+=`<line x1="${mx}" y1="${cy}" x2="${mx+r*Math.cos(a)}" y2="${cy+r*Math.sin(a)}" stroke="${ink}" stroke-width="2"/>`;
+    s+=`<line x1="${mx+r}" y1="${cy}" x2="666" y2="${cy-50}" stroke="${css('--cu')}" stroke-width="4"/>`;
+    s+=`<text x="${mx}" y="70" text-anchor="middle" font-size="15" font-weight="700" fill="${ink}">Bobinadora</text><text x="${mx}" y="92" text-anchor="middle" font-size="12" fill="${mut}">al engordar la bobina, gira más</text><text x="${mx}" y="108" text-anchor="middle" font-size="12" fill="${mut}">despacio y tira con más par</text>`;
+  }
+  $('g').innerHTML=s;
+  const d=dem(F),av=avail(F);
+  $('vN').textContent=fmt(F*2)+' %';$('vD').textContent=fmt(d*100)+' %';$('vA').textContent=fmt(av*100)+' %';$('vP').textContent=fmt(pow(F)*100)+' %';
+  const st=$('st');
+  if(d>av*1.05){st.textContent='¡Sobrecarga! La carga pide más par del que hay';st.className='state bad';}
+  else if(T==='c'&&F<20){st.textContent='Va bien, pero ojo: el motor se calienta';st.className='state mid';}
+  else{st.textContent='El motor puede con la carga';st.className='state ok';}
+}
+function texts(){
+  let m;const d=dem(F),av=avail(F);
+  if(T==='c')m=F<20?'A poca velocidad la cinta sigue pidiendo <b>todo el par</b>, pero el ventilador del motor gira lento y <b>enfría poco</b>: hace falta <b>ventilación forzada</b>.':F>50?'Por encima de 50 Hz el par disponible baja. La cinta pide siempre el mismo par: llega un momento en que el motor <b>no puede</b>.':'La cinta pide <b>el mismo par</b> a cualquier velocidad. La potencia sube a la vez que la velocidad.';
+  else if(T==='q')m=F>50?'¡Cuidado! Por encima de 50 Hz el ventilador pide <b>muchísimo par</b> y el motor tiene menos: <b>sobrecarga</b>. Nunca hagas trabajar un ventilador o una bomba en sobrevelocidad.':`A ${F} Hz el ventilador pide el ${fmt(d*100)} % del par y solo el <b>${fmt(pow(F)*100)} % de la potencia</b>. Por eso regular ventiladores y bombas con variador <b>ahorra tanta energía</b>.`;
+  else m=F<25?'Despacio, la bobinadora pide <b>mucho par</b>: ojo, puede pasar del que da el motor.':F>50?'Deprisa pide poco par: aquí la <b>sobrevelocidad</b> se aprovecha bien, porque la potencia se mantiene.':'La bobinadora pide <b>la misma potencia</b>: si va más despacio, tira con más par; si va más deprisa, con menos.';
+  $('exp').innerHTML='<h2>Qué pasa</h2><p>'+m+'</p>';$('oF').textContent=F+' Hz';
+}
+$('rF').oninput=e=>{F=+e.target.value;texts();};
+document.querySelectorAll('#sT button').forEach(b=>b.onclick=()=>{T=b.dataset.v;document.querySelectorAll('#sT button').forEach(x=>x.setAttribute('aria-pressed',x===b));texts();});
+texts();requestAnimationFrame(frame);
+
+</script>
+</body>
+</html>

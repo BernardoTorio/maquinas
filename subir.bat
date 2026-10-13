@@ -1,51 +1,63 @@
 @echo off
 chcp 65001 >nul
-title Subir animaciones de Maquinas a GitHub
-setlocal
+title Subir Maquinas a GitHub
+setlocal enabledelayedexpansion
 cd /d "%~dp0"
 
-set "REPO=BernardoTorio/maquinas"
 set "WEB=https://bernardotorio.github.io/maquinas/"
-set "ZIP=%USERPROFILE%\Downloads\maquinas.zip"
+set "DESC=%USERPROFILE%\Downloads"
 
 echo ============================================
-echo   Subir animaciones de Maquinas a GitHub
+echo   Subir Maquinas Electricas (2MB) a GitHub
 echo   Carpeta: %CD%
 echo ============================================
 echo.
 
-rem --- 1. Si hay un maquinas.zip nuevo en Descargas, se descomprime aqui ---
-if not exist "%ZIP%" goto sinzip
-echo Encontrado maquinas.zip en Descargas: descomprimiendo...
-tar -xf "%ZIP%" -C "%CD%"
-if errorlevel 1 (
-  echo ERROR al descomprimir el zip.
-  goto fin
+rem --- 1. Buscar maquinas.zip: primero en esta carpeta, luego en Descargas ---
+set "ZIP="
+for %%f in ("%CD%\maquinas*.zip") do (
+  echo %%~nf | findstr /i "_subido" >nul || set "ZIP=%%~ff"
 )
-for /f %%d in ('powershell -NoProfile -Command "Get-Date -Format yyyyMMdd_HHmm"') do set "STAMP=%%d"
-ren "%ZIP%" "maquinas_subido_%STAMP%.zip"
-echo Zip descomprimido. En Descargas queda como maquinas_subido_%STAMP%.zip
-echo.
-:sinzip
+if not defined ZIP (
+  for %%f in ("%DESC%\maquinas*.zip") do (
+    echo %%~nf | findstr /i "_subido" >nul || set "ZIP=%%~ff"
+  )
+)
 
-rem --- 2. Primera vez: crear el repositorio y activar GitHub Pages ---
-if not exist ".git" (
-  echo Primera vez: creando el repositorio %REPO%...
-  git init -b main
-  if not exist ".nojekyll" type nul > .nojekyll
-  git add -A
-  git commit -m "Primera subida de las animaciones de Maquinas Electricas"
-  gh repo create %REPO% --public --source=. --remote=origin --push --description "Animaciones de Maquinas Electricas (2MB) - I.E.S. Trinidad Arroyo"
+for /f %%d in ('powershell -NoProfile -Command "Get-Date -Format yyyyMMdd_HHmm"') do set "STAMP=%%d"
+
+if defined ZIP (
+  echo Encontrado: !ZIP!
+  echo Contenido del zip:
+  tar -tf "!ZIP!"
+  echo.
+  tar -xf "!ZIP!" -C "%CD%"
   if errorlevel 1 (
-    echo ERROR al crear el repositorio. Comprueba "gh auth status".
+    echo ERROR al descomprimir el zip.
     goto fin
   )
-  gh api -X POST repos/%REPO%/pages -f "source[branch]=main" -f "source[path]=/" >nul 2>&1
-  echo Repositorio creado y GitHub Pages activado.
-  goto listo
+  move /y "!ZIP!" "%DESC%\maquinas_subido_!STAMP!.zip" >nul
+  echo Zip descomprimido y apartado en Descargas como maquinas_subido_!STAMP!.zip
+  echo.
+) else (
+  echo No hay ningun maquinas.zip nuevo: se sube lo que haya en la carpeta.
+  echo.
 )
 
-rem --- 3. Subida normal: añadir, commit y push ---
+rem --- 2. Ordenar: los PDF van en temas\ y practicas\, no en la raiz ---
+rem     Temas: T1_..._Maquinas.pdf   Practicas: P1_Maquinas.pdf, P2_Maquinas.pdf...
+if not exist "temas" mkdir "temas"
+if not exist "practicas" mkdir "practicas"
+for %%f in (T*_Maquinas.pdf) do move /y "%%f" "temas\" >nul
+for %%f in (P*_Maquinas.pdf) do move /y "%%f" "practicas\" >nul
+if not exist ".nojekyll" type nul > ".nojekyll"
+
+rem --- 3. Nunca subir zips ni docx ---
+findstr /x /c:"*.zip" .gitignore >nul 2>&1 || echo *.zip>>.gitignore
+findstr /x /c:"*.docx" .gitignore >nul 2>&1 || echo *.docx>>.gitignore
+git rm -r --cached -q --ignore-unmatch *.zip *.docx >nul 2>&1
+
+rem --- 4. Commit y push ---
 git add -A
 git diff --cached --quiet
 if not errorlevel 1 (
@@ -55,22 +67,18 @@ if not errorlevel 1 (
 echo Archivos que cambian:
 git diff --cached --name-status
 echo.
-for /f "delims=" %%d in ('powershell -NoProfile -Command "Get-Date -Format 'yyyy-MM-dd HH:mm'"') do set "FECHA=%%d"
-git commit -m "Actualizacion de animaciones %FECHA%"
-git push
+git commit -q -m "Actualizacion %date% %time:~0,5%"
+git push -u origin main
 if errorlevel 1 (
   echo.
-  echo ERROR al hacer push. Revisa la conexion o "gh auth status".
+  echo *** ERROR al subir. Revisa el mensaje de arriba. ***
   goto fin
 )
 
 :listo
 echo.
-echo ============================================
-echo   Hecho. En 1 o 2 minutos estara en:
-echo   %WEB%
-echo   (si ves la version vieja, recarga con Ctrl+F5)
-echo ============================================
+echo Publicado en %WEB%
+echo (tarda uno o dos minutos; recarga con Ctrl+F5)
 start "" "%WEB%"
 
 :fin

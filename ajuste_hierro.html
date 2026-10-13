@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ajuste del hierro al carrete</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cur:#D9362E;--force:#3F8F2A;--warn:#C0602B;
+  --fe:#9AA5B1;--fe2:#B7C0C9;--feline:#5f6b77;--bob:#E8C99B;--hole:#ffffff;--wood:#C9A06A;
+  --idea-bg:#E2EFDA;--idea:#548235;--ojo-bg:#FCE4D6;--ojo:#C00000;--pista-bg:#DDEBF7;--pista:#2E75B6;--taller-bg:#EDE7F6;--taller:#6A4C93;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--warn:#F0A060;--cur:#FF6B5E;
+  --fe:#7d8894;--fe2:#95a0ab;--feline:#3e4750;--bob:#8a6f48;--hole:#11151a;--wood:#9c7a4c;
+  --idea-bg:#22301c;--idea:#8CC46A;--ojo-bg:#3a2320;--ojo:#FF8A80;--pista-bg:#1c2a38;--pista:#7DB7EC;--taller-bg:#2a2436;--taller:#B9A1DE}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--warn:#F0A060;--cur:#FF6B5E;
+  --fe:#7d8894;--fe2:#95a0ab;--feline:#3e4750;--bob:#8a6f48;--hole:#11151a;--wood:#9c7a4c;
+  --idea-bg:#22301c;--idea:#8CC46A;--ojo-bg:#3a2320;--ojo:#FF8A80;--pista-bg:#1c2a38;--pista:#7DB7EC;--taller-bg:#2a2436;--taller:#B9A1DE}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:16px 16px 36px}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.back{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:var(--card);outline:none}
+.crumbs{font-size:.88rem;color:var(--muted)}
+.crumbs a{color:var(--muted)}
+.crumbs b{color:var(--ink)}
+.theme{margin-left:auto;font:inherit;font-size:.9rem;font-weight:700;padding:7px 12px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:14px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.ctrls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:12px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button,.act button{font:inherit;font-weight:700;padding:9px 14px;border-radius:10px;border:2px solid var(--acc);background:var(--card);color:var(--acc);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--acc);color:var(--card)}
+.seg button small{display:block;font-weight:400;font-size:.75rem;opacity:.85}
+.act{display:flex;gap:8px;flex-wrap:wrap}
+.act button.main{background:var(--acc);color:var(--card)}
+.sl{display:flex;align-items:center;gap:10px;flex:1 1 260px;min-width:0}
+.sl label{font-weight:700;white-space:nowrap}
+.sl output{font-weight:700;min-width:3.2em;text-align:right;color:var(--acc)}
+input[type=range]{flex:1;min-width:0;accent-color:var(--acc)}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px}
+.stage svg{display:block;width:100%;height:auto}
+.two{display:grid;grid-template-columns:330fr 440fr;gap:10px;align-items:end}
+@media (max-width:700px){.two{grid-template-columns:1fr}.two svg:first-child{max-width:340px;margin:0 auto}}
+svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;fill:var(--ink)}
+svg .mut{fill:var(--muted)}
+svg .red{fill:var(--cur)}
+svg .blue{fill:var(--field)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:760px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 8px;color:var(--acc)}
+.box p{margin:0 0 8px}.box p:last-child{margin-bottom:0}
+.box ol,.box ul{margin:0;padding-left:20px}.box li{margin-bottom:5px}
+.full{grid-column:1/-1}
+.k{border-left:6px solid}
+.k .lab{font-weight:700;font-size:.85rem;letter-spacing:.03em;margin-right:6px}
+.idea{background:var(--idea-bg);border-color:var(--idea)}.idea .lab{color:var(--idea)}
+.ojo{background:var(--ojo-bg);border-color:var(--ojo)}.ojo .lab{color:var(--ojo)}
+.pista{background:var(--pista-bg);border-color:var(--pista)}.pista .lab{color:var(--pista)}
+.taller{background:var(--taller-bg);border-color:var(--taller)}.taller .lab{color:var(--taller)}
+.calc{width:100%;border-collapse:collapse;font-size:.95rem}
+.calc td{padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+.calc td.n{font-weight:700;color:var(--acc);width:1.6em}
+.calc td.r{font-weight:700;text-align:right}
+.fm{font-family:Consolas,"Courier New",monospace;font-size:.92rem}
+.st{font-weight:700;padding:8px 10px;border-radius:8px;margin-top:8px}
+.st.ok{color:var(--force);background:rgba(63,143,42,.10)}
+.st.warn{color:var(--warn);background:rgba(192,96,43,.10)}
+.st.bad{color:var(--cur);background:rgba(217,54,46,.10)}
+.sum{width:100%;border-collapse:collapse;font-size:.95rem;text-align:center}
+.sum th{background:var(--acc);color:var(--card);padding:6px 4px}
+.sum td{padding:6px 4px;border-bottom:1px solid var(--line)}
+.sum td:first-child{text-align:left;font-weight:700}
+.sum tr.sel td{background:rgba(46,117,182,.13)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <div class="bar">
+    <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+    <nav class="crumbs" aria-label="Dónde estás"><a href="index.html">Máquinas Eléctricas</a> › Taller › <b>Ajuste del hierro</b></nav>
+    <button class="theme" id="bTheme" type="button" aria-label="Cambiar entre modo claro y oscuro">◐ Automático</button>
+  </div>
+  <header class="top">
+    <small>Máquinas Eléctricas 2MB · Taller · Práctica P1: cálculo y construcción de un trafo</small>
+    <h1>Ajuste del hierro al carrete de 40 × 40 mm</h1>
+    <p class="sub">El carrete del aula tiene un hueco de 40 × 40 mm, pero no hay que llenarlo entero de chapas: solo las que pide el cálculo.</p>
+  </header>
+
+  <div class="ctrls">
+    <div class="seg" id="seg" role="group" aria-label="Elige el trafo"></div>
+    <div class="seg" id="modo" role="group" aria-label="Qué chapas"></div>
+    <div class="sl"><label for="rN">Chapas que metes</label><input id="rN" type="range" min="0" max="114" step="1" value="0"><output id="oN" for="rN">0</output></div>
+    <div class="act">
+      <button class="main" id="bJust" type="button">Meter las chapas justas</button>
+      <button id="bFull" type="button">Llenar el carrete</button>
+      <button id="bEmpty" type="button">Vaciar</button>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="two">
+    <svg viewBox="20 10 330 420" role="img" aria-label="Una chapa E-I con su columna central de 40 mm">
+      <defs>
+        <pattern id="wood" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect width="8" height="8" fill="var(--wood)"/><line x1="0" y1="0" x2="0" y2="8" stroke="rgba(0,0,0,.25)" stroke-width="3"/>
+        </pattern>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="context-stroke"/></marker>
+      </defs>
+      <g id="gL"></g>
+    </svg>
+    <svg viewBox="440 10 440 420" role="img" aria-label="El hueco del carrete visto de frente, con el paquete de chapas que has metido">
+      <g id="gR"></g>
+    </svg>
+    </div>
+  </div>
+
+  <div class="boxes">
+    <div class="box" id="bCalc"></div>
+    <div class="box" id="bNow"></div>
+    <div class="box k idea"><p><span class="lab">IDEA CLAVE</span>El carrete tiene <b>dos medidas de 40 mm</b> que no son iguales para nosotros:</p>
+      <ul><li><b>El ancho</b> lo pone la columna central de la chapa E: siempre 40 mm. No se puede cambiar.</li>
+      <li><b>El fondo</b> es el grueso del paquete de chapas. Ese sí lo decidimos: depende de cuántas chapas metamos.</li></ul>
+      <p style="margin-top:8px">Por eso el paso 10 no busca un carrete: busca <b>cuántas chapas</b> hacen falta para que el hierro tenga la sección que pide el cálculo.</p></div>
+    <div class="box k ojo"><p><span class="lab">¡OJO!</span><b>Una chapa = una E + una I.</b> Si el cálculo dice 62 chapas, son 62 E y 62 I. Se meten alternando el lado de la E en cada capa.</p>
+      <p><b>Menos chapas de las calculadas:</b> el hierro se satura. Sube mucho la corriente de vacío, el trafo zumba y se calienta aunque no tenga carga.</p>
+      <p><b>Más chapas de las calculadas:</b> el trafo funciona, pero gastas chapa que no hace falta, pesa más y los ensayos ya no coinciden con lo calculado.</p></div>
+    <div class="box k pista"><p><span class="lab">PISTA</span>El hueco que sobra en el carrete se calza (con cartón o un taco de madera) para que el carrete no baile sobre el paquete de chapas y no vibre.</p>
+      <p>Comprueba con el calibre el fondo del paquete ya apretado: debe salir más o menos el que da el cálculo.</p></div>
+    <div class="box k taller"><p><span class="lab">EN EL TALLER</span>¿Por qué el paso 2 divide entre 0,9? Entre chapa y chapa hay barniz y algo de aire, así que solo el 90 % del paquete es hierro. Por eso el paquete tiene que ser un poco más gordo que la sección que pide el paso 1.</p>
+      <p>Con chapa nueva caben <b>114 chapas</b> de 0,35 mm en 40 mm de fondo. Las chapas del aula están oxidadas y solo caben <b>85</b>: su K<sub>ap</sub> es 29,75 / 40 ≈ <b>0,74</b>. Cambia arriba a «Chapas del aula» para ver qué pasa.</p></div>
+    <div class="box full" id="bSum"></div>
+    <div class="box full"><h2>Cómo funciona esta página</h2>
+      <ul><li>Elige arriba uno de los 4 trafos de la práctica.</li>
+      <li>Mueve la barra para meter chapas una a una, o pulsa <b>Meter las chapas justas</b> para ver cuántas pide el cálculo.</li>
+      <li>Pulsa <b>Llenar el carrete</b> para ver qué pasaría si lo llenaras entero.</li>
+      <li>Abajo a la derecha te dice a qué inducción trabaja el hierro con esas chapas y si el trafo va bien. Pulsa <b>Esc</b> para volver al índice.</li></ul></div>
+  </div>
+</main>
+<script>
+const NS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+const f=(v,d=2)=>v.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+const E=0.35, F=50;
+// Dos casos: el método de clase (chapa nueva, K_ap 0,9) y las chapas del aula (oxidadas: solo caben 85)
+const MODOS={calc:{n:'Método de clase',d:'chapa nueva · K_ap 0,9',kap:0.9,pitch:0.35,max:114},
+             aula:{n:'Chapas del aula',d:'oxidadas · K_ap 0,74',kap:0.74,pitch:40/85,max:85}};
+let M=MODOS.calc, MAX=M.max;
+// Trafos de la práctica P1 (con Kcu de la tabla del formulario y las espiras ya redondeadas)
+const TR=[
+  {n:1,S:50, V1:28, V2:15,B:1.0,kcu:1.15,N1:186},
+  {n:2,S:100,V1:66, V2:38,B:1.5,kcu:1.08,N1:195},
+  {n:3,S:150,V1:109,V2:63,B:1.5,kcu:1.07,N1:260},
+  {n:4,S:200,V1:111,V2:83,B:1.7,kcu:1.06,N1:200}];
+function prep(){for(const t of TR){t.Sn=Math.round(1.1*Math.sqrt(t.S)*100)/100;t.Sr=Math.round(t.Sn/M.kap*100)/100;t.fondo=Math.round(t.Sr*100/40*10)/10;t.ch=Math.ceil((M===MODOS.calc?t.fondo/E:t.fondo*M.kap/E)-1e-9);}}
+prep();
+let T=TR[0], N=0, anim=null;
+
+function el(tag,a={},p){const e=document.createElementNS(NS,tag);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function txt(x,y,s,a={},p){const t=el('text',{x,y,...a},p);t.textContent=s;return t;}
+function arrow(x1,y1,x2,y2,col,p){el('line',{x1,y1,x2,y2,stroke:col,'stroke-width':1.6,'marker-start':'url(#ar)','marker-end':'url(#ar)'},p);}
+
+// ---------- Chapa E-I (izquierda, fija) ----------
+function drawLeft(){
+  const g=$('gL'); g.innerHTML=''; const s=2.4, x0=40, y0=70;
+  const X=v=>x0+v*s, Y=v=>y0+v*s;
+  txt(X(60),40,'Una chapa E-I (vista de frente)',{'text-anchor':'middle','font-size':17,'font-weight':700},g);
+  el('rect',{x:X(0),y:Y(0),width:120*s,height:20*s,fill:'var(--fe2)',stroke:'var(--ink)','stroke-width':1.5},g);
+  txt(X(60),Y(13),'I',{'text-anchor':'middle','font-size':16,'font-weight':700},g);
+  const pts=[[0,20],[120,20],[120,100],[0,100]];
+  el('path',{d:`M${X(0)} ${Y(20)}H${X(120)}V${Y(100)}H${X(0)}Z M${X(20)} ${Y(20)}V${Y(80)}H${X(40)}V${Y(20)}Z M${X(80)} ${Y(20)}V${Y(80)}H${X(100)}V${Y(20)}Z`,
+    fill:'var(--fe)',stroke:'var(--ink)','stroke-width':1.5,'fill-rule':'evenodd'},g);
+  txt(X(10),Y(60),'E',{'text-anchor':'middle','font-size':16,'font-weight':700},g);
+  for(const cx of [30,90]) txt(X(cx),Y(50),'ventana',{'text-anchor':'middle','font-size':12,class:'mut',transform:`rotate(-90 ${X(cx)} ${Y(50)})`},g);
+  el('rect',{x:X(40),y:Y(20),width:40*s,height:60*s,fill:'none',stroke:'var(--cur)','stroke-width':3,'stroke-dasharray':'8 6'},g);
+  txt(X(60),Y(45),'columna',{'text-anchor':'middle','font-size':13,'font-weight':700,class:'red'},g);
+  txt(X(60),Y(51.5),'central',{'text-anchor':'middle','font-size':13,'font-weight':700,class:'red'},g);
+  txt(X(60),Y(60),'(aquí entra',{'text-anchor':'middle','font-size':11.5,class:'red'},g);
+  txt(X(60),Y(66),'el carrete)',{'text-anchor':'middle','font-size':11.5,class:'red'},g);
+  arrow(X(40),Y(107),X(80),Y(107),'var(--cur)',g);
+  txt(X(60),Y(115),'40 mm: el ancho del carrete',{'text-anchor':'middle','font-size':14,'font-weight':700,class:'red'},g);
+}
+
+// ---------- Hueco del carrete (derecha) ----------
+function drawRight(){
+  const g=$('gR'); g.innerHTML=''; const s=6, W=3, x0=520, y0=110;  // hueco 40x40 mm = 240x240 px
+  const X=v=>x0+v*s, Y=v=>y0+(40-v)*s; // v = altura desde el fondo
+  txt(X(20),40,'El hueco del carrete (visto de frente)',{'text-anchor':'middle','font-size':17,'font-weight':700},g);
+  el('rect',{x:X(-W),y:Y(40+W),width:(40+2*W)*s,height:(40+2*W)*s,fill:'var(--bob)',stroke:'var(--ink)','stroke-width':1.5},g);
+  el('rect',{x:X(0),y:Y(40),width:40*s,height:40*s,fill:'var(--hole)',stroke:'var(--ink)','stroke-width':1.5},g);
+  const show=Math.min(N,MAX), h=show*M.pitch;
+  // calzo en el hueco libre (solo si hay chapas y queda hueco)
+  if(show>0 && 40-h>0.4 && 40-h<7){
+    el('rect',{x:X(0)+1,y:Y(40)+1,width:40*s-2,height:(40-h)*s-2,fill:'url(#wood)',opacity:.35},g);
+    txt(X(20),Y(40+W)-10,'hueco libre: '+f(40-h,1)+' mm (se calza)',{'text-anchor':'middle','font-size':14,'font-weight':700},g);
+  }
+  if(show>0 && 40-h>=7){
+    el('rect',{x:X(0)+2,y:Y(40)+2,width:40*s-4,height:(40-h)*s-4,fill:'url(#wood)',opacity:.35},g);
+    txt(X(20),Y(h+(40-h)/2)-4,'hueco libre: '+f(40-h,1)+' mm',{'text-anchor':'middle','font-size':14,'font-weight':700},g);
+    txt(X(20),Y(h+(40-h)/2)+15,'(se calza)',{'text-anchor':'middle','font-size':12,class:'mut'},g);
+  }
+  if(show===0) txt(X(20),Y(20),'carrete vacío',{'text-anchor':'middle','font-size':15,class:'mut'},g);
+  // paquete de chapas: una raya por chapa
+  if(show>0){
+    el('rect',{x:X(0),y:Y(h),width:40*s,height:h*s,fill:'var(--fe)'},g);
+    for(let i=1;i<show;i++){const y=Y(i*M.pitch);el('line',{x1:X(0),y1:y,x2:X(40),y2:y,stroke:'var(--feline)','stroke-width':i%2?0.5:0.9},g);}
+    el('rect',{x:X(0),y:Y(h),width:40*s,height:h*s,fill:'none',stroke:'var(--ink)','stroke-width':1.2},g);
+    if(h>5) txt(X(20),Y(h/2)+6,show+' chapas',{'text-anchor':'middle','font-size':17,'font-weight':700},g);
+  }
+  // lo que no cabe (Trafo 4)
+  if(T.ch>MAX && N>=MAX && justMode){
+    const extra=Math.min(12,(T.ch-MAX)*M.pitch);
+    el('rect',{x:X(0),y:Y(40+W+extra)-4,width:40*s,height:extra*s,fill:'var(--cur)',opacity:.35,stroke:'var(--cur)','stroke-dasharray':'5 4'},g);
+    txt(X(20),Y(40+W+extra)-12,`faltan ${T.ch-MAX} chapas: ¡no caben!`,{'text-anchor':'middle','font-size':14,'font-weight':700,class:'red'},g);
+  }
+  // cota fondo
+  if(show>0){arrow(X(-W)-18,Y(0),X(-W)-18,Y(h),'var(--field)',g);
+    const ty=Y(h/2); txt(X(-W)-28,ty,'fondo '+f(h,1)+' mm',{'text-anchor':'middle','font-size':14,'font-weight':700,class:'blue',transform:`rotate(-90 ${X(-W)-28} ${ty})`},g);}
+  // cota alto total y ancho
+  arrow(X(40+W)+18,Y(0),X(40+W)+18,Y(40),'var(--muted)',g);
+  txt(X(40+W)+34,Y(20),'40 mm',{'text-anchor':'middle','font-size':13,class:'mut',transform:`rotate(-90 ${X(40+W)+34} ${Y(20)})`},g);
+  arrow(X(0),Y(-W)+20,X(40),Y(-W)+20,'var(--cur)',g);
+  txt(X(20),Y(-W)+40,'40 mm (columna central)',{'text-anchor':'middle','font-size':14,'font-weight':700,class:'red'},g);
+}
+
+function stateOf(n){
+  const fondo=n*M.pitch, fe=Math.round(40*fondo*M.kap)/100; // cm² de hierro de verdad
+  const B=n>0? T.V1/(4.44*F*(T.N1/T.kcu)*fe/10000):Infinity;
+  return {fondo,fe,B};
+}
+function render(){
+  $('oN').value=N; $('rN').value=Math.min(N,MAX);
+  drawRight();
+  const t=T;
+  $('bCalc').innerHTML=`<h2>Paso 10 del Trafo ${t.n}: cuántas chapas · ${M.n}</h2>
+  <table class="calc">
+  <tr><td class="n">a</td><td>Sección real del paso 2 <span class="fm">= S<sub>n</sub> / ${f(M.kap,M.kap===0.9?1:2)}</span></td><td class="r">${f(t.Sr)} cm² = ${f(t.Sr*100,0)} mm²</td></tr>
+  <tr><td class="n">b</td><td>Ancho de la columna central (fijo)</td><td class="r">40 mm</td></tr>
+  <tr><td class="n">c</td><td>Fondo del paquete <span class="fm">= ${f(t.Sr*100,0)} / 40</span></td><td class="r">${f(t.fondo,1)} mm</td></tr>
+  <tr><td class="n">d</td><td>Chapas <span class="fm">= ${M===MODOS.calc?f(t.fondo,1)+' / 0,35 = '+f(t.fondo/E,1):f(t.fondo,1)+' × 0,74 / 0,35 = '+f(t.fondo*0.74/E,1)}</span> → siempre hacia arriba</td><td class="r">${t.ch} chapas</td></tr>
+  <tr><td class="n">e</td><td>¿Caben en el carrete? (máximo ${MAX})</td><td class="r">${t.ch<=MAX?'✔ sí':'✖ no'}</td></tr>
+  </table>
+  <p style="margin-top:8px">El carrete queda lleno al <b>${Math.round(t.ch/MAX*100)} %</b>${t.ch<=MAX?`; sobran ${f(40-t.ch*M.pitch,1)} mm de hueco.`:': le faltan '+(t.ch-MAX)+' chapas para llegar al cálculo.'}</p>`;
+  const s=stateOf(Math.min(N,MAX));
+  let st;
+  if(N===0) st=`<div class="st warn">Mete chapas con la barra o con los botones.</div>`;
+  else{
+    const lim=t.B, r=s.B/lim;
+    if(r>1.03 && N>=MAX) st=`<div class="st bad">✖ Carrete lleno y aun así falta hierro: trabaja a ${f(s.B)} T, por encima de los ${f(lim,1)} T de la chapa. Se satura: sube la corriente de vacío y se calienta. Con este carrete habría que bajar la tensión del primario o dar más espiras.</div>`;
+    else if(r>1.10) st=`<div class="st bad">✖ Falta hierro: el núcleo trabaja a ${s.B>2.2?'más de 2,2':f(s.B)} T, por encima de los ${f(lim,1)} T de la chapa. Se satura: mucha corriente de vacío, zumba y se calienta sin carga.</div>`;
+    else if(r>1.03) st=`<div class="st warn">⚠ Un poco justo de hierro: trabaja a ${f(s.B)} T (la chapa es de ${f(lim,1)} T). Mete alguna chapa más.</div>`;
+    else if(r>=0.94) st=`<div class="st ok">✔ Bien: con ${N} chapas el hierro trabaja a ${f(s.B)} T, lo que pide el cálculo.</div>`;
+    else st=`<div class="st warn">Sobra hierro: trabaja a solo ${f(s.B)} T. Funciona, pero gastas ${N-t.ch} chapas que no hacen falta y el trafo pesa más.</div>`;
+  }
+  $('bNow').innerHTML=`<h2>Con las chapas que has metido</h2>
+  <table class="calc">
+  <tr><td>Chapas</td><td class="r">${Math.min(N,MAX)} <span style="font-weight:400">(de ${t.ch} calculadas)</span></td></tr>
+  <tr><td>Fondo del paquete <span class="fm">${M===MODOS.calc?'= chapas × 0,35':'(85 chapas llenan 40 mm)'}</span></td><td class="r">${f(s.fondo,1)} mm</td></tr>
+  <tr><td>Hierro de verdad <span class="fm">= 40 × fondo × ${f(M.kap,M.kap===0.9?1:2)}</span></td><td class="r">${f(s.fe)} cm²</td></tr>
+  <tr><td>Hierro que pide el paso 1 (S<sub>n</sub>)</td><td class="r">${f(t.Sn)} cm²</td></tr>
+  <tr><td>Inducción a la que trabaja con ${t.V1} V y ${t.N1} espiras</td><td class="r">${N?(s.B>2.2?'más de 2,2 T':f(s.B)+' T'):'—'}</td></tr>
+  </table>${st}`;
+  $('bSum').innerHTML=`<h2>Los 4 trafos de la práctica · ${M.n} (${M.d.replace('K_ap','K<sub>ap</sub>')})</h2>
+  <table class="sum"><tr><th></th><th>S</th><th>Sección real</th><th>Fondo</th><th>Chapas</th><th>Carrete lleno al</th></tr>
+  ${TR.map(x=>`<tr class="${x===t?'sel':''}"><td>Trafo ${x.n}</td><td>${x.S} VA</td><td>${f(x.Sr)} cm²</td><td>${f(x.fondo,1)} mm</td><td>${x.ch}${x.ch>MAX?' (caben '+MAX+')':''}</td><td>${Math.round(x.ch/MAX*100)} %</td></tr>`).join('')}</table>`;
+  document.querySelectorAll('#seg button').forEach((b,i)=>b.setAttribute('aria-pressed',TR[i]===t));
+  document.querySelectorAll('#modo button').forEach(b=>b.setAttribute('aria-pressed',MODOS[b.dataset.m]===M));
+}
+let justMode=false;
+function stop(){if(anim){cancelAnimationFrame(anim);anim=null;}}
+function goTo(target,just){
+  stop(); justMode=!!just; const end=Math.min(target,MAX);
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){N=end;render();return;}
+  const start=N, t0=performance.now(), dur=Math.min(1600,300+Math.abs(end-start)*14);
+  const step=ts=>{ const k=Math.min(1,(ts-t0)/dur); N=Math.round(start+(end-start)*k); render();
+    if(k<1) anim=requestAnimationFrame(step); else anim=null; };
+  anim=requestAnimationFrame(step);
+}
+// botones de trafo
+for(const t of TR){const b=document.createElement('button');b.type='button';b.innerHTML=`Trafo ${t.n}<small>${t.S} VA · ${t.V1}/${t.V2} V</small>`;
+  b.onclick=()=>{stop();T=t;N=0;justMode=false;render();};$('seg').appendChild(b);}
+for(const k of ['calc','aula']){const b=document.createElement('button');b.type='button';b.dataset.m=k;b.innerHTML=`${MODOS[k].n}<small>${MODOS[k].d.replace('K_ap','K<sub>ap</sub>')}</small>`;
+  b.onclick=()=>{stop();M=MODOS[k];MAX=M.max;$('rN').max=MAX;prep();N=0;justMode=false;render();};$('modo').appendChild(b);}
+$('rN').oninput=e=>{stop();justMode=false;N=+e.target.value;render();};
+$('bJust').onclick=()=>goTo(T.ch,true);
+$('bFull').onclick=()=>goTo(MAX,false);
+$('bEmpty').onclick=()=>goTo(0,false);
+// modo claro / oscuro
+const MODES=[['auto','◐ Automático'],['light','☀ Claro'],['dark','☾ Oscuro']];
+let mi=0; try{const m=localStorage.getItem('maq-tema');const k=MODES.findIndex(x=>x[0]===m);if(k>0)mi=k;}catch(e){}
+function applyTheme(){const m=MODES[mi][0]; if(m==='auto')document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme',m); $('bTheme').textContent=MODES[mi][1]; try{localStorage.setItem('maq-tema',m);}catch(e){}}
+$('bTheme').onclick=()=>{mi=(mi+1)%3;applyTheme();};
+applyTheme();
+document.addEventListener('keydown',e=>{if(e.key==='Escape')location.href='index.html';});
+drawLeft(); render();
+</script>
+</body>
+</html>

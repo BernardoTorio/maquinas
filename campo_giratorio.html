@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Campo magnético giratorio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<script>try{const t=localStorage.getItem('maq-tema');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;--ph1:#D9362E;--ph2:#2E75B6;--ph3:#3F8F2A;--steel:#9aa5b1;--steel2:#c3cbd3;--warn:#C00000;--ok:#3F8F2A;--grid:#e3e8ee;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:16px 16px 36px}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.back{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+.crumbs{font-size:.88rem;color:var(--muted);flex:1 1 auto}
+.crumbs a{color:var(--muted)} .crumbs b{color:var(--ink)}
+.theme{font:inherit;font-size:.9rem;font-weight:700;padding:7px 12px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage svg{display:block;width:100%;height:auto;touch-action:manipulation;user-select:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button,.seg button{font:inherit;font-weight:700;padding:11px 12px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 120px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}
+.seg button{flex:1 1 70px;padding:8px 8px;font-size:.92rem;border-width:2px}
+.seg button[aria-pressed="true"],.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.lab{font-weight:700;font-size:.95rem;margin:2px 0 2px}
+.sl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700} .sl output{font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
+.sl input{grid-column:1/3}
+input[type=range]{width:100%;accent-color:var(--acc);height:28px}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.read{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
+.read div{border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.read small{display:block;color:var(--muted);font-size:.8rem}
+.read b{font-size:1.25rem;font-variant-numeric:tabular-nums}
+.state{border-radius:10px;padding:8px 12px;font-weight:700;margin-bottom:10px;background:var(--grid)}
+.state.ok{background:rgba(63,143,42,.16);color:var(--ok)} .state.bad{background:rgba(217,54,46,.15);color:var(--warn)} .state.mid{background:rgba(242,180,0,.2)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box.green{background:rgba(63,143,42,.10);border-left:6px solid var(--force)}
+.box ul,.box ol{margin:0;padding-left:20px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.box li.on{background:rgba(242,180,0,.25);border-radius:6px}
+.hint{font-size:.88rem;color:var(--muted);margin:6px 4px 0}
+svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif}
+.hit{cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+
+</style>
+</head>
+<body>
+<main>
+  <nav class="bar" aria-label="Navegación">
+    <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › Tema 5 › <b>5.4 Campo giratorio</b></span>
+    <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
+  </nav>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 5 · Punto 5.4</small><h1>El campo magnético giratorio</h1><p class="sub">Tres bobinas quietas, tres fases… y un campo que da vueltas. Conecta el motor y mira qué pasa en el rótor.</p></header>
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 640 548" role="img" aria-label="Corte del motor: estátor con las bobinas de las tres fases, campo giratorio y rótor de jaula"><g id="g"></g></svg>
+        <div class="legend"><span><b style="color:var(--ph1)">●</b> fase 1</span><span><b style="color:var(--ph2)">●</b> fase 2</span><span><b style="color:var(--ph3)">●</b> fase 3</span><span>⊙ corriente que sale · ⊗ que entra</span><span><b style="color:var(--acc)">➜</b> campo (de S a N)</span><span>barras del rótor: <b style="color:var(--cur)">rojo</b> / <b style="color:var(--field)">azul</b> = corriente inducida</span></div></div>
+      <div class="boxes">
+        <div class="box" id="exp"></div>
+        <div class="box blue"><h2>Cómo funciona, en 4 pasos</h2><ol id="steps">
+          <li>El estátor crea un <b>campo giratorio</b>.</li>
+          <li>El campo "barre" las barras del rótor: se <b>induce tensión</b> en ellas.</li>
+          <li>La jaula está cerrada: por las barras <b>circula corriente</b>.</li>
+          <li>Corriente + campo = <b>fuerza</b>: el rótor <b>gira</b> detrás del campo, un poco más lento.</li></ol>
+          <p class="hint">Cómo se usa: pulsa <b>Conectar</b> y prueba los botones. Todo va a cámara lenta.</p></div>
+      </div>
+    </div>
+    <aside class="panel">
+      <div class="ctrl"><button id="bOn" class="main">Conectar</button></div>
+      <div class="lab">Número de polos</div>
+      <div class="seg" id="sPol"><button data-v="1" aria-pressed="true">2 polos</button><button data-v="2" aria-pressed="false">4 polos</button></div>
+      <div class="sl"><label for="rF">Frecuencia</label><output id="oF">50 Hz</output><input id="rF" type="range" min="10" max="60" step="5" value="50"></div>
+      <div class="ctrl"><button id="bSw" aria-pressed="false">Intercambiar dos fases</button><button id="bLoad" aria-pressed="false">Poner carga</button></div>
+      <div class="read"><div><small>Velocidad del campo</small><b id="vNs">0 rpm</b></div><div><small>Velocidad del rótor</small><b id="vNr">0 rpm</b></div><div><small>Deslizamiento</small><b id="vS">–</b></div><div><small>Sentido de giro</small><b id="vDir">–</b></div></div>
+      <div class="inset"><svg id="osc" viewBox="0 0 300 130" aria-hidden="true"></svg><p class="cap">Corrientes de las tres fases. La raya negra es "ahora".</p></div>
+    </aside>
+  </div>
+
+</main>
+<script>
+// navegación y tema (común a todas las páginas)
+document.addEventListener('keydown',e=>{if(e.key==='Escape')location.href='index.html';});
+(function(){const b=document.getElementById('themeBtn'),r=document.documentElement;
+ const cur=()=>r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+ const lab=()=>{b.textContent=cur()==='dark'?'☀ Modo claro':'☾ Modo oscuro';};
+ b.onclick=()=>{const n=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('maq-tema',n);}catch(e){}lab();};lab();})();
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmt=(x,d=0)=>x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+let on=false,p=1,f=50,sw=false,load=false,t=0,te=0,ton=0,last=performance.now(),rotA=0,wr=0;
+const CX=320,CY=272,R1=218,R2=148,RR=138;
+const SLOW=0.12; // vueltas por segundo del campo a 50 Hz y 2 polos (cámara lenta)
+function el(t,a,txt){let s='<'+t;for(const k in a)s+=` ${k}="${a[k]}"`;return s+(txt!==undefined?'>'+txt+'</'+t+'>':'/>');}
+function pt(r,a){return [CX+r*Math.cos(a),CY-r*Math.sin(a)];}
+function iPh(k,we){ // corriente de la fase k (0,1,2) en el ángulo eléctrico we
+  const order=sw?[0,2,1]:[0,1,2]; return Math.cos(we-order[k]*2*Math.PI/3);}
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;
+  if(on){ton+=dt;te+=dt*2*Math.PI*SLOW*(f/50);
+    const ws=(sw?-1:1)/p; const sVis=load?0.22:0.08; const target=ws*(1-sVis);
+    wr+= (target-wr)*Math.min(1,dt*0.9); rotA+=wr*dt*2*Math.PI*SLOW*(f/50);}
+  else{wr*=Math.max(0,1-dt*0.8);rotA+=wr*dt*2*Math.PI*SLOW*(f/50);}
+  draw();requestAnimationFrame(frame);}
+function draw(){
+  let s='';
+  const st=css('--steel'),st2=css('--steel2'),ink=css('--ink'),card=css('--card'),acc=css('--acc');
+  const PH=[css('--ph1'),css('--ph2'),css('--ph3')];
+  // estátor
+  s+=el('circle',{cx:CX,cy:CY,r:R1+14,fill:st2,stroke:ink,'stroke-width':1.5});
+  s+=el('circle',{cx:CX,cy:CY,r:R1,fill:st,stroke:ink,'stroke-width':1});
+  s+=el('circle',{cx:CX,cy:CY,r:R2,fill:card,stroke:ink,'stroke-width':1});
+  // ranuras con conductores
+  const n=6*p, pat=[[0,1],[2,-1],[1,1],[0,-1],[2,1],[1,-1]];
+  const we=te; // ángulo eléctrico de las corrientes
+  for(let k=0;k<n;k++){
+    const a=k*2*Math.PI/n+Math.PI/2; const [ph,sg]=pat[k%6];
+    const i=on?sg*iPh(ph,we):0; const [x,y]=pt(R2+32,a);
+    s+=el('circle',{cx:x,cy:y,r:21,fill:PH[ph],'fill-opacity':(0.18+0.82*Math.abs(i)).toFixed(2),stroke:ink,'stroke-width':1.2});
+    if(on&&Math.abs(i)>0.12){ if(i>0) s+=el('circle',{cx:x,cy:y,r:4.5,fill:ink}); else s+=`<path d="M${x-8} ${y-8}L${x+8} ${y+8}M${x+8} ${y-8}L${x-8} ${y+8}" stroke="${ink}" stroke-width="3"/>`;}
+    const lab=['1','2','3'][ph]+(sg>0?'':"'"); const [lx,ly]=pt(R1+28,a);
+    s+=el('text',{x:lx,y:ly+5,'text-anchor':'middle','font-size':13,'font-weight':700,fill:css('--muted')},lab);
+  }
+  // rótor de jaula
+  s+=el('circle',{cx:CX,cy:CY,r:RR,fill:st2,stroke:ink,'stroke-width':1.2});
+  const nb=18, thN=on?(we-Math.PI/2)/p*(sw?1:1):0;
+  // ángulo mecánico del norte: la onda de corriente avanza a we/p
+  const north=(sw? -1:1)*0;
+  for(let k=0;k<nb;k++){
+    const a=rotA+k*2*Math.PI/nb; const [x,y]=pt(RR-22,a);
+    // corriente inducida: máxima bajo los polos, proporcional a lo que "resbala" el campo
+    const rel=Math.cos(p*(a-Math.PI/2)-fieldE()); const slipNow=on?Math.max(0.15,Math.abs(1/p*(sw?-1:1)-wr)*p):0;
+    const ib=on?rel*Math.min(1,slipNow*2.2):0;
+    const col=ib>0?css('--cur'):css('--field');
+    s+=el('circle',{cx:x,cy:y,r:10,fill:Math.abs(ib)>0.08?col:card,'fill-opacity':(0.25+0.75*Math.abs(ib)).toFixed(2),stroke:ink,'stroke-width':1});
+  }
+  s+=el('circle',{cx:CX,cy:CY,r:RR-40,fill:'none',stroke:ink,'stroke-width':.6,'stroke-dasharray':'3 4',opacity:.5});
+  // eje con marca
+  s+=el('circle',{cx:CX,cy:CY,r:24,fill:'#666',stroke:ink,'stroke-width':1.5});
+  const [mx,my]=pt(22,rotA); s+=`<line x1="${CX}" y1="${CY}" x2="${mx}" y2="${my}" stroke="#fff" stroke-width="4" stroke-linecap="round"/>`;
+  // campo: flechas S→N
+  if(on){
+    const fe=fieldE();
+    for(let k=0;k<p;k++){
+      const aN=Math.PI/2+(fe+2*Math.PI*k)/p, aS=aN+Math.PI/p;
+      if(p===1){ const [x1,y1]=pt(RR-30,aS),[x2,y2]=pt(RR-30,aN); s+=arrowSvg(x1,y1,x2,y2,acc,9);}
+      else{ const [x1,y1]=pt(40,aN),[x2,y2]=pt(RR-28,aN); s+=arrowSvg(x1,y1,x2,y2,acc,7);
+            const [x3,y3]=pt(RR-28,aS),[x4,y4]=pt(40,aS); s+=arrowSvg(x3,y3,x4,y4,acc,7);}
+      const [nx,ny]=pt(R2-2,aN),[sx,sy]=pt(R2-2,aS);
+      s+=el('circle',{cx:nx,cy:ny,r:14,fill:acc})+el('text',{x:nx,y:ny+5,'text-anchor':'middle','font-size':15,'font-weight':700,fill:'#fff'},'N');
+      s+=el('circle',{cx:sx,cy:sy,r:14,fill:css('--cur')})+el('text',{x:sx,y:sy+5,'text-anchor':'middle','font-size':15,'font-weight':700,fill:'#fff'},'S');
+    }
+  }
+  s+=el('text',{x:16,y:26,'font-size':15,'font-weight':700,fill:css('--muted')},'estátor (quieto)');
+  s+=el('text',{x:16,y:46,'font-size':13,fill:css('--muted')},'1, 2, 3 = principio de cada bobina');
+  s+=el('text',{x:16,y:62,'font-size':13,fill:css('--muted')},"1', 2', 3' = final");
+  $('g').innerHTML=s;
+  // lecturas
+  const Ns=60*f/p, sl=load?0.045:0.012;
+  $('vNs').textContent=on?fmt(Ns)+' rpm':'0 rpm';
+  const nr=on?Ns*(1-sl)*Math.min(1,Math.abs(wr)*p/(1-(load?0.22:0.08))):Math.abs(wr)*p*Ns;
+  $('vNr').textContent=fmt(Math.max(0,nr))+' rpm';
+  $('vS').textContent=on&&ton>2.5?fmt(sl*100,1)+' %':'–';
+  $('vDir').textContent=on?(sw?'↻ horario':'↺ antihorario'):'–';
+  // osciloscopio
+  let o='<line x1="0" y1="65" x2="300" y2="65" stroke="'+css('--line')+'"/>';
+  for(let k=0;k<3;k++){const pts=[];for(let i=0;i<=150;i++){const w=we-(150-i)*0.06;pts.push(`${i*2},${(65-(on?iPh(k,w):0)*48).toFixed(1)}`);}
+    o+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${PH[k]}" stroke-width="2.5"/>`;}
+  o+='<line x1="300" y1="8" x2="300" y2="122" stroke="'+ink+'" stroke-width="4"/>';
+  $('osc').innerHTML=o;
+  // pasos
+  const li=document.querySelectorAll('#steps li'); const stp=on?Math.min(3,Math.floor(ton/1.2)):-1;
+  li.forEach((x,i)=>x.classList.toggle('on',on&&i<=stp));
+}
+function fieldE(){ // ángulo eléctrico del norte
+  return (sw?-1:1)*(te)-Math.PI/2; }
+function arrowSvg(x1,y1,x2,y2,c,w){const a=Math.atan2(y2-y1,x2-x1),h=w*2.4;const bx=x2-h*Math.cos(a),by=y2-h*Math.sin(a);
+  return `<line x1="${x1}" y1="${y1}" x2="${bx}" y2="${by}" stroke="${c}" stroke-width="${w}" stroke-linecap="round" opacity=".9"/><path d="M${x2} ${y2}L${bx-h*.6*Math.sin(a)} ${by+h*.6*Math.cos(a)}L${bx+h*.6*Math.sin(a)} ${by-h*.6*Math.cos(a)}Z" fill="${c}"/>`;}
+function texts(){
+  let m;
+  if(!on) m='El motor está desconectado. Las tres bobinas del estátor (1-1\', 2-2\' y 3-3\') están repartidas a 120°. Pulsa <b>Conectar</b>.';
+  else m=`Cada fase llega a su máximo en un momento distinto (mira el osciloscopio): el norte y el sur <b>van girando</b> aunque las bobinas no se mueven. Con <b>${p===1?'2':'4'} polos</b> y <b>${f} Hz</b> el campo gira a <b>${fmt(60*f/p)} rpm</b>.`+
+    (load?' Con <b>carga</b>, el rótor se queda <b>más atrás</b>: las barras cortan más campo, llevan más corriente y el motor hace más fuerza.':' El rótor gira <b>un poco más lento</b> que el campo: por eso se llama <b>asíncrono</b>.')+
+    (sw?' Has <b>intercambiado dos fases</b>: el campo y el motor giran <b>al revés</b>.':'');
+  $('exp').innerHTML='<h2>Qué pasa</h2><p>'+m+'</p>';
+  $('bOn').textContent=on?'Desconectar':'Conectar';$('bOn').classList.toggle('on',on);
+  $('oF').textContent=f+' Hz';
+}
+$('bOn').onclick=()=>{on=!on;ton=0;texts();};
+document.querySelectorAll('#sPol button').forEach(b=>b.onclick=()=>{p=+b.dataset.v;document.querySelectorAll('#sPol button').forEach(x=>x.setAttribute('aria-pressed',x===b));wr=on?wr:0;texts();});
+$('rF').oninput=e=>{f=+e.target.value;texts();};
+$('bSw').onclick=()=>{sw=!sw;$('bSw').setAttribute('aria-pressed',sw);ton=Math.min(ton,1.2*3);texts();};
+$('bLoad').onclick=()=>{load=!load;$('bLoad').setAttribute('aria-pressed',load);$('bLoad').textContent=load?'Quitar carga':'Poner carga';texts();};
+texts();requestAnimationFrame(frame);
+
+</script>
+</body>
+</html>

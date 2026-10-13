@@ -3,45 +3,112 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Máquinas Eléctricas · Animaciones</title>
+<script>(function(){try{var t=localStorage.getItem('maq-tema');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<title>Máquinas Eléctricas · 2MB</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--acc2:#2E75B6;--chip:#e3ecf6;
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--green:#6A9A1F;--chip:#e3ecf6;
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--acc2:#6FAEE8;--chip:#26323f}}
-:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--acc2:#6FAEE8;--chip:#26323f}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--chip:#26323f}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--chip:#26323f}
 *,*::before,*::after{box-sizing:inherit}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
 main{max-width:860px;margin:0 auto;padding:28px 16px 40px}
-.top{border-bottom:4px solid var(--acc2);padding-bottom:10px;margin-bottom:8px}
-.top small{color:var(--acc2);font-weight:700}
+.top{border-bottom:4px solid var(--green);padding-bottom:10px;margin-bottom:22px}
+.top small{color:var(--green);font-weight:700;letter-spacing:.04em}
 h1{margin:4px 0 0;font-size:clamp(1.6rem,4vw,2.3rem);line-height:1.15}
-.intro{color:var(--muted);margin:8px 0 0}
-h2.tema{font-size:1.15rem;color:var(--acc);margin:28px 0 10px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.sec{font-size:1.05rem;color:var(--muted);margin:0 0 12px;font-weight:700}
 a.card{display:flex;gap:16px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px;color:inherit;text-decoration:none;transition:transform .12s,border-color .12s}
 a.card:hover,a.card:focus-visible{transform:translateY(-2px);border-color:var(--acc);outline:none}
-.num{flex:none;min-width:64px;padding:8px 8px;border-radius:10px;background:var(--acc);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;line-height:1.2;text-align:center}
+.num{flex:none;min-width:64px;padding:8px;border-radius:10px;background:var(--acc);color:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;line-height:1.2;text-align:center}
 .num small{font-size:.7rem;font-weight:400;opacity:.85}
-.card h3{margin:0 0 4px;font-size:1.2rem;color:var(--acc)}
+.card h2{margin:0 0 4px;font-size:1.2rem;color:var(--acc)}
 .card p{margin:0 0 8px;color:var(--muted);font-size:.98rem}
+.card p:last-child{margin:0}
 .pts{display:flex;flex-wrap:wrap;gap:6px}
 .pt{background:var(--chip);border-radius:999px;padding:3px 10px;font-size:.85rem}
 .pt b{color:var(--acc)}
 .foot{color:var(--muted);font-size:.9rem;margin-top:24px}
+.pdf{display:flex;gap:14px;align-items:center;background:var(--card);border:2px solid var(--green);border-radius:12px;padding:12px 16px;margin:0 0 18px;color:inherit;text-decoration:none;font-weight:700}
+.pdf:hover,.pdf:focus-visible{border-color:var(--acc);outline:none}
+.pdf .ico{flex:none;width:44px;height:52px;border-radius:6px;background:#C0392B;color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:700}
+.pdf small{display:block;font-weight:400;color:var(--muted)}
+.pdf.missing{opacity:.45;border-style:dashed;pointer-events:none}
+.pdf.missing small:after{content:" · próximamente"}
+.folders{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
+@media (max-width:560px){.folders{grid-template-columns:1fr}}
+.folder{display:flex;flex-direction:column;align-items:flex-start;gap:6px;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:14px 16px;color:inherit;text-decoration:none;font-weight:700;font-size:1.1rem;cursor:pointer}
+.folder:hover,.folder:focus-visible{border-color:var(--acc);outline:none}
+.folder.sel{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc) inset}
+.folder small{font-weight:400;color:var(--muted);font-size:.9rem}
+.fico{width:46px;height:36px;position:relative}
+.fico:before{content:"";position:absolute;left:0;top:0;width:20px;height:8px;border-radius:4px 4px 0 0;background:#E0A800}
+.fico:after{content:"";position:absolute;left:0;top:5px;width:46px;height:31px;border-radius:0 5px 5px 5px;background:#F2B400}
+section{display:none} section.on{display:block}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px;padding:4px 0 10px;border-bottom:1px solid var(--line)}
+.tb-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.crumbs{min-width:0;flex:1;overflow:hidden;white-space:nowrap;direction:rtl;text-align:left;font-size:.92rem;color:var(--muted)}
+.crumbs span.in{direction:ltr;unicode-bidi:bidi-override}
+.crumbs a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted)}
+.crumbs a:hover{color:var(--ink)}
+.crumbs .sep{margin:0 6px;opacity:.7}
+.crumbs b{color:var(--ink)}
+.themebtn{flex:none;width:42px;height:36px;border-radius:10px;border:2px solid var(--line);background:transparent;color:var(--ink);font-size:1.15rem;cursor:pointer;line-height:1}
+.themebtn:hover{border-color:var(--acc)}
+button:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
 </style>
 </head>
 <body>
 <main>
+  <header class="topbar"><div class="tb-left"><nav class="crumbs" aria-label="Dónde estás"><span class="in"><a href="index.html#temas">Máquinas Eléctricas</a><span class="sep">›</span><b id="crumbLast">Temas</b></span></nav></div><button id="themeBtn" class="themebtn" type="button" aria-label="Cambiar modo claro u oscuro">🌙</button></header>
   <div class="top">
-    <small>Máquinas Eléctricas 2MB · I.E.S. Trinidad Arroyo</small>
-    <h1>Animaciones de clase</h1>
-    <p class="intro">Cada animación indica el punto de los apuntes al que corresponde. Ábrela cuando estudies ese punto.</p>
+    <small>MÁQUINAS ELÉCTRICAS · 2MB · I.E.S. TRINIDAD ARROYO</small>
+    <h1>Máquinas Eléctricas</h1>
   </div>
-  <div id="list"></div>
-  <p class="foot">Funcionan en el ordenador, la tablet y el móvil.</p>
+
+  <nav class="folders" aria-label="Carpetas">
+    <a class="folder" href="#temas" data-f="temas"><span class="fico"></span>Temas<small>Apuntes en PDF</small></a>
+    <a class="folder" href="#practicas" data-f="practicas"><span class="fico"></span>Prácticas<small>Fichas en PDF</small></a>
+    <a class="folder" href="#animaciones" data-f="animaciones"><span class="fico"></span>Animaciones<small>Dibujos que se mueven</small></a>
+  </nav>
+
+  <section id="sec-temas">
+    <h2 class="sec">Temas · apuntes para descargar</h2>
+    <a class="pdf" href="temas/T1_Electromagnetismo_Maquinas.pdf" download>
+      <div class="ico">PDF</div>
+      <div>Tema 1 · Electromagnetismo<small>Imanes, campo y flujo, inducción, leyes del electromagnetismo, materiales magnéticos, histéresis y Foucault</small></div>
+    </a>
+    <a class="pdf" href="temas/T3_Transformadores_Maquinas.pdf" download>
+      <div class="ico">PDF</div>
+      <div>Tema 3 · Transformadores<small>Funcionamiento, homólogos, tipos, ensayos de vacío, cortocircuito y carga, y pruebas de aislamiento</small></div>
+    </a>
+    <a class="pdf" href="temas/T5_Motores_electricos_Maquinas.pdf" download>
+      <div class="ico">PDF</div>
+      <div>Tema 5 · Motores eléctricos<small>Campo giratorio, par y deslizamiento, curvas, placa de bornes, arranques y regulación de velocidad</small></div>
+    </a>
+    <a class="pdf" href="temas/T6_Variadores_Maquinas.pdf" download>
+      <div class="ico">PDF</div>
+      <div>Tema 6 · Regulación de motores mediante variadores<small>Partes y conexionado del variador, tipos de control y tipos de carga</small></div>
+    </a>
+  </section>
+
+  <section id="sec-practicas">
+    <h2 class="sec">Prácticas · fichas para descargar</h2>
+    <a class="pdf" href="practicas/P1_Maquinas.pdf" download>
+      <div class="ico">PDF</div>
+      <div>Práctica 1 · Cálculo y construcción de un trafo<small>Los 4 trafos del aula, ajuste al carrete de 40 × 40 mm y a las chapas del aula, ensayos con hoja para rellenar y memoria</small></div>
+    </a>
+    <h2 class="sec" style="margin-top:26px">Práctica 1 · herramientas del taller</h2>
+    <div id="herr"></div>
+  </section>
+
+  <section id="sec-animaciones">
+    <div id="list"></div>
+    <p class="foot">Cada animación indica el punto de los apuntes al que corresponde. Funcionan en el ordenador, la tablet y el móvil.</p>
+  </section>
 </main>
 
 <script>
@@ -64,9 +131,18 @@ const PUNTOS={
   '3.15':'Ensayo de vacío',
   '3.16':'Ensayo de cortocircuito',
   '3.17':'Ensayo de carga',
-  '3.18':'Pruebas de aislamiento'
+  '3.18':'Pruebas de aislamiento',
+  '5.4':'Campo magnético giratorio',
+  '5.4.2':'Deslizamiento y par motor',
+  '5.5':'Curvas de par e intensidad',
+  '5.6':'Placa de características y de bornes',
+  '5.7':'Arranques',
+  '5.8':'Regulación de velocidad',
+  '6.1':'El variador: partes y conexionado',
+  '6.2':'Tipos de control',
+  '6.3':'Tipos de cargas'
 };
-const TEMAS={'1':'Tema 1. Electromagnetismo','3':'Tema 3. Transformadores'};
+const TEMAS={'1':'Tema 1 · Electromagnetismo','3':'Tema 3 · Transformadores','5':'Tema 5 · Motores eléctricos','6':'Tema 6 · Regulación de motores mediante variadores'};
 
 // Animaciones: para añadir una nueva, basta con añadir una línea aquí
 const ANIM=[
@@ -85,27 +161,63 @@ const ANIM=[
   {f:'aislamiento.html',          t:'Pruebas de aislamiento', d:'Las tres medidas con el megóhmetro: el trafo del aula antes y después de quemarse, y un trafo de 1 MW.', p:['3.18']},
   {f:'flujo_induccion.html',    t:'Campo, flujo e inducción', d:'Mueve una ventana sobre el imán y cuenta las líneas: el flujo es el total y la inducción, las líneas por cuadradito.', p:['1.2','1.3']},
   {f:'circuito_magnetico.html', t:'La bobina y el circuito magnético', d:'Corriente, espiras, longitud, grosor, hierro o aire y entrehierro: qué cambia y qué no.', p:['1.3','1.4','1.5']},
+  {f:'campo_giratorio.html',    t:'Campo magnético giratorio', d:'Tres bobinas quietas y un campo que gira. Cambia los polos y la frecuencia, pon carga e intercambia dos fases.', p:['5.4']},
+  {f:'curva_par.html',          t:'Par, velocidad y corriente del motor', d:'Arranca el motor y ponle carga: los 6 puntos de las curvas, el deslizamiento, el térmico y qué pasa al cambiar la tensión o la frecuencia.', p:['5.4.2','5.5','5.8']},
+  {f:'placa_bornes.html',       t:'Placa de bornes: estrella o triángulo', d:'Pon tú las chapas, elige motor y red, y comprueba si va bien, va flojo o se quema.', p:['5.6']},
+  {f:'arranques.html',          t:'Arranques del motor', d:'Directo, estrella-triángulo, arrancador suave y variador: el pico de corriente frente al límite del REBT.', p:['5.7']},
+  {f:'variador.html',           t:'Así funciona un variador', d:'Rectificador, bus de continua e inversor. Marcha, sentido, potenciómetro, rampas y la curva V/f.', p:['6.1','6.2']},
+  {f:'cargas.html',             t:'Tipos de carga', d:'Cinta, ventilador y bobinadora: el par que piden frente al que da el motor, y la sobrevelocidad.', p:['6.3']},
   {f:'campo_corriente.html',    t:'La corriente crea un campo magnético', d:'Cable, espira y bobina. Brújulas, líneas de campo y regla de la mano derecha.', p:['1.6']},
 ];
+// Herramientas para el taller de la práctica 1 (no van con un punto concreto)
+const HERR=[
+  {f:'medir.html',t:'Cómo medir con calibre y micrómetro',d:'Calibres de 0,05 y 0,02 mm y micrómetros de 0–25 a 75–100 mm: escala ampliada, lectura paso a paso y práctica con medidas al azar, como en las fichas.'},
+  {f:'ajuste_hierro.html',t:'Ajuste del hierro al carrete de 40 × 40 mm',d:'Por qué el paquete de chapas no llena todo el carrete. El paso 10 de los 4 trafos, con chapa nueva y con las chapas oxidadas del aula: mete las chapas y mira si el hierro se satura.'},
+  {f:'calculadora_trafo.html',t:'Calculadora de transformadores pequeños',d:'Carrete de 40 × 40 mm. Pon la potencia, la tensión, las chapas, las espiras y el hilo que tienes: salen tensiones, corrientes, inducción real, capas del bobinado y si cabe y funciona.'}];
 
-const ord=k=>k.split('.').map(Number); const cmp=(a,b)=>{const x=ord(a),y=ord(b);return x[0]-y[0]||x[1]-y[1];};
+const ord=k=>k.split('.').map(Number); const cmp=(a,b)=>{const x=ord(a),y=ord(b);return x[0]-y[0]||x[1]-y[1]||(x[2]||0)-(y[2]||0);};
 ANIM.forEach(a=>a.p.sort(cmp)); ANIM.sort((a,b)=>cmp(a.p[0],b.p[0]));
 const L=document.getElementById('list'); let tema=null;
 for(const a of ANIM){
   const tm=a.p[0].split('.')[0];
-  if(tm!==tema){tema=tm;const h=document.createElement('h2');h.className='tema';h.textContent=TEMAS[tm]||('Tema '+tm);L.appendChild(h);}
+  if(tm!==tema){tema=tm;const h=document.createElement('h2');h.className='sec';if(L.children.length)h.style.marginTop='26px';h.textContent=TEMAS[tm]||('Tema '+tm);L.appendChild(h);}
   const card=document.createElement('a'); card.className='card'; card.href=a.f;
   const rango=a.p.length>1?a.p[0]+'<small>a</small>'+a.p[a.p.length-1]:a.p[0];
   card.innerHTML=`<div class="num"><small>Punto${a.p.length>1?'s':''}</small>${a.p.length===2?a.p.join('<small>y</small>'):rango}</div>
-    <div><h3>${a.t}</h3><p>${a.d}</p>
+    <div><h2>${a.t}</h2><p>${a.d}</p>
     <div class="pts">${a.p.map(n=>`<span class="pt"><b>${n}</b> ${PUNTOS[n]||''}</span>`).join('')}</div></div>`;
   L.appendChild(card);
 }
-// Herramientas para el taller (no van con un punto concreto)
-const HERR=[{f:'medir.html',t:'Cómo medir con calibre y micrómetro',d:'Calibres de 0,05 y 0,02 mm y micrómetros de 0–25 a 75–100 mm: escala ampliada, lectura paso a paso y práctica con medidas al azar, como en las fichas.'},
-  {f:'calculadora_trafo.html',t:'Calculadora de transformadores pequeños',d:'Carrete de 40 × 40 mm. Pon la potencia, la tensión, las chapas, las espiras y el hilo que tienes: salen tensiones, corrientes, inducción real, capas del bobinado y si cabe y funciona. Método del formulario de la práctica P1.'}];
-{const h=document.createElement('h2');h.className='tema';h.textContent='Taller: construcción de transformadores';L.appendChild(h);
- for(const a of HERR){const c=document.createElement('a');c.className='card';c.href=a.f;c.innerHTML=`<div class="num"><small>Taller</small>🔧</div><div><h3>${a.t}</h3><p>${a.d}</p></div>`;L.appendChild(c);}}
+{const hT=document.createElement('h2');hT.className='sec';hT.style.marginTop='26px';hT.textContent='Taller · construcción de transformadores';L.appendChild(hT);
+ const H=document.getElementById('herr');
+ for(const a of HERR){for(const dst of [L,H]){const c=document.createElement('a');c.className='card';c.href=a.f;c.innerHTML=`<div class="num"><small>Taller</small>🔧</div><div><h2>${a.t}</h2><p>${a.d}</p></div>`;dst.appendChild(c);}}}
 </script>
+<script>(function(){
+  var N = {"temas": "Temas", "practicas": "Prácticas", "animaciones": "Animaciones"};
+  function show(){
+    var f = (location.hash || '#temas').slice(1);
+    if (!N[f]) f = 'temas';
+    document.querySelectorAll('section').forEach(function(s){ s.classList.toggle('on', s.id === 'sec-' + f); });
+    document.querySelectorAll('.folder').forEach(function(a){ a.classList.toggle('sel', a.dataset.f === f); });
+    document.getElementById('crumbLast').textContent = N[f];
+  }
+  window.addEventListener('hashchange', function(){ show(); window.scrollTo(0, 0); });
+  document.querySelectorAll('.folder').forEach(function(a){ a.addEventListener('click', function(e){ e.preventDefault(); history.replaceState(null, '', '#' + a.dataset.f); show(); }); });
+  show();
+  // los PDF que aún no están subidos se marcan como "próximamente"
+  document.querySelectorAll('a.pdf').forEach(function(a){
+    fetch(a.getAttribute('href'), { method:'HEAD' }).then(function(r){ if (!r.ok) a.classList.add('missing'); }).catch(function(){});
+  });
+})();</script>
+<script>(function(){
+  var b = document.getElementById('themeBtn'), r = document.documentElement;
+  function cur(){ var t = r.getAttribute('data-theme'); if (t === 'light' || t === 'dark') return t;
+    return (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light'; }
+  function paint(){ var d = cur() === 'dark'; b.textContent = d ? '☀️' : '🌙';
+    b.setAttribute('aria-label', d ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'); b.title = b.getAttribute('aria-label'); }
+  b.addEventListener('click', function(){ var t = cur() === 'dark' ? 'light' : 'dark'; r.setAttribute('data-theme', t);
+    try { localStorage.setItem('maq-tema', t); } catch(e){} paint(); });
+  paint();
+})();</script>
 </body>
 </html>

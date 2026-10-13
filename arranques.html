@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arranques de motores asíncronos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<script>try{const t=localStorage.getItem('maq-tema');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;--ph1:#D9362E;--ph2:#2E75B6;--ph3:#3F8F2A;--steel:#9aa5b1;--steel2:#c3cbd3;--warn:#C00000;--ok:#3F8F2A;--grid:#e3e8ee;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:16px 16px 36px}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.back{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+.crumbs{font-size:.88rem;color:var(--muted);flex:1 1 auto}
+.crumbs a{color:var(--muted)} .crumbs b{color:var(--ink)}
+.theme{font:inherit;font-size:.9rem;font-weight:700;padding:7px 12px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage svg{display:block;width:100%;height:auto;touch-action:manipulation;user-select:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button,.seg button{font:inherit;font-weight:700;padding:11px 12px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 120px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}
+.seg button{flex:1 1 70px;padding:8px 8px;font-size:.92rem;border-width:2px}
+.seg button[aria-pressed="true"],.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.lab{font-weight:700;font-size:.95rem;margin:2px 0 2px}
+.sl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700} .sl output{font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
+.sl input{grid-column:1/3}
+input[type=range]{width:100%;accent-color:var(--acc);height:28px}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.read{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
+.read div{border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.read small{display:block;color:var(--muted);font-size:.8rem}
+.read b{font-size:1.25rem;font-variant-numeric:tabular-nums}
+.state{border-radius:10px;padding:8px 12px;font-weight:700;margin-bottom:10px;background:var(--grid)}
+.state.ok{background:rgba(63,143,42,.16);color:var(--ok)} .state.bad{background:rgba(217,54,46,.15);color:var(--warn)} .state.mid{background:rgba(242,180,0,.2)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box.green{background:rgba(63,143,42,.10);border-left:6px solid var(--force)}
+.box ul,.box ol{margin:0;padding-left:20px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.box li.on{background:rgba(242,180,0,.25);border-radius:6px}
+.hint{font-size:.88rem;color:var(--muted);margin:6px 4px 0}
+svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif}
+.hit{cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+.kms{display:flex;gap:8px;margin:0 0 12px}
+.kms div{flex:1;text-align:center;border:2px solid var(--line);border-radius:10px;padding:6px 4px;font-size:.85rem;color:var(--muted)}
+.kms div b{display:block;font-size:1.05rem;color:var(--ink)}
+.kms div.on{border-color:var(--ok);background:rgba(63,143,42,.16)}
+
+</style>
+</head>
+<body>
+<main>
+  <nav class="bar" aria-label="Navegación">
+    <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › Tema 5 › <b>5.7 Arranques</b></span>
+    <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
+  </nav>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 5 · Punto 5.7</small><h1>¿Cuánta corriente pide el motor al arrancar?</h1><p class="sub">Elige un sistema de arranque, la potencia del motor y la carga. Pulsa Arrancar y compara con el límite del REBT.</p></header>
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 640 470" role="img" aria-label="Gráfica de la corriente y de la velocidad durante el arranque"><g id="g"></g></svg>
+        <div class="legend"><span><b style="color:var(--cur)">━</b> límite del REBT</span><span>línea gruesa: el arranque que acabas de hacer</span><span>líneas finas: los otros sistemas que ya has probado</span></div></div>
+      <div class="boxes">
+        <div class="box" id="exp"></div>
+        <div class="box blue"><h2>Recuerda</h2><ul>
+          <li>Arranque <b>directo</b>: entre 4 y 8 veces la corriente nominal. Solo para motores <b>pequeños</b>.</li>
+          <li><b>Estrella-triángulo</b>: en estrella la corriente y el par bajan a la <b>tercera parte</b>. Si cambias a triángulo demasiado pronto, hay un <b>pico</b>.</li>
+          <li><b>Arrancador suave</b>: sube la tensión poco a poco y limita la corriente.</li>
+          <li><b>Variador</b>: sube a la vez la frecuencia y la tensión. La corriente casi no pasa de la nominal.</li>
+          <li>Bajar la tensión baja la corriente, pero el <b>par baja más</b>: con carga pesada, el motor puede no arrancar.</li></ul></div>
+      </div>
+    </div>
+    <aside class="panel">
+      <div class="ctrl"><button id="bGo" class="main">▶ Arrancar</button></div>
+      <div class="lab">Sistema de arranque</div>
+      <div class="seg" id="sMet"><button data-v="dir" aria-pressed="true">Directo</button><button data-v="yd" aria-pressed="false">Estrella-triángulo</button><button data-v="suave" aria-pressed="false">Arrancador suave</button><button data-v="var" aria-pressed="false">Variador</button></div>
+      <div class="kms" id="kms" hidden><div id="k1"><b>KM1</b>línea</div><div id="k2"><b>KM2</b>estrella</div><div id="k3"><b>KM3</b>triángulo</div></div>
+      <div class="sl" id="slT" hidden><label for="rT">Temporizador estrella → triángulo</label><output id="oT">3,0 s</output><input id="rT" type="range" min="0.5" max="6" step="0.5" value="3"></div>
+      <div class="lab">Potencia del motor</div>
+      <div class="seg" id="sP"><button data-v="4.5" aria-pressed="false">1,1 kW</button><button data-v="3" aria-pressed="true">4 kW</button><button data-v="2" aria-pressed="false">11 kW</button><button data-v="1.5" aria-pressed="false">30 kW</button></div>
+      <div class="lab">Carga al arrancar</div>
+      <div class="seg" id="sL"><button data-v="0.35" aria-pressed="true">Ligera</button><button data-v="0.9" aria-pressed="false">Pesada</button></div>
+      <div class="state" id="st">Pulsa Arrancar</div>
+      <div class="read"><div><small>Pico de corriente</small><b id="vP">–</b></div><div><small>Límite REBT</small><b id="vL">3 × In</b></div><div><small>Tiempo de arranque</small><b id="vT">–</b></div><div><small>Velocidad</small><b id="vN">0 rpm</b></div></div>
+    </aside>
+  </div>
+
+</main>
+<script>
+// navegación y tema (común a todas las páginas)
+document.addEventListener('keydown',e=>{if(e.key==='Escape')location.href='index.html';});
+(function(){const b=document.getElementById('themeBtn'),r=document.documentElement;
+ const cur=()=>r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+ const lab=()=>{b.textContent=cur()==='dark'?'☀ Modo claro':'☾ Modo oscuro';};
+ b.onclick=()=>{const n=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('maq-tema',n);}catch(e){}lab();};lab();})();
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmt=(x,d=0)=>x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+const sk=0.217,sn=0.04;
+function Mk(s){s=Math.max(s,1e-6);return 2*2.8/(s/sk+sk/s)+0.95*Math.pow(s,1.6);}
+const MN=Mk(sn), I0=0.4; let KA=.3,KK=1;(function(){let lo=1e-3,hi=5;const g=a=>(sn/Math.hypot(sn,a))/(1/Math.hypot(1,a))-0.917/6.49;for(let i=0;i<60;i++){const m=(lo+hi)/2;(g(lo)*g(m)<=0)?hi=m:lo=m;}KA=(lo+hi)/2;KK=6.49*Math.hypot(1,KA);})();
+const M=s=>Mk(s)/MN, I=s=>Math.hypot(I0,KK*s/Math.hypot(s,KA));
+let met='dir',lim=3,Mr=0.35,Tyd=3,run=null,traces={},last=performance.now();
+const TMAX=8,J=0.8;
+function newRun(){return {t:0,w:0,star:true,pk:0,tEnd:null,pts:[],stall:false};}
+function stepRun(r,dt){
+  let m,i;const sl=Math.max(1-r.w,1e-4);
+  if(met==='dir'){m=M(sl);i=I(sl);}
+  else if(met==='yd'){if(r.star&&r.t>=Tyd)r.star=false;const k=r.star?1/3:1;m=M(sl)*k;i=I(sl)*k;}
+  else if(met==='suave'){const V=Math.min(1,0.35+0.65*r.t/4,3/I(sl));m=M(sl)*V*V;i=I(sl)*V;}
+  else{const fs=Math.max(0.01,Math.min(1,r.t/3));const se=Math.max(1e-4,fs-r.w);m=M(Math.min(se,1));i=I(Math.min(se,1));if(r.w<fs*0.5&&r.t>0.3)i=Math.min(i,1.6);}
+  r.w+=(m-Mr)/J*dt; if(r.w<0)r.w=0; if(r.w>1-sn*Mr)r.w=1-sn*Mr;
+  r.pk=Math.max(r.pk,i);
+  if(r.tEnd===null&&r.w>0.93*(1-sn*Mr)&&(met!=='yd'||!r.star)&&(met!=='var'||r.t>=3)&&(met!=='suave'||i<1.2))r.tEnd=r.t;
+  return i;
+}
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;
+  if(run&&run.t<TMAX){for(let k=0;k<20;k++){const i=stepRun(run,dt/20);run.t+=dt/20;}run.pts.push([run.t,stepI(run),run.w]);
+    if(run.t>=TMAX){traces[met]=run.pts.slice();finish();}}
+  draw();requestAnimationFrame(frame);}
+function stepI(r){const sl=Math.max(1-r.w,1e-4);if(met==='dir')return I(sl);if(met==='yd')return I(sl)*(r.star?1/3:1);if(met==='suave'){const V=Math.min(1,0.35+0.65*r.t/4,3/I(sl));return I(sl)*V;}
+  const fs=Math.max(0.01,Math.min(1,r.t/3));const se=Math.max(1e-4,fs-r.w);let i=I(Math.min(se,1));if(r.w<fs*0.5&&r.t>0.3)i=Math.min(i,1.6);return i;}
+const X0=58,X1=620,A0=24,A1=300,B0=340,B1=430;
+const COL={dir:'--cur',yd:'--field',suave:'--cu',var:'--force'};
+function draw(){
+  const ink=css('--ink'),mut=css('--muted'),gr=css('--grid');
+  const xp=t=>X0+(X1-X0)*t/TMAX, yI=v=>A1-(A1-A0)*Math.min(v,7.5)/7.5, yW=v=>B1-(B1-B0)*v;
+  let s='';
+  for(let v=0;v<=7;v++){s+=`<line x1="${X0}" y1="${yI(v)}" x2="${X1}" y2="${yI(v)}" stroke="${gr}"/><text x="${X0-8}" y="${yI(v)+5}" text-anchor="end" font-size="13" fill="${mut}">${v}</text>`;}
+  s+=`<line x1="${X0}" y1="${A0}" x2="${X0}" y2="${A1}" stroke="${ink}" stroke-width="1.5"/><line x1="${X0}" y1="${A1}" x2="${X1}" y2="${A1}" stroke="${ink}" stroke-width="1.5"/>`;
+  s+=`<text x="${X0+6}" y="${A0+2}" font-size="13" font-weight="700" fill="${mut}">CORRIENTE (veces la nominal)</text>`;
+  s+=`<line x1="${X0}" y1="${yI(1)}" x2="${X1}" y2="${yI(1)}" stroke="${mut}" stroke-dasharray="5 5"/><text x="${X1-4}" y="${yI(1)-6}" text-anchor="end" font-size="12" fill="${mut}">nominal</text>`;
+  s+=`<rect x="${X0}" y="${A0}" width="${X1-X0}" height="${yI(lim)-A0}" fill="${css('--cur')}" opacity=".07"/><line x1="${X0}" y1="${yI(lim)}" x2="${X1}" y2="${yI(lim)}" stroke="${css('--cur')}" stroke-width="2.5"/><text x="${X1-4}" y="${yI(lim)-6}" text-anchor="end" font-size="13" font-weight="700" fill="${css('--cur')}">límite REBT: ${fmt(lim,1)} × In</text>`;
+  s+=`<line x1="${X0}" y1="${B0}" x2="${X0}" y2="${B1}" stroke="${ink}" stroke-width="1.5"/><line x1="${X0}" y1="${B1}" x2="${X1}" y2="${B1}" stroke="${ink}" stroke-width="1.5"/>`;
+  s+=`<text x="${X0+6}" y="${B0-4}" font-size="13" font-weight="700" fill="${mut}">VELOCIDAD</text><text x="${X0-8}" y="${B0+5}" text-anchor="end" font-size="12" fill="${mut}">1440</text><text x="${X0-8}" y="${B1+5}" text-anchor="end" font-size="12" fill="${mut}">0</text>`;
+  for(let t=0;t<=TMAX;t++)s+=`<text x="${xp(t)}" y="${B1+18}" text-anchor="middle" font-size="13" fill="${mut}">${t}</text>`;
+  s+=`<text x="${X1}" y="${B1+36}" text-anchor="end" font-size="13" fill="${mut}">tiempo (segundos)</text>`;
+  const line=(pts,c,w,op)=>`<polyline points="${pts.map(p=>xp(p[0]).toFixed(1)+','+yI(p[1]).toFixed(1)).join(' ')}" fill="none" stroke="${c}" stroke-width="${w}" opacity="${op}"/>`+
+    `<polyline points="${pts.map(p=>xp(p[0]).toFixed(1)+','+yW(p[2]).toFixed(1)).join(' ')}" fill="none" stroke="${c}" stroke-width="${w}" opacity="${op}"/>`;
+  for(const k in traces){if(run&&k===met)continue;if(!run&&k===met)continue;s+=line(traces[k],css(COL[k]),1.6,.55);}
+  const cur=run?run.pts:(traces[met]||[]);
+  if(cur.length>1)s+=line(cur,css(COL[met]),4,1);
+  if(met==='yd'){const x=xp(Tyd);s+=`<line x1="${x}" y1="${A0}" x2="${x}" y2="${B1}" stroke="${css('--field')}" stroke-dasharray="4 4"/><text x="${x+4}" y="${A0+30}" font-size="12" fill="${css('--field')}">paso a triángulo</text>`;}
+  $('g').innerHTML=s;
+  const r=run;
+  if(met==='yd'){$('k1').classList.toggle('on',!!r);$('k2').classList.toggle('on',!!r&&r.star&&r.t<TMAX);$('k3').classList.toggle('on',!!r&&!r.star);}
+  if(r){$('vN').textContent=fmt(r.w*1500)+' rpm';$('vP').textContent=fmt(r.pk,1)+' × In';}
+}
+function finish(){const r=run;const ok=r.pk<=lim+0.05;const st=$('st');
+  const arr=r.tEnd!==null;
+  $('vT').textContent=arr?fmt(r.tEnd,1)+' s':'no llega';
+  if(!arr&&r.w<0.5){st.textContent='¡No arranca! Le falta par';st.className='state bad';}
+  else{st.textContent=(ok?'Cumple':'No cumple')+' el REBT: pico de '+fmt(r.pk,1)+' × In';st.className='state '+(ok?'ok':'bad');}
+  texts(r);run=null;$('bGo').textContent='▶ Arrancar otra vez';}
+function texts(r){
+  let m;
+  const name={dir:'directo',yd:'estrella-triángulo',suave:'con arrancador suave',var:'con variador'}[met];
+  if(!r)m=`Has elegido arranque <b>${name}</b>. Pulsa <b>Arrancar</b> y mira la gráfica.`;
+  else if(r.tEnd===null&&r.w<0.5)m='El sistema baja tanto la tensión que el motor <b>no tiene par suficiente</b> para mover la carga pesada. Se queda casi parado y consumiendo corriente.';
+  else if(met==='dir')m='Al conectar, la corriente salta a unas <b>6,5 veces</b> la nominal y baja cuando el motor coge velocidad. Arranca muy rápido, pero con un gran pico.';
+  else if(met==='yd')m=(Tyd<1.5?'Has pasado a triángulo <b>demasiado pronto</b>: el motor aún iba lento y aparece un <b>pico</b> casi como el del arranque directo. ':'En estrella la corriente baja a la <b>tercera parte</b>. Al pasar a triángulo aparece un pequeño pico. ')+(Mr>0.5?'Con carga pesada, en estrella el motor <b>no tiene fuerza</b> para coger velocidad.':'');
+  else if(met==='suave')m='El arrancador sube la tensión poco a poco y <b>no deja pasar de unas 3 veces</b> la corriente nominal. Tarda más en arrancar.';
+  else m='El variador sube la frecuencia de 0 a 50 Hz en 3 segundos: el motor la sigue y la corriente <b>apenas pasa de la nominal</b>.';
+  $('exp').innerHTML='<h2>Qué pasa</h2><p>'+m+'</p>';
+}
+$('bGo').onclick=()=>{run=newRun();$('bGo').textContent='Arrancando…';$('st').textContent='Arrancando…';$('st').className='state mid';$('vT').textContent='–';};
+function seg(id,cb){document.querySelectorAll('#'+id+' button').forEach(b=>b.onclick=()=>{if(run)return;cb(b.dataset.v);document.querySelectorAll('#'+id+' button').forEach(x=>x.setAttribute('aria-pressed',x===b));texts(null);});}
+seg('sMet',v=>{met=v;$('kms').hidden=$('slT').hidden=v!=='yd';$('vP').textContent='–';$('vT').textContent='–';$('st').textContent='Pulsa Arrancar';$('st').className='state';});
+seg('sP',v=>{lim=+v;$('vL').textContent=fmt(lim,1)+' × In';});
+seg('sL',v=>{Mr=+v;traces={};});
+$('rT').oninput=e=>{Tyd=+e.target.value;$('oT').textContent=fmt(Tyd,1)+' s';};
+$('vL').textContent=fmt(lim,1)+' × In';texts(null);requestAnimationFrame(frame);
+
+</script>
+</body>
+</html>
