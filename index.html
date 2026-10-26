@@ -71,7 +71,7 @@ button:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
 
   <nav class="folders" aria-label="Carpetas">
     <a class="folder" href="#temas" data-f="temas"><span class="fico"></span>Temas<small>Apuntes en PDF</small></a>
-    <a class="folder" href="#practicas" data-f="practicas"><span class="fico"></span>Prácticas<small>Fichas en PDF</small></a>
+    <a class="folder" href="#practicas" data-f="practicas"><span class="fico"></span>Prácticas<small>Enunciados, hojas y animaciones</small></a>
     <a class="folder" href="#animaciones" data-f="animaciones"><span class="fico"></span>Animaciones<small>Dibujos que se mueven</small></a>
     <a class="folder" href="#tests" data-f="tests"><span class="fico"></span>Tests<small>Pon a prueba lo que sabes</small></a>
   </nav>
@@ -93,10 +93,18 @@ button:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
   </section>
 
   <section id="sec-practicas">
-    <h2 class="sec">Prácticas · fichas para descargar</h2>
+    <h2 class="sec">Práctica 1 · Cálculo y construcción de un trafo</h2>
     <a class="pdf" href="practicas/P1_Maquinas.pdf" download>
       <div class="ico">PDF</div>
-      <div>Práctica 1 · Cálculo y construcción de un trafo<small>Los 4 trafos del aula, ajuste al carrete de 40 × 40 mm y a las chapas del aula, ensayos con hoja para rellenar y memoria</small></div>
+      <div>Enunciado<small>Los 4 trafos del aula, ajuste al carrete de 40 × 40 mm y a las chapas del aula, ensayos y memoria</small></div>
+    </a>
+    <a class="pdf" href="practicas/P1_Hoja_ensayos_Maquinas.pdf" download>
+      <div class="ico">PDF</div>
+      <div>Hoja de ensayos<small>Una por grupo: datos del trafo, resistencias, vacío por escalones, carga, aislamiento, cortocircuito y sobrecarga</small></div>
+    </a>
+    <a class="card" href="problemas_trafos.html">
+      <div class="num"><small>Práctica</small>P1</div>
+      <div><h2>Qué les pasó a nuestros trafos</h2><p>Animación resumen de los problemas reales de la práctica: chapas oxidadas y saturación del Trafo 3, el Trafo 4 con 100 vueltas y espiras en cortocircuito, y por qué la lámpara casi no se nota. Con las medidas de clase.</p></div>
     </a>
     <h2 class="sec" style="margin-top:26px">Práctica 1 · herramientas del taller</h2>
     <div id="herr"></div>
@@ -194,9 +202,9 @@ for(const a of ANIM){
     <div class="pts">${a.p.map(n=>`<span class="pt"><b>${n}</b> ${PUNTOS[n]||''}</span>`).join('')}</div></div>`;
   L.appendChild(card);
 }
-{const hT=document.createElement('h2');hT.className='sec';hT.style.marginTop='26px';hT.textContent='Taller · construcción de transformadores';L.appendChild(hT);
+{
  const H=document.getElementById('herr');
- for(const a of HERR){for(const dst of [L,H]){const c=document.createElement('a');c.className='card';c.href=a.f;c.innerHTML=`<div class="num"><small>Taller</small>🔧</div><div><h2>${a.t}</h2><p>${a.d}</p></div>`;dst.appendChild(c);}}}
+ for(const a of HERR){for(const dst of [H]){const c=document.createElement('a');c.className='card';c.href=a.f;c.innerHTML=`<div class="num"><small>Taller</small>🔧</div><div><h2>${a.t}</h2><p>${a.d}</p></div>`;dst.appendChild(c);}}}
 </script>
 <script>(function(){
   var N = {"temas": "Temas", "practicas": "Prácticas", "animaciones": "Animaciones", "tests": "Tests"};
