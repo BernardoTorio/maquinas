@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>(function(){try{var t=localStorage.getItem('maq-tema');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<title>Problemas de los trafos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--green:#6A9A1F;--field:#2E75B6;--cur:#D9362E;--ok:#3F8F2A;--warn:#C0602B;
+  --fe:#9AA5B1;--fe2:#B7C0C9;--prim:#E07A5F;--sec:#7FB069;--bob:#E8C99B;--grid:#e3e8ee;--smoke:rgba(90,90,90,.55);
+  --idea-bg:#E2EFDA;--idea:#548235;--ojo-bg:#FCE4D6;--ojo:#C00000;--pista-bg:#DDEBF7;--pista:#2E75B6;--taller-bg:#EDE7F6;--taller:#6A4C93;--porque-bg:#FFF2CC;--porque:#BF9000;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--cur:#FF6B5E;--ok:#7BC45A;--warn:#F0A060;
+  --fe:#7d8894;--fe2:#95a0ab;--bob:#8a6f48;--grid:#2b333c;--smoke:rgba(200,200,200,.45);
+  --idea-bg:#22301c;--idea:#8CC46A;--ojo-bg:#3a2320;--ojo:#FF8A80;--pista-bg:#1c2a38;--pista:#7DB7EC;--taller-bg:#2a2436;--taller:#B9A1DE;--porque-bg:#3a3216;--porque:#ffd23f}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--cur:#FF6B5E;--ok:#7BC45A;--warn:#F0A060;
+  --fe:#7d8894;--fe2:#95a0ab;--bob:#8a6f48;--grid:#2b333c;--smoke:rgba(200,200,200,.45);
+  --idea-bg:#22301c;--idea:#8CC46A;--ojo-bg:#3a2320;--ojo:#FF8A80;--pista-bg:#1c2a38;--pista:#7DB7EC;--taller-bg:#2a2436;--taller:#B9A1DE;--porque-bg:#3a3216;--porque:#ffd23f}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:16px 16px 36px}
+.topbar{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:4px 0 10px;border-bottom:1px solid var(--line)}
+.back{flex:none;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.92rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:var(--card);outline:none}
+.crumbs{min-width:0;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:.9rem;color:var(--muted)}
+.crumbs a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted)}
+.crumbs b{color:var(--ink)}
+.themebtn{flex:none;width:42px;height:36px;border-radius:10px;border:2px solid var(--line);background:transparent;color:var(--ink);font-size:1.15rem;cursor:pointer;line-height:1}
+.top{border-bottom:4px solid var(--green);padding-bottom:8px;margin-bottom:14px}
+.top small{color:var(--green);font-weight:700;letter-spacing:.03em}
+h1{margin:2px 0 4px;font-size:clamp(1.45rem,3.4vw,2.1rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.tabs button{font:inherit;font-weight:700;font-size:.95rem;padding:8px 12px;border-radius:10px;border:2px solid var(--acc);background:var(--card);color:var(--acc);cursor:pointer;text-align:left}
+.tabs button small{display:block;font-weight:400;font-size:.75rem;opacity:.85}
+.tabs button[aria-pressed="true"]{background:var(--acc);color:var(--card)}
+.ctrls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:12px}
+.sl{display:flex;align-items:center;gap:10px;flex:1 1 280px;min-width:0}
+.sl label{font-weight:700;white-space:nowrap}
+.sl output{font-weight:700;min-width:3.4em;text-align:right;color:var(--acc)}
+input[type=range]{flex:1;min-width:0;accent-color:var(--acc)}
+.act{display:flex;gap:8px;flex-wrap:wrap}
+.act button{font:inherit;font-weight:700;font-size:.95rem;padding:8px 12px;border-radius:10px;border:2px solid var(--acc);background:var(--card);color:var(--acc);cursor:pointer}
+.act button.main{background:var(--acc);color:var(--card)}
+.act button[aria-pressed="true"]{background:var(--cur);border-color:var(--cur);color:#fff}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px}
+.two{display:grid;grid-template-columns:1fr 1.15fr;gap:8px;align-items:center}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+.stage svg{display:block;width:100%;height:auto}
+svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;fill:var(--ink)}
+svg .mut{fill:var(--muted)}
+.meters{display:flex;flex-wrap:wrap;gap:8px;padding:6px 4px 2px}
+.m{flex:1 1 120px;background:var(--bg);border-radius:10px;padding:6px 10px}
+.m small{display:block;color:var(--muted);font-size:.78rem}
+.m b{font-size:1.25rem}
+.st{font-weight:700;padding:8px 12px;border-radius:8px;margin:8px 4px 2px}
+.st.ok{color:var(--ok);background:rgba(63,143,42,.12)}
+.st.warn{color:var(--warn);background:rgba(192,96,43,.12)}
+.st.bad{color:var(--cur);background:rgba(217,54,46,.12)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:760px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 8px;color:var(--acc)}
+.box p{margin:0 0 8px}.box p:last-child{margin-bottom:0}
+.box ul{margin:0;padding-left:20px}.box li{margin-bottom:5px}
+.full{grid-column:1/-1}
+.k{border-left:6px solid}
+.k .lab{font-weight:700;font-size:.85rem;letter-spacing:.03em;margin-right:6px}
+.idea{background:var(--idea-bg);border-color:var(--idea)}.idea .lab{color:var(--idea)}
+.ojo{background:var(--ojo-bg);border-color:var(--ojo)}.ojo .lab{color:var(--ojo)}
+.pista{background:var(--pista-bg);border-color:var(--pista)}.pista .lab{color:var(--pista)}
+.taller{background:var(--taller-bg);border-color:var(--taller)}.taller .lab{color:var(--taller)}
+.porque{background:var(--porque-bg);border-color:var(--porque)}.porque .lab{color:var(--porque)}
+.sum{width:100%;border-collapse:collapse;font-size:.93rem}
+.sum th{background:var(--acc);color:var(--card);padding:6px;text-align:left}
+.sum td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}
+.sum tr.sel td{background:rgba(46,117,182,.13)}
+.flux{fill:none;stroke:var(--field);stroke-width:2.5;stroke-dasharray:8 8;stroke-linecap:round}
+@keyframes run{to{stroke-dashoffset:-32}}
+.puff{fill:var(--smoke)}
+@media (prefers-reduced-motion:reduce){.flux{animation:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <header class="topbar">
+    <a class="back" href="index.html" aria-label="Volver al índice">← Índice</a>
+    <nav class="crumbs" aria-label="Dónde estás"><a href="index.html#practicas">Máquinas Eléctricas</a> › Taller › <b>Problemas de los trafos</b></nav>
+    <button id="themeBtn" class="themebtn" type="button" aria-label="Cambiar modo claro u oscuro">🌙</button>
+  </header>
+  <div class="top">
+    <small>MÁQUINAS ELÉCTRICAS 2MB · TALLER · PRÁCTICA 1</small>
+    <h1>Qué les pasó a nuestros trafos</h1>
+    <p class="sub">Los problemas reales de la práctica de este curso: chapas oxidadas, saturación, pocas espiras, espiras en cortocircuito y una carga que casi no se nota.</p>
+  </div>
+
+  <div class="tabs" id="tabs" role="group" aria-label="Elige el caso"></div>
+
+  <div class="ctrls">
+    <div class="sl"><label for="rV">Tensión del primario V<sub>1</sub></label><input id="rV" type="range" min="0" max="120" step="1" value="0"><output id="oV" for="rV">0 V</output></div>
+    <div class="act">
+      <button class="main" id="bUp" type="button">Subir por escalones</button>
+      <button id="bCc" type="button" aria-pressed="false" hidden>Espiras en cortocircuito</button>
+      <button id="bLamp" type="button" aria-pressed="false" hidden>Conectar la lámpara</button>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="two">
+      <svg id="svT" viewBox="0 0 440 310" role="img" aria-label="El trafo: núcleo de chapas, primario y secundario"></svg>
+      <svg id="svG" viewBox="0 0 520 340" role="img" aria-label="Gráfica de la corriente del primario frente a la tensión"></svg>
+    </div>
+    <div class="meters" id="meters"></div>
+    <div id="st"></div>
+  </div>
+
+  <div class="boxes">
+    <div class="box" id="bCase"></div>
+    <div class="box" id="bWhy"></div>
+    <div class="box k idea"><p><span class="lab">IDEA CLAVE</span>La saturación depende de los <b>voltios por espira</b> y del <b>hierro</b>. En nuestros trafos el hierro empieza a saturarse con unos <b>0,31 V por espira</b> (lo medimos en el Trafo 3: 80 V / 260 espiras).</p>
+      <ul><li>Menos espiras → más voltios por espira → satura antes.</li><li>Menos chapas (o chapas oxidadas) → menos hierro → satura antes.</li></ul></div>
+    <div class="box k ojo"><p><span class="lab">¡OJO!</span>Si sale humo a muy poca tensión, <b>no es saturación</b>: lo normal es que haya <b>espiras en cortocircuito</b> (esmalte rascado al bobinar). Esas espiras hacen de secundario en cortocircuito desde el primer voltio y se queman aunque el trafo esté en vacío.</p>
+      <p>Con el polímetro en ohmios no se ven: si de 100 espiras se cortocircuitan 3, la resistencia baja solo un 3 %.</p></div>
+    <div class="box full" id="bSum"></div>
+    <div class="box full"><h2>Cómo funciona esta página</h2>
+      <ul><li>Arriba eliges el caso. Mueve la barra para subir la tensión del primario, o pulsa <b>Subir por escalones</b>.</li>
+      <li>A la izquierda, el núcleo se pone naranja y rojo cuando se acerca a la saturación, y el bobinado se calienta. A la derecha, la gráfica de la corriente frente a la tensión: el punto marca dónde estás.</li>
+      <li>En el Trafo 3 real, los puntos huecos son las medidas que hicimos en clase.</li>
+      <li>Pulsa <b>Esc</b> para volver al índice.</li></ul></div>
+  </div>
+</main>
+<script>
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const f=(v,d=2)=>v.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+const AOLD=11.9e-4, ANEW=13.47e-4;  // m² de hierro: 85 chapas oxidadas / 107 chapas nuevas (método)
+// Amperios·vuelta para magnetizar el núcleo (ajustado con las medidas del Trafo 3 en clase)
+const Fold=B=>28.6*B+1362*Math.pow(Math.max(0,B-1.15),0.74);
+const Fnew=B=>25*B+1362*Math.pow(Math.max(0,B-1.45),0.74);
+const CASOS=[
+ {id:'t3',n:'Trafo 3 · real',d:'85 chapas oxidadas · 260 / 150',N1:260,N2:150,A:AOLD,F:Fold,Vn:109,Imax:1.38,hilo:'Ø 0,8 mm',meas:[[60,.12],[80,.3],[85,1],[109,3]],
+  t:'Trafo 3 tal como quedó',
+  p:['Se calculó para 109 V con 107 chapas nuevas, pero solo cupieron <b>85 chapas oxidadas</b>: hay un 12 % menos de hierro y de peor calidad.',
+     'Hasta unos 80 V la corriente de vacío casi no se ve (0,1-0,15 A). Entre <b>80 y 85 V</b> está el codo: se dispara hasta 1 A. A 109 V llega a <b>3 A</b>, más del doble de la corriente nominal del primario.'],
+  w:'El hierro trabaja a 1,25-1,3 T en el codo y a 1,6-1,7 T a 109 V: está saturado justo a la tensión para la que se construyó. Para usarlo sin saturar, conéctalo a unos 80 V (el secundario dará unos 46 V).'},
+ {id:'t3c',n:'Trafo 3 · como debía ser',d:'107 chapas nuevas · 260 / 150',N1:260,N2:150,A:ANEW,F:Fnew,Vn:109,Imax:1.38,hilo:'Ø 0,8 mm',
+  t:'Trafo 3 con las chapas del cálculo',
+  p:['Con las 107 chapas nuevas que pedía el cálculo, el hierro trabaja a unos <b>1,4-1,5 T</b> a 109 V.',
+     'La corriente de vacío se queda en unas décimas de amperio: alrededor del 10 % de la nominal, como debe ser en un trafo pequeño.'],
+  w:'Compáralo con el Trafo 3 real: las mismas espiras y la misma tensión, pero con más hierro y de mejor calidad el codo queda por encima de 109 V.'},
+ {id:'t4',n:'Trafo 4 · con 100 vueltas',d:'85 chapas · 100 / 150 (pedía 200 / 150)',N1:100,N2:150,A:AOLD,F:Fold,Vn:111,Imax:2.1,hilo:'0,85 mm²',cc:true,
+  t:'Trafo 4 bobinado con la mitad de espiras',
+  p:['El primario tiene <b>100 vueltas en lugar de 200</b>: cada espira aguanta el doble de tensión. Con 85 chapas, el codo baja a unos <b>31 V</b> (0,31 V por espira × 100).',
+     'Además el trafo <b>eleva</b>: con 100 y 150 vueltas, en el secundario sale 1,5 veces la tensión del primario.',
+     'En clase salió humo a <b>20-30 V</b>, por debajo del codo. Pulsa <b>Espiras en cortocircuito</b> para ver por qué.'],
+  w:'Sin espiras en cortocircuito, a 20-30 V la corriente sería de décimas de amperio. El humo a esa tensión solo se explica con espiras en cortocircuito: se calientan desde el primer voltio.'},
+ {id:'t4b',n:'Trafo 4 · rebobinado',d:'85 chapas · 200 / 150',N1:200,N2:150,A:AOLD,F:Fold,Vn:111,Imax:1.8,hilo:'0,8 mm²',
+  t:'Trafo 4 con las 200 vueltas del cálculo',
+  p:['Con las 200 vueltas, el codo sube a unos <b>62 V</b>.',
+     'Pero el Trafo 4 pedía 112 chapas del aula y solo caben 85: a sus 111 V sigue saturado, igual que el Trafo 3.'],
+  w:'Para trabajar a 111 V sin saturar haría falta más hierro (no cabe en el carrete de 40 × 40 mm) o muchas más espiras. Con este carrete, lo razonable es conectarlo a unos 60 V.'},
+ {id:'lamp',n:'La lámpara como carga',d:'Trafo 3 real · lámpara de 100 W a 230 V',N1:260,N2:150,A:AOLD,F:Fold,Vn:109,Imax:1.38,hilo:'Ø 0,8 mm',lamp:true,
+  t:'Por qué la lámpara casi no se nota',
+  p:['La lámpara es de 100 W a 230 V. Conectada a unos 60 V consume solo unos <b>12 W</b>: una carga muy pequeña.',
+     'Su corriente es <b>activa</b> y la de vacío casi toda <b>reactiva</b> (para magnetizar): van desfasadas 90° y no se suman tal cual. Mira el dibujo de flechas en la gráfica.'],
+  w:'Por eso la pinza no ve diferencia en I<sub>1</sub>, pero el vatímetro sí: P<sub>1</sub> sube lo que consume la lámpara. Para ver la carga, mide I<sub>2</sub> o P<sub>1</sub>.'},
+];
+let C=CASOS[0], V=0, cc=false, lamp=false, anim=null, puffs=[];
+
+function el(tag,a={},p){const e=document.createElementNS(NS,tag);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function txt(x,y,s,a={},p){const t=el('text',{x,y,...a},p);t.innerHTML=s;return t;}
+function calc(v){
+  const B=v/(222*C.N1*C.A);
+  let I0=v>0?C.F(B)/C.N1:0;
+  const Icc=(cc&&C.cc)?v/4:0;                 // espiras en cortocircuito: corriente casi proporcional a V
+  const V2=v*C.N2/C.N1;
+  const Plamp=lamp?100*Math.pow(Math.min(V2,230)/230,1.6):0;
+  const Ia=(v>0?Plamp/v:0)+Icc;              // parte activa (lámpara + espiras en cc)
+  const I1=Math.hypot(I0,Ia);
+  return {B,I0,Icc,V2,Plamp,Ia,I1,r:I1/C.Imax};
+}
+function mix(a,b,t){return a.map((x,i)=>Math.round(x+(b[i]-x)*t));}
+function coreColor(B){ // gris → naranja → rojo según lo cerca que está de saturar
+  const k=C.F===Fnew?1.45:1.15, t=Math.max(0,Math.min(1,(B-k*0.85)/(k*0.45)));
+  const c=t<.5?mix([154,165,177],[232,150,70],t*2):mix([232,150,70],[210,50,40],(t-.5)*2);
+  return `rgb(${c})`;
+}
+// ---------- dibujo del trafo ----------
+function drawTrafo(r){
+  const g=$('svT'); g.innerHTML='';
+  const x0=70,y0=40,W=300,H=230,leg=50,win=(W-3*leg)/2;
+  const col=coreColor(r.B);
+  el('path',{d:`M${x0} ${y0}h${W}v${H}h${-W}Z M${x0+leg} ${y0+leg}h${win}v${H-2*leg}h${-win}Z M${x0+2*leg+win} ${y0+leg}h${win}v${H-2*leg}h${-win}Z`,fill:col,'fill-rule':'evenodd',stroke:'var(--ink)','stroke-width':1.5},g);
+  el('line',{x1:x0,y1:y0+leg,x2:x0+W,y2:y0+leg,stroke:'var(--ink)','stroke-width':1,opacity:.5},g);
+  txt(x0+W/2,y0-12,'Núcleo: '+C.d.split('·')[0].trim(),{'text-anchor':'middle','font-size':14,class:'mut'},g);
+  // carrete y bobinados en la columna central
+  const cx=x0+leg+win, cw=leg, by=y0+leg+8, bh=H-2*leg-16;
+  const heat=Math.min(1,r.r/2.5), hot=mix([224,122,95],[255,40,20],heat);
+  el('rect',{x:cx-26,y:by,width:cw+52,height:bh,rx:4,fill:'var(--bob)',stroke:'var(--ink)','stroke-width':1},g);
+  el('rect',{x:cx-22,y:by+4,width:22,height:bh-8,fill:`rgb(${hot})`,stroke:'var(--ink)','stroke-width':.8},g);
+  el('rect',{x:cx+cw,y:by+4,width:22,height:bh-8,fill:`rgb(${hot})`,stroke:'var(--ink)','stroke-width':.8},g);
+  el('rect',{x:cx-26-20,y:by+4,width:18,height:bh-8,fill:'#7FB069',stroke:'var(--ink)','stroke-width':.8},g);
+  el('rect',{x:cx+cw+28,y:by+4,width:18,height:bh-8,fill:'#7FB069',stroke:'var(--ink)','stroke-width':.8},g);
+  txt(x0+W/2,y0+H+24,`Primario <tspan font-weight="700" fill="#C0602B">${C.N1}</tspan> espiras · Secundario <tspan font-weight="700" fill="#3F8F2A">${C.N2}</tspan> espiras`,{'text-anchor':'middle','font-size':14},g);
+  // punto caliente de espiras en cortocircuito
+  if(cc&&C.cc&&V>0){const hs=Math.min(1,V/20);el('circle',{cx:cx-11,cy:by+bh*0.3,r:6+8*hs,fill:`rgba(255,60,20,${0.35+0.5*hs})`},g);
+    txt(cx-60,by+bh*0.3-14,'espiras en cc',{'text-anchor':'end','font-size':12,fill:'var(--cur)'},g);}
+  // flujo
+  if(V>0){const sp=Math.max(.35,2.2-1.4*Math.min(r.B,1.6));
+    for(const off of [0,1]){const p=el('path',{class:'flux',d:off?`M${x0+leg+win/2+0} ${y0+leg/2}H${x0+W-leg/2}V${y0+H-leg/2}H${x0+leg+win+leg/2}`:`M${x0+leg+win+leg/2} ${y0+H-leg/2}H${x0+leg/2}V${y0+leg/2}H${x0+leg+win+leg/2}`,style:`animation:run ${sp}s linear infinite`},g);}}
+  // humo
+  for(const p of puffs) el('circle',{class:'puff',cx:p.x,cy:p.y,r:p.r,opacity:p.o},g);
+}
+// ---------- gráfica I1 frente a V1 ----------
+const GX=60,GY=20,GW=430,GH=270,VMAX=120,IMAX=5;
+const sx=v=>GX+v/VMAX*GW, sy=i=>GY+GH-Math.min(i,IMAX)/IMAX*GH;
+function drawGraph(r){
+  const g=$('svG'); g.innerHTML='';
+  for(let v=0;v<=VMAX;v+=20){el('line',{x1:sx(v),y1:GY,x2:sx(v),y2:GY+GH,stroke:'var(--grid)'},g);txt(sx(v),GY+GH+18,v,{'text-anchor':'middle','font-size':12,class:'mut'},g);}
+  for(let i=0;i<=IMAX;i++){el('line',{x1:GX,y1:sy(i),x2:GX+GW,y2:sy(i),stroke:'var(--grid)'},g);txt(GX-8,sy(i)+4,i,{'text-anchor':'end','font-size':12,class:'mut'},g);}
+  el('rect',{x:GX,y:GY,width:GW,height:GH,fill:'none',stroke:'var(--line)'},g);
+  txt(GX+GW/2,GY+GH+38,'V<tspan dy="4" font-size="10">1</tspan><tspan dy="-4"> (V)</tspan>',{'text-anchor':'middle','font-size':14},g);
+  txt(16,GY+GH/2,'I<tspan dy="4" font-size="10">1</tspan><tspan dy="-4"> (A)</tspan>',{'text-anchor':'middle','font-size':14,transform:`rotate(-90 16 ${GY+GH/2})`},g);
+  // corriente máxima del hilo
+  el('line',{x1:GX,y1:sy(C.Imax),x2:GX+GW,y2:sy(C.Imax),stroke:'var(--cur)','stroke-dasharray':'6 5','stroke-width':1.5},g);
+  txt(GX+GW-4,sy(C.Imax)-6,`máximo del hilo (${C.hilo}): ${f(C.Imax,1)} A`,{'text-anchor':'end','font-size':12,fill:'var(--cur)'},g);
+  // tensión de cálculo
+  el('line',{x1:sx(C.Vn),y1:GY,x2:sx(C.Vn),y2:GY+GH,stroke:'var(--muted)','stroke-dasharray':'3 4'},g);
+  txt(sx(C.Vn)-4,GY+GH-24,`${C.Vn} V de cálculo`,{'font-size':12,class:'mut','text-anchor':'end'},g);
+  // codo
+  const kB=C.F===Fnew?1.45:1.15, kV=kB*222*C.N1*C.A;
+  if(kV<VMAX){el('rect',{x:sx(kV*0.97),y:GY,width:sx(kV*1.08)-sx(kV*0.97),height:GH,fill:'rgba(232,150,70,.15)'},g);
+    txt(sx(kV),GY+GH-8,'codo',{'text-anchor':'middle','font-size':12,fill:'var(--warn)'},g);}
+  // curva
+  let d='';for(let v=0;v<=VMAX;v+=0.5){const q=calc(v);d+=(v?'L':'M')+sx(v).toFixed(1)+' '+sy(q.I1).toFixed(1);}
+  el('path',{d,fill:'none',stroke:'var(--acc)','stroke-width':3},g);
+  if(C.meas) for(const [v,i] of C.meas){el('circle',{cx:sx(v),cy:sy(i),r:6,fill:'var(--card)',stroke:'var(--warn)','stroke-width':2.5},g);}
+  if(C.meas) txt(GX+8,GY+18,'○ medidas en clase (pinza analógica)',{'font-size':12,fill:'var(--warn)'},g);
+  // punto actual
+  el('circle',{cx:sx(V),cy:sy(r.I1),r:7,fill:'var(--cur)',stroke:'var(--card)','stroke-width':2},g);
+  // fasores con la lámpara
+  if(C.lamp&&V>0){const ox=GX+30,oy=GY+122,s=70/Math.max(r.I0,r.Ia,0.2);
+    el('rect',{x:ox-14,y:oy-104,width:190,height:124,rx:8,fill:'var(--card)',stroke:'var(--line)'},g);
+    const ar=(x2,y2,c)=>{el('line',{x1:ox,y1:oy,x2,y2,stroke:c,'stroke-width':3},g);};
+    ar(ox,oy-r.I0*s,'var(--field)'); ar(ox+r.Ia*s,oy,'#C87533'); ar(ox+r.Ia*s,oy-r.I0*s,'var(--cur)');
+    txt(ox+6,oy-r.I0*s+4,'I₀ (magnetizar)',{'font-size':11,fill:'var(--field)'},g);
+    txt(ox+r.Ia*s+4,oy+12,'lámpara',{'font-size':11,fill:'#C87533'},g);
+    txt(ox+4,oy-96,'Suma de corrientes (90°)',{'font-size':11,class:'mut'},g);}
+}
+function puffTick(r){
+  const smoke=r.r>=3||(cc&&C.cc&&V>=15);
+  if(smoke&&puffs.length<26&&Math.random()<.5){const x=(cc&&C.cc)?195:205+Math.random()*30;puffs.push({x,y:150,r:6,o:.8,vx:(Math.random()-.5)*.6});}
+  puffs.forEach(p=>{p.y-=1.1;p.x+=p.vx;p.r+=.18;p.o-=.012;});puffs=puffs.filter(p=>p.o>0&&p.y>-20);
+}
+function render(){
+  $('oV').value=V+' V'; $('rV').value=V;
+  const r=calc(V); drawTrafo(r); drawGraph(r);
+  const vpe=C.N1?V/C.N1:0;
+  $('meters').innerHTML=`<div class="m"><small>V₁</small><b>${f(V,0)} V</b></div><div class="m"><small>V₂ en vacío</small><b>${f(r.V2,0)} V</b></div>
+   <div class="m"><small>Voltios por espira</small><b>${f(vpe,2)} V</b></div><div class="m"><small>Inducción en el hierro</small><b>${V?f(Math.min(r.B,9.99),2)+' T':'—'}</b></div>
+   <div class="m"><small>I₁ (pinza)</small><b>${f(r.I1,2)} A</b></div>${C.lamp?`<div class="m"><small>Lo que sube P₁ con la lámpara</small><b>${f(r.Plamp,1)} W</b></div>`:''}`;
+  let s;
+  if(V===0) s='<div class="st warn">Sube la tensión del primario.</div>';
+  else if(cc&&C.cc&&V>=15) s=`<div class="st bad">✖ Humo: las espiras en cortocircuito se queman aunque el núcleo no esté saturado (${f(vpe,2)} V por espira, por debajo de 0,31).</div>`;
+  else if(r.r>=2) s=`<div class="st bad">✖ ${f(r.I1,1)} A: más del doble de lo que aguanta el hilo. El núcleo está saturado y el bobinado se calienta mucho aunque el trafo esté en vacío.</div>`;
+  else if(r.r>=1) s=`<div class="st warn">⚠ Pasado el codo: la corriente ya supera lo que aguanta el hilo y el trafo se calienta.</div>`;
+  else if(vpe>0.29&&C.F===Fold) s=`<div class="st warn">⚠ Estás en el codo (${f(vpe,2)} V por espira): un poco más de tensión y la corriente se dispara.</div>`;
+  else s=`<div class="st ok">✔ Zona recta: la corriente de vacío es pequeña. El hierro trabaja bien.</div>`;
+  $('st').innerHTML=s;
+}
+function renderTexts(){
+  $('bCase').innerHTML=`<h2>${C.t}</h2>${C.p.map(x=>`<p>${x}</p>`).join('')}`;
+  $('bWhy').innerHTML=`<div class="k porque" style="border-radius:8px;padding:10px 12px;margin:-4px -6px"><p><span class="lab">¿POR QUÉ?</span>${C.w}</p></div>`;
+  $('bSum').innerHTML=`<h2>Resumen de los casos</h2><table class="sum"><tr><th>Caso</th><th>Chapas · espiras</th><th>Dónde está el codo</th><th>Qué pasó / qué hacer</th></tr>
+  <tr class="${C.id==='t3'?'sel':''}"><td>Trafo 3 real</td><td>85 oxidadas · 260 / 150</td><td>≈ 80-85 V</td><td>A 109 V, 3 A en vacío. Usarlo a unos 80 V.</td></tr>
+  <tr class="${C.id==='t3c'?'sel':''}"><td>Trafo 3 como debía ser</td><td>107 nuevas · 260 / 150</td><td>por encima de 109 V</td><td>Funcionaría bien a 109 V.</td></tr>
+  <tr class="${C.id==='t4'?'sel':''}"><td>Trafo 4 con 100 vueltas</td><td>85 oxidadas · 100 / 150</td><td>≈ 31 V</td><td>Humo a 20-30 V: espiras en cortocircuito. Rebobinar.</td></tr>
+  <tr class="${C.id==='t4b'?'sel':''}"><td>Trafo 4 rebobinado</td><td>85 oxidadas · 200 / 150</td><td>≈ 62 V</td><td>Sigue saturado a 111 V. Usarlo a unos 60 V.</td></tr>
+  <tr class="${C.id==='lamp'?'sel':''}"><td>Lámpara de carga</td><td>Trafo 3 real</td><td>—</td><td>I₁ casi no cambia; P₁ sube unos 12 W. Medir I₂ o P₁.</td></tr></table>`;
+}
+function stop(){if(anim){clearInterval(anim);anim=null;}}
+function pick(c){stop();C=c;V=0;cc=false;lamp=false;puffs=[];
+  $('bCc').hidden=!C.cc;$('bCc').setAttribute('aria-pressed','false');$('bLamp').hidden=!C.lamp;$('bLamp').setAttribute('aria-pressed','false');
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===C.id));
+  renderTexts();render();}
+for(const c of CASOS){const b=document.createElement('button');b.type='button';b.dataset.id=c.id;b.innerHTML=`${c.n}<small>${c.d}</small>`;b.onclick=()=>pick(c);$('tabs').appendChild(b);}
+$('rV').oninput=e=>{stop();V=+e.target.value;render();};
+$('bUp').onclick=()=>{stop();V=0;puffs=[];const top=Math.min(VMAX,Math.round(C.Vn*1.0));anim=setInterval(()=>{if(V<top){V=Math.min(top,V+10);render();}else stop();},900);render();};
+$('bCc').onclick=()=>{cc=!cc;$('bCc').setAttribute('aria-pressed',cc);puffs=[];render();};
+$('bLamp').onclick=()=>{lamp=!lamp;$('bLamp').setAttribute('aria-pressed',lamp);$('bLamp').textContent=lamp?'Quitar la lámpara':'Conectar la lámpara';render();};
+setInterval(()=>{const r=calc(V);puffTick(r);if(puffs.length||r.r>=3||(cc&&C.cc&&V>=15))drawTrafo(r);},60);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')location.href='index.html';});
+(function(){const b=$('themeBtn'),r=document.documentElement;
+ const cur=()=>{const t=r.getAttribute('data-theme');if(t==='light'||t==='dark')return t;return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';};
+ const paint=()=>{const d=cur()==='dark';b.textContent=d?'☀️':'🌙';b.setAttribute('aria-label',d?'Cambiar a modo claro':'Cambiar a modo oscuro');};
+ b.onclick=()=>{const t=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',t);try{localStorage.setItem('maq-tema',t)}catch(e){}paint();};paint();})();
+pick(CASOS[0]);
+</script>
+</body>
+</html>

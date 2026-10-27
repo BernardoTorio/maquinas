@@ -38,8 +38,8 @@ a.card:hover,a.card:focus-visible{transform:translateY(-2px);border-color:var(--
 .pdf small{display:block;font-weight:400;color:var(--muted)}
 .pdf.missing{opacity:.45;border-style:dashed;pointer-events:none}
 .pdf.missing small:after{content:" · próximamente"}
-.folders{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
-@media (max-width:560px){.folders{grid-template-columns:1fr}}
+.folders{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+@media (max-width:700px){.folders{grid-template-columns:repeat(2,1fr)}}
 .folder{display:flex;flex-direction:column;align-items:flex-start;gap:6px;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:14px 16px;color:inherit;text-decoration:none;font-weight:700;font-size:1.1rem;cursor:pointer}
 .folder:hover,.folder:focus-visible{border-color:var(--acc);outline:none}
 .folder.sel{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc) inset}
@@ -71,8 +71,9 @@ button:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
 
   <nav class="folders" aria-label="Carpetas">
     <a class="folder" href="#temas" data-f="temas"><span class="fico"></span>Temas<small>Apuntes en PDF</small></a>
-    <a class="folder" href="#practicas" data-f="practicas"><span class="fico"></span>Prácticas<small>Fichas en PDF</small></a>
+    <a class="folder" href="#practicas" data-f="practicas"><span class="fico"></span>Prácticas<small>Enunciados, hojas y animaciones</small></a>
     <a class="folder" href="#animaciones" data-f="animaciones"><span class="fico"></span>Animaciones<small>Dibujos que se mueven</small></a>
+    <a class="folder" href="#tests" data-f="tests"><span class="fico"></span>Tests<small>Pon a prueba lo que sabes</small></a>
   </nav>
 
   <section id="sec-temas">
@@ -92,10 +93,18 @@ button:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
   </section>
 
   <section id="sec-practicas">
-    <h2 class="sec">Prácticas · fichas para descargar</h2>
+    <h2 class="sec">Práctica 1 · Cálculo y construcción de un trafo</h2>
     <a class="pdf" href="practicas/P1_Maquinas.pdf" download>
       <div class="ico">PDF</div>
-      <div>Práctica 1 · Cálculo y construcción de un trafo<small>Los 4 trafos del aula, ajuste al carrete de 40 × 40 mm y a las chapas del aula, ensayos con hoja para rellenar y memoria</small></div>
+      <div>Enunciado<small>Los 4 trafos del aula, ajuste al carrete de 40 × 40 mm y a las chapas del aula, ensayos y memoria</small></div>
+    </a>
+    <a class="pdf" href="practicas/P1_Hoja_ensayos_Maquinas.pdf" download>
+      <div class="ico">PDF</div>
+      <div>Hoja de ensayos<small>Una por grupo: datos del trafo, resistencias, vacío por escalones, carga, aislamiento, cortocircuito y sobrecarga</small></div>
+    </a>
+    <a class="card" href="problemas_trafos.html">
+      <div class="num"><small>Práctica</small>P1</div>
+      <div><h2>Qué les pasó a nuestros trafos</h2><p>Animación resumen de los problemas reales de la práctica: chapas oxidadas y saturación del Trafo 3, el Trafo 4 con 100 vueltas y espiras en cortocircuito, y por qué la lámpara casi no se nota. Con las medidas de clase.</p></div>
     </a>
     <h2 class="sec" style="margin-top:26px">Práctica 1 · herramientas del taller</h2>
     <div id="herr"></div>
@@ -104,6 +113,19 @@ button:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
   <section id="sec-animaciones">
     <div id="list"></div>
     <p class="foot">Cada animación indica el punto de los apuntes al que corresponde. Funcionan en el ordenador, la tablet y el móvil.</p>
+  </section>
+
+  <section id="sec-tests">
+    <h2 class="sec">Tests · repasa con preguntas tipo test</h2>
+    <a class="card" href="test_repaso.html">
+      <div class="num"><small>Test</small>1</div>
+      <div><h2>Test de repaso · T1 y punto 3.12</h2><p>40 preguntas del tema 1 (puntos 1.3 a 1.11, sin el 1.7) y del funcionamiento del transformador. Elige temas, dificultad y cuántas; al responder ves por qué.</p></div>
+    </a>
+    <a class="card" href="test_repaso_2.html">
+      <div class="num"><small>Test</small>2</div>
+      <div><h2>Test de repaso 2 · 1.1, 1.2, 1.7 y 3.13 a 3.18</h2><p>50 preguntas: imanes y electroimanes, campo y flujo, fuerza sobre un conductor, homólogos, tipos de trafos, ensayos de vacío, cortocircuito y carga, y aislamiento.</p></div>
+    </a>
+    <p class="foot">Puedes hacerlos por orden (como en papel) o con las preguntas mezcladas. Al final ves tu nota y puedes repetir solo los fallos.</p>
   </section>
 </main>
 
@@ -184,12 +206,12 @@ for(const a of ANIM){
     <div class="pts">${a.p.map(n=>`<span class="pt"><b>${n}</b> ${PUNTOS[n]||''}</span>`).join('')}</div></div>`;
   L.appendChild(card);
 }
-{const hT=document.createElement('h2');hT.className='sec';hT.style.marginTop='26px';hT.textContent='Taller · construcción de transformadores';L.appendChild(hT);
+{
  const H=document.getElementById('herr');
- for(const a of HERR){for(const dst of [L,H]){const c=document.createElement('a');c.className='card';c.href=a.f;c.innerHTML=`<div class="num"><small>Taller</small>🔧</div><div><h2>${a.t}</h2><p>${a.d}</p></div>`;dst.appendChild(c);}}}
+ for(const a of HERR){for(const dst of [H]){const c=document.createElement('a');c.className='card';c.href=a.f;c.innerHTML=`<div class="num"><small>Taller</small>🔧</div><div><h2>${a.t}</h2><p>${a.d}</p></div>`;dst.appendChild(c);}}}
 </script>
 <script>(function(){
-  var N = {"temas": "Temas", "practicas": "Prácticas", "animaciones": "Animaciones"};
+  var N = {"temas": "Temas", "practicas": "Prácticas", "animaciones": "Animaciones", "tests": "Tests"};
   function show(){
     var f = (location.hash || '#temas').slice(1);
     if (!N[f]) f = 'temas';

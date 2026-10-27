@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test de repaso · Máquinas Eléctricas 2MB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1F4; --card:#ffffff; --ink:#1a1a1a; --muted:#56606b; --line:#cfd6de; --bar:#6A9A1F;
+  --green:#1F4E79; --green-soft:#e3ecf6; --red:#c0392b; --red-soft:#fbe4e1;
+  --ok:#2e7d32; --ok-soft:#e3f3e4; --yellow:#b7860b; --yellow-soft:#fdf5dc;
+  --blue:#1f5fbf; --btn:#e9eef3; --on-green:#fff; --shadow:0 1px 3px rgba(0,0,0,.08);
+}
+:root[data-theme="dark"]{
+  --bg:#15191e; --card:#1f252c; --ink:#eef1f4; --muted:#a9b3bd; --line:#36404b; --bar:#6A9A1F;
+  --green:#8EC1F0; --green-soft:#26323f; --red:#ef6b5d; --red-soft:#3a201d;
+  --ok:#7ccf80; --ok-soft:#1d3320; --yellow:#e7c25a; --yellow-soft:#3a3218;
+  --blue:#7aa7f0; --btn:#26323f; --on-green:#0f1a26; --shadow:0 1px 3px rgba(0,0,0,.4);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15191e; --card:#1f252c; --ink:#eef1f4; --muted:#a9b3bd; --line:#36404b; --bar:#6A9A1F;
+    --green:#8EC1F0; --green-soft:#26323f; --red:#ef6b5d; --red-soft:#3a201d;
+    --ok:#7ccf80; --ok-soft:#1d3320; --yellow:#e7c25a; --yellow-soft:#3a3218;
+    --blue:#7aa7f0; --btn:#26323f; --on-green:#0f1a26; --shadow:0 1px 3px rgba(0,0,0,.4);
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:17px;line-height:1.45}
+.top{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--card);border-bottom:3px solid var(--bar);position:sticky;top:0;z-index:5;box-shadow:var(--shadow)}
+.back{border:1px solid var(--line);background:var(--btn);color:var(--ink);padding:6px 12px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap}
+.back:hover{border-color:var(--green)}
+.crumbs{font-size:14px;color:var(--muted);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crumbs a{color:var(--green);text-decoration:none}
+.crumbs b{color:var(--ink)}
+.theme{border:1px solid var(--line);background:var(--btn);color:var(--ink);width:38px;height:34px;border-radius:8px;cursor:pointer;display:grid;place-items:center}
+main{max-width:860px;margin:0 auto;padding:18px 16px 60px}
+h1{font-size:26px;margin:6px 0 2px;font-weight:700}
+h1 span{color:var(--green)}
+.sub{color:var(--muted);margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+.box{border-left:5px solid var(--green);background:var(--green-soft);border-radius:8px;padding:10px 14px;margin:12px 0}
+.box .lbl{font-size:13px;font-weight:700;letter-spacing:.05em;color:var(--green);display:block;margin-bottom:2px}
+.box.why{border-color:var(--yellow);background:var(--yellow-soft)}
+.box.why .lbl{color:var(--yellow)}
+fieldset{border:none;padding:0;margin:0 0 14px}
+legend{font-weight:700;margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip>span{display:inline-block;padding:7px 13px;border-radius:999px;border:1.5px solid var(--line);background:var(--btn);cursor:pointer;font-size:15px;user-select:none}
+.chip input:checked+span{border-color:var(--green);background:var(--green-soft);font-weight:700}
+.chip input:focus-visible+span{outline:2px solid var(--green);outline-offset:2px}
+.cnt{color:var(--muted);font-size:13px}
+.go{background:var(--green);color:var(--on-green);border:none;border-radius:10px;padding:12px 22px;font:inherit;font-weight:700;font-size:17px;cursor:pointer}
+.go:disabled{opacity:.45;cursor:not-allowed}
+.go.ghost{background:var(--btn);color:var(--ink);border:1px solid var(--line)}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:4px 0 12px}
+.bar i{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px;color:var(--muted);margin-bottom:8px}
+.tag{border:1px solid var(--line);border-radius:6px;padding:1px 7px;background:var(--btn)}
+.tag.d{border-color:var(--red);color:var(--red)}
+.score{margin-left:auto;font-weight:700;color:var(--ink)}
+.qtext{font-size:19px;font-weight:700;margin:6px 0 12px}
+.qn{color:var(--green)}
+figure{margin:0 0 12px;text-align:center}
+figure img{max-width:100%;max-height:520px;background:#fff;border-radius:8px;padding:6px;border:1px solid var(--line);cursor:zoom-in}
+figcaption{font-size:14px;color:var(--muted);font-style:italic;margin-top:4px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:11px 13px;font:inherit;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover:not(:disabled){border-color:var(--green)}
+.opt .k{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--btn);font-weight:700;font-size:14px}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.right .k{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--red);background:var(--red-soft)}
+.opt.wrong .k{background:var(--red);color:#fff}
+.opt.dim{opacity:.55}
+.verdict{font-weight:700;font-size:18px;margin-top:12px}
+.verdict.ok{color:var(--ok)} .verdict.ko{color:var(--red)}
+.nav{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}
+.big{font-size:44px;font-weight:700;color:var(--green);margin:0}
+.review{border-top:1px solid var(--line);padding:12px 0}
+.review .rq{font-weight:700}
+.review .ra{color:var(--ok);font-weight:700}
+.review .ry{color:var(--red)}
+.hint{font-size:13px;color:var(--muted);margin-top:8px}
+#zoom{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:20;cursor:zoom-out;padding:16px}
+#zoom img{max-width:100%;max-height:100%;background:#fff;border-radius:8px;padding:8px}
+@media (max-width:560px){body{font-size:16px}.qtext{font-size:17px}h1{font-size:22px}.crumbs{font-size:12px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="index.html#tests" title="Volver al índice (Esc)">← Volver al índice</a>
+  <nav class="crumbs"><a href="index.html#temas">Máquinas Eléctricas</a> › <a href="index.html#tests">Tests</a> › <b>Test de repaso T1 y 3.12</b></nav>
+  <button class="theme" id="theme" title="Modo claro / oscuro" aria-label="Cambiar modo claro u oscuro"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
+</header>
+<main id="app"></main>
+<div id="zoom"><img alt="Esquema ampliado"></div>
+
+<script>
+const DATA = [{"tema":"T1","t":"T1 · punto 1.3 Inducción magnética","dif":"M","tipo":"CON","q":"¿Qué es la inducción magnética?","ok":"Las líneas de campo que atraviesan cada trozo de superficie: lo juntas que van las líneas","d":["El número total de líneas que salen de un imán","La fuerza con la que un imán atrae a un trozo de hierro","La corriente que circula por una bobina"],"j":"Inducción = líneas por cada cm²; el total de líneas es el flujo.","img":null,"cap":"","n":1,"o":[1,0,2,3]},{"tema":"T1","t":"T1 · punto 1.3 Inducción magnética","dif":"M","tipo":"UNI","q":"¿En qué unidad se mide la inducción magnética?","ok":"Tesla (T)","d":["Weber (Wb)","Amperio-vuelta (A·v)","Voltio (V)"],"j":"La inducción se mide en teslas; el flujo, en webers.","img":null,"cap":"","n":2,"o":[2,3,1,0]},{"tema":"T1","t":"T1 · punto 1.3 Inducción magnética","dif":"D","tipo":"QPS","q":"Hacemos el núcleo más grueso y la inducción no cambia. ¿Qué le pasa al flujo?","ok":"Aumenta, porque hay más superficie por la que pasan líneas","d":["Disminuye","No cambia","Desaparece"],"j":"Misma densidad de líneas en más superficie: más líneas en total.","img":null,"cap":"","n":3,"o":[1,3,0,2]},{"tema":"T1","t":"T1 · punto 1.3 Inducción magnética","dif":"M","tipo":"CON","q":"¿Dónde es mayor la inducción de un imán?","ok":"Cerca de los polos, donde las líneas van más juntas","d":["Lejos del imán, donde las líneas se separan","Es igual en todos los puntos alrededor del imán","En el aire que hay entre dos imanes separados un metro"],"j":"Más juntas las líneas = más inducción, y eso ocurre junto a los polos.","img":null,"cap":"","n":4,"o":[3,0,1,2]},{"tema":"T1","t":"T1 · punto 1.4 Intensidad de campo y fuerza magnetomotriz","dif":"M","tipo":"QPS","q":"La fuerza magnetomotriz de una bobina aumenta si…","ok":"Aumentamos la corriente o el número de espiras","d":["Hacemos más largo el núcleo","Cambiamos el núcleo de hierro por aire","Quitamos espiras a la bobina"],"j":"Es el \"empuje\" de la bobina: depende de la corriente y de las espiras.","img":null,"cap":"","n":5,"o":[2,0,1,3]},{"tema":"T1","t":"T1 · punto 1.4 Intensidad de campo y fuerza magnetomotriz","dif":"M","tipo":"UNI","q":"¿En qué unidad se mide la fuerza magnetomotriz?","ok":"Amperio-vuelta (A·v)","d":["Tesla (T)","Weber (Wb)","Vatio (W)"],"j":"Amperios por número de vueltas (espiras).","img":null,"cap":"","n":6,"o":[2,3,1,0]},{"tema":"T1","t":"T1 · punto 1.4 Intensidad de campo y fuerza magnetomotriz","dif":"M","tipo":"CON","q":"¿Qué es la intensidad de campo?","ok":"La fuerza magnetomotriz repartida a lo largo del circuito magnético (A·v por metro)","d":["El número de líneas que hay en cada cm² del núcleo","El número total de líneas que recorren el núcleo","El calor que se produce en el núcleo"],"j":"Es el empuje de la bobina dividido entre la longitud del circuito.","img":null,"cap":"","n":7,"o":[2,3,1,0]},{"tema":"T1","t":"T1 · punto 1.4 Intensidad de campo y fuerza magnetomotriz","dif":"D","tipo":"QPS","q":"Con la misma bobina y la misma corriente, hacemos el circuito magnético el doble de largo. La intensidad de campo…","ok":"Baja a la mitad: el mismo empuje se reparte entre más metros","d":["Sube al doble","No cambia","Depende de si el núcleo es de hierro o de aire"],"j":"No depende del material; sí de la longitud del circuito.","img":null,"cap":"","n":8,"o":[3,0,1,2]},{"tema":"T1","t":"T1 · punto 1.5 Circuito magnético básico","dif":"M","tipo":"CON","q":"¿Qué es un circuito magnético?","ok":"El camino cerrado que recorren las líneas de campo, normalmente por un núcleo de hierro","d":["El cable que alimenta a la bobina","El conjunto de protecciones de un electroimán","La caja donde se guarda el transformador"],"j":"Igual que la corriente va por los cables, el flujo va por el núcleo.","img":null,"cap":"","n":9,"o":[1,3,0,2]},{"tema":"T1","t":"T1 · punto 1.5 Circuito magnético básico","dif":"M","tipo":"CON","q":"¿Qué es un entrehierro?","ok":"Un corte de aire en el núcleo, que hace que el flujo baje mucho","d":["Una pieza de hierro añadida para aumentar el flujo","El barniz aislante del hilo de la bobina","El tornillo que sujeta las chapas"],"j":"El aire es como una resistencia muy grande en el circuito magnético.","img":null,"cap":"","n":10,"o":[3,2,1,0]},{"tema":"T1","t":"T1 · punto 1.5 Circuito magnético básico","dif":"M","tipo":"APL","q":"¿Por qué las bobinas de las máquinas llevan núcleo de hierro?","ok":"Porque el hierro deja pasar las líneas mucho mejor que el aire: más flujo con la misma bobina","d":["Porque el hierro es mejor conductor de la corriente que el cobre","Porque así la bobina no se calienta nunca","Porque el hierro aísla la bobina de la carcasa"],"j":"El hierro \"conduce\" las líneas de campo; el aire, muy mal.","img":null,"cap":"","n":11,"o":[0,1,2,3]},{"tema":"T1","t":"T1 · punto 1.5 Circuito magnético básico","dif":"D","tipo":"QPS","q":"Una bobina sin núcleo (aire) y otra igual con núcleo de hierro, con la misma corriente. ¿Qué ocurre?","ok":"Las dos tienen la misma fuerza magnetomotriz, pero la de aire tiene muchas menos líneas","d":["La de aire tiene más flujo que la de hierro","Las dos tienen exactamente el mismo flujo","La de aire no tiene fuerza magnetomotriz"],"j":"El empuje es el mismo (misma corriente y espiras); cambia lo que deja pasar el material.","img":null,"cap":"","n":12,"o":[0,2,3,1]},{"tema":"T1","t":"T1 · punto 1.6 1ª ley del electromagnetismo","dif":"M","tipo":"CON","q":"¿Qué dice la 1ª ley del electromagnetismo?","ok":"Que una corriente eléctrica crea un campo magnético a su alrededor","d":["Que un imán quieto crea corriente en un cable","Que un cable con corriente se convierte en un imán para siempre","Que el cobre es un material magnético"],"j":"Lo vemos con una brújula al lado de un cable: se mueve al pasar corriente.","img":null,"cap":"","n":13,"o":[1,2,0,3]},{"tema":"T1","t":"T1 · punto 1.6 1ª ley del electromagnetismo","dif":"M","tipo":"CON","q":"¿Qué forma tienen las líneas de campo alrededor de un cable recto con corriente?","ok":"Círculos alrededor del cable","d":["Rectas paralelas al cable","Rectas que salen del cable hacia fuera, como los radios de una rueda","No hay líneas: un cable recto no crea campo"],"j":"Las líneas rodean al cable como anillos.","img":null,"cap":"","n":14,"o":[1,0,2,3]},{"tema":"T1","t":"T1 · punto 1.6 1ª ley del electromagnetismo","dif":"M","tipo":"CON","q":"Regla de la mano derecha en un cable: si el pulgar apunta en el sentido de la corriente…","ok":"Los demás dedos, al cerrar la mano, indican el sentido de las líneas de campo","d":["Los demás dedos indican hacia dónde se mueve el cable","El índice indica dónde está el polo sur","Los demás dedos indican el sentido de la corriente de vuelta"],"j":"Agarramos el cable: pulgar = corriente, dedos = líneas.","img":null,"cap":"","n":15,"o":[3,1,0,2]},{"tema":"T1","t":"T1 · punto 1.6 1ª ley del electromagnetismo","dif":"D","tipo":"QPS","q":"Si invertimos el sentido de la corriente en una bobina…","ok":"Se intercambian el polo norte y el polo sur","d":["Desaparece el campo magnético","El campo se hace el doble de fuerte","No cambia nada"],"j":"Cambia el sentido de las líneas, y con él la posición de los polos.","img":null,"cap":"","n":16,"o":[0,3,1,2]},{"tema":"T1","t":"T1 · punto 1.8 3ª ley del electromagnetismo","dif":"M","tipo":"CON","q":"¿Cuándo se induce tensión en una bobina?","ok":"Cuando cambia el flujo que la atraviesa","d":["Cuando el flujo que la atraviesa es grande, aunque no cambie","Siempre que haya un imán cerca, aunque esté quieto","Solo cuando la bobina es de cobre"],"j":"Lo importante es que el flujo varíe, no que sea grande.","img":null,"cap":"","n":17,"o":[3,0,1,2]},{"tema":"T1","t":"T1 · punto 1.8 3ª ley del electromagnetismo","dif":"D","tipo":"QPS","q":"Metemos un imán dentro de una bobina y lo dejamos quieto. ¿Qué marca el polímetro?","ok":"Nada: con el imán quieto el flujo no cambia","d":["Una tensión constante mientras el imán esté dentro","Una tensión alterna","La tensión de la red"],"j":"Solo hay tensión mientras el imán entra o sale.","img":null,"cap":"","n":18,"o":[0,2,1,3]},{"tema":"T1","t":"T1 · punto 1.8 3ª ley del electromagnetismo","dif":"M","tipo":"QPS","q":"Si metemos el imán en la bobina más deprisa, la tensión inducida…","ok":"Es mayor","d":["Es menor","Es la misma","Es cero"],"j":"El flujo cambia más rápido, y la tensión sube.","img":null,"cap":"","n":19,"o":[1,3,0,2]},{"tema":"T1","t":"T1 · punto 1.8 3ª ley del electromagnetismo","dif":"D","tipo":"QPS","q":"Con el mismo imán y el mismo movimiento, usamos una bobina con más espiras. La tensión inducida…","ok":"Es mayor","d":["Es menor","Es la misma","Desaparece"],"j":"Cada espira aporta su parte de tensión.","img":null,"cap":"","n":20,"o":[1,0,3,2]},{"tema":"T1","t":"T1 · punto 1.8 3ª ley del electromagnetismo","dif":"M","tipo":"APL","q":"¿Qué máquina funciona gracias a la 3ª ley del electromagnetismo?","ok":"El alternador (generador de corriente)","d":["La resistencia de un horno","El fusible","La lámpara de incandescencia"],"j":"El alternador hace girar espiras en un campo: el flujo cambia y se induce tensión.","img":null,"cap":"","n":21,"o":[1,2,3,0]},{"tema":"T1","t":"T1 · punto 1.9 Materiales magnéticos y curva de magnetización","dif":"M","tipo":"APL","q":"¿Cuáles de estos materiales son ferromagnéticos (los atrae mucho un imán)?","ok":"Hierro, níquel y cobalto","d":["Cobre, aluminio y plata","Madera, plástico y goma","Vidrio, cerámica y papel"],"j":"El cobre y el aluminio no los atrae un imán.","img":null,"cap":"","n":22,"o":[0,3,2,1]},{"tema":"T1","t":"T1 · punto 1.9 Materiales magnéticos y curva de magnetización","dif":"M","tipo":"CON","q":"¿Qué representa la curva de magnetización?","ok":"Cuánta inducción consigue un material según la intensidad de campo (la corriente) que le damos","d":["Cómo sube la temperatura del núcleo con el tiempo","La tensión de la red a lo largo de un ciclo","La potencia que consume la bobina"],"j":"Es la gráfica de inducción frente a intensidad de campo.","img":null,"cap":"","n":23,"o":[3,1,2,0]},{"tema":"T1","t":"T1 · punto 1.9 Materiales magnéticos y curva de magnetización","dif":"M","tipo":"CON","q":"¿Cuáles son las zonas de la curva de magnetización?","ok":"Zona recta, codo y saturación","d":["Arranque, marcha y paro","Primario, secundario y núcleo","Vacío, cortocircuito y carga"],"j":"Primero sube recta, luego se dobla (codo) y al final se aplana.","img":null,"cap":"","n":24,"o":[1,3,2,0]},{"tema":"T1","t":"T1 · punto 1.9 Materiales magnéticos y curva de magnetización","dif":"D","tipo":"CON","q":"¿Qué significa que un núcleo está saturado?","ok":"Que, aunque demos más corriente, la inducción casi no sube","d":["Que el núcleo se ha roto","Que la corriente baja sola","Que el material ha dejado de ser magnético para siempre"],"j":"El hierro ya está \"lleno\": más corriente casi no da más líneas.","img":null,"cap":"","n":25,"o":[3,1,0,2]},{"tema":"T1","t":"T1 · punto 1.10 Histéresis magnética","dif":"M","tipo":"CON","q":"¿Qué es la histéresis magnética?","ok":"El retraso del material al imantarse y desimantarse: la inducción va por detrás del campo","d":["La pérdida de magnetismo de un imán al calentarse","La corriente que circula por dentro del núcleo","El ruido que hace un transformador"],"j":"Por eso la curva de subida y la de bajada no coinciden: forman un ciclo.","img":null,"cap":"","n":26,"o":[1,2,0,3]},{"tema":"T1","t":"T1 · punto 1.10 Histéresis magnética","dif":"M","tipo":"CON","q":"¿Qué es el magnetismo remanente?","ok":"El que se queda en el material cuando quitamos la corriente","d":["El que tiene el material con la corriente máxima","El magnetismo de la Tierra","El que se pierde en forma de calor"],"j":"El material \"recuerda\" que estuvo imantado.","img":null,"cap":"","n":27,"o":[2,0,3,1]},{"tema":"T1","t":"T1 · punto 1.10 Histéresis magnética","dif":"M","tipo":"CON","q":"¿Qué es el campo coercitivo?","ok":"El campo en sentido contrario que hay que dar para quitar el magnetismo remanente","d":["El campo máximo que soporta el material antes de romperse","El campo que crea un cable recto","El campo de un imán permanente"],"j":"Hay que \"empujar al revés\" para dejar el material a cero.","img":null,"cap":"","n":28,"o":[0,3,1,2]},{"tema":"T1","t":"T1 · punto 1.10 Histéresis magnética","dif":"D","tipo":"APL","q":"¿Qué material conviene para el núcleo de un transformador?","ok":"Un material magnético blando: ciclo de histéresis estrecho y pocas pérdidas","d":["Un material magnético duro: ciclo de histéresis ancho","Cobre, porque conduce muy bien","Aluminio, porque pesa poco"],"j":"Con alterna el ciclo se recorre 50 veces por segundo: cuanto más estrecho, menos calor.","img":null,"cap":"","n":29,"o":[1,0,3,2]},{"tema":"T1","t":"T1 · punto 1.10 Histéresis magnética","dif":"M","tipo":"APL","q":"¿Para qué se usan los materiales magnéticos duros (ciclo ancho)?","ok":"Para fabricar imanes permanentes","d":["Para los núcleos de los transformadores","Para los cables de las bobinas","Para aislar las chapas"],"j":"Retienen mucho magnetismo remanente: son buenos imanes.","img":null,"cap":"","n":30,"o":[3,2,0,1]},{"tema":"T1","t":"T1 · punto 1.11 Corrientes parásitas (de Foucault)","dif":"M","tipo":"CON","q":"¿Qué son las corrientes de Foucault?","ok":"Corrientes que se inducen dentro del propio núcleo metálico cuando el flujo cambia","d":["Las corrientes que van por el hilo de la bobina","Las fugas de corriente a tierra","Las corrientes de cortocircuito de la red"],"j":"Son remolinos de corriente dentro del hierro.","img":null,"cap":"","n":31,"o":[0,3,1,2]},{"tema":"T1","t":"T1 · punto 1.11 Corrientes parásitas (de Foucault)","dif":"M","tipo":"CON","q":"¿Qué efecto tienen las corrientes de Foucault?","ok":"Calientan el núcleo y hacen perder energía","d":["Mejoran el rendimiento de la máquina","Enfrían el núcleo","Aumentan la tensión del secundario"],"j":"Esa energía se pierde en forma de calor.","img":null,"cap":"","n":32,"o":[3,2,0,1]},{"tema":"T1","t":"T1 · punto 1.11 Corrientes parásitas (de Foucault)","dif":"D","tipo":"APL","q":"¿Cómo se reducen las corrientes de Foucault en un transformador?","ok":"Haciendo el núcleo con chapas finas aisladas entre sí","d":["Haciendo el núcleo de una sola pieza maciza","Haciendo el núcleo de cobre","Dando más corriente a la bobina"],"j":"Las chapas cortan el camino de los remolinos de corriente.","img":null,"cap":"","n":33,"o":[3,2,0,1]},{"tema":"T1","t":"T1 · punto 1.11 Corrientes parásitas (de Foucault)","dif":"M","tipo":"QPS","q":"¿Aparecen corrientes de Foucault en un núcleo alimentado con corriente continua constante?","ok":"No, porque el flujo no cambia","d":["Sí, y mucho más que con alterna","Sí, pero solo si el núcleo es de chapas","Solo si la bobina tiene muchas espiras"],"j":"Sin variación de flujo no se induce nada (3ª ley).","img":null,"cap":"","n":34,"o":[0,1,2,3]},{"tema":"T3","t":"T3 · punto 3.12 Principio de funcionamiento del transformador","dif":"M","tipo":"APL","q":"¿Cuáles son las partes principales de un transformador?","ok":"Núcleo de chapas, devanado primario y devanado secundario","d":["Rotor, estator y escobillas","Fusible, contactor y relé térmico","Pila, resistencia y condensador"],"j":"Dos bobinas sobre un mismo núcleo de chapas.","img":null,"cap":"","n":35,"o":[0,3,2,1]},{"tema":"T3","t":"T3 · punto 3.12 Principio de funcionamiento del transformador","dif":"M","tipo":"CON","q":"¿Qué es el devanado primario?","ok":"La bobina que se conecta a la red, por donde entra la energía","d":["La bobina a la que se conecta la carga","Siempre la bobina de menos espiras","El núcleo de chapas"],"j":"Primario = entrada; secundario = salida hacia la carga.","img":null,"cap":"","n":36,"o":[3,0,2,1]},{"tema":"T3","t":"T3 · punto 3.12 Principio de funcionamiento del transformador","dif":"D","tipo":"CON","q":"¿Cómo pasa la energía del primario al secundario?","ok":"A través del flujo que recorre el núcleo, sin unión eléctrica entre las dos bobinas","d":["Por un cable que une las dos bobinas","Por el aire caliente que hay dentro del transformador","A través de la carcasa metálica"],"j":"Las bobinas están aisladas entre sí: la energía pasa por el núcleo.","img":null,"cap":"","n":37,"o":[1,2,3,0]},{"tema":"T3","t":"T3 · punto 3.12 Principio de funcionamiento del transformador","dif":"D","tipo":"QPS","q":"¿Por qué un transformador no funciona con corriente continua?","ok":"Porque el flujo no cambia y no se induce tensión en el secundario","d":["Porque la corriente continua no crea campo magnético","Porque las chapas no dejan pasar la continua","Porque la continua solo sirve para motores"],"j":"Además, el primario se calentaría mucho y podría quemarse.","img":null,"cap":"","n":38,"o":[3,2,1,0]},{"tema":"T3","t":"T3 · punto 3.12 Principio de funcionamiento del transformador","dif":"M","tipo":"QPS","q":"El secundario tiene la mitad de espiras que el primario. Si en el primario hay 230 V, en el secundario habrá…","ok":"Unos 115 V","d":["Unos 460 V","230 V","0 V"],"j":"La tensión va en proporción a las espiras.","img":null,"cap":"","n":39,"o":[0,2,3,1]},{"tema":"T3","t":"T3 · punto 3.12 Principio de funcionamiento del transformador","dif":"M","tipo":"CON","q":"¿Qué es un transformador reductor?","ok":"El que da en el secundario menos tensión que en el primario","d":["El que reduce la potencia que consume la carga","El que tiene más espiras en el secundario que en el primario","El que reduce la frecuencia de la red"],"j":"El secundario tiene menos espiras que el primario.","img":null,"cap":"","n":40,"o":[3,1,2,0]}];
+const IMGS = {};
+const TEMAS = {T1:"T1 Electromagnetismo",T3:"T3 Transformadores"};
+const TIPO = {CON:"Concepto",UNI:"Unidades",QPS:"Qué pasa si…",APL:"En la máquina real"};
+const app = document.getElementById('app');
+
+/* ---------- tema claro/oscuro ---------- */
+const root = document.documentElement;
+try { const t = localStorage.getItem('maq-tema'); if (t) root.dataset.theme = t; } catch(e) {}
+document.getElementById('theme').onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+  try { localStorage.setItem('maq-tema', root.dataset.theme); } catch(e) {}
+};
+
+/* ---------- zoom de esquemas ---------- */
+const zoom = document.getElementById('zoom');
+zoom.onclick = () => zoom.style.display = 'none';
+function openZoom(src){ zoom.querySelector('img').src = src; zoom.style.display = 'flex'; }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (zoom.style.display === 'flex') { zoom.style.display = 'none'; return; }
+    location.href = 'index.html#tests'; return;
+  }
+  if (e.key === 'Backspace' && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) {
+    location.href = 'index.html#tests'; return;
+  }
+  if (state.screen !== 'q') return;
+  const k = e.key.toLowerCase();
+  const idx = 'abcd'.indexOf(k) >= 0 ? 'abcd'.indexOf(k) : '1234'.indexOf(k);
+  if (!state.answered && idx >= 0) { answer(idx); e.preventDefault(); }
+  else if (state.answered && (e.key === 'Enter' || e.key === ' ')) { next(); e.preventDefault(); }
+});
+
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+let state = { screen: 'start' };
+
+/* ---------- inicio ---------- */
+function start(){
+  state = { screen: 'start' };
+  const cnt = t => DATA.filter(q => q.tema === t).length;
+  app.innerHTML = `
+  <h1>Test de repaso · <span>Máquinas Eléctricas</span></h1>
+  <p class="sub">${DATA.length} preguntas del tema 1 (puntos 1.3 a 1.11, sin el 1.7) y del punto 3.12 del tema 3.</p>
+  <div class="card">
+    <fieldset><legend>Temas</legend><div class="chips">
+      ${Object.keys(TEMAS).map(t => `<label class="chip"><input type="checkbox" name="tema" value="${t}" checked><span>${TEMAS[t]} <span class="cnt">(${cnt(t)})</span></span></label>`).join('')}
+    </div></fieldset>
+    <fieldset><legend>Dificultad</legend><div class="chips">
+      <label class="chip"><input type="radio" name="dif" value="all" checked><span>Todas</span></label>
+      <label class="chip"><input type="radio" name="dif" value="M"><span>Medias</span></label>
+      <label class="chip"><input type="radio" name="dif" value="D"><span>Difíciles</span></label>
+    </div></fieldset>
+    <fieldset><legend>Orden</legend><div class="chips">
+      <label class="chip"><input type="radio" name="ord" value="fix" checked><span>Por orden (1, 2, 3…)</span></label>
+      <label class="chip"><input type="radio" name="ord" value="mix"><span>Mezcladas</span></label>
+    </div></fieldset>
+    <fieldset><legend>Número de preguntas</legend><div class="chips">
+      ${[10,20,30].map((n,i) => `<label class="chip"><input type="radio" name="num" value="${n}" ${i===1?'checked':''}><span>${n}</span></label>`).join('')}
+      <label class="chip"><input type="radio" name="num" value="0"><span>Todas</span></label>
+    </div></fieldset>
+    <p id="avail" class="cnt"></p>
+    <button class="go" id="go">Empezar</button>
+  </div>
+  <div class="box"><span class="lbl">CÓMO FUNCIONA</span>
+    Elige una respuesta tocándola (o con las teclas A, B, C, D). Aciertes o no, verás <b>por qué</b> es esa la respuesta.
+    <b>Por orden</b>: las preguntas van del 1 al 40 y las respuestas, con las mismas letras que el test en papel. <b>Mezcladas</b>: cambian el orden de las preguntas y de las respuestas cada vez.</div>`;
+  const upd = () => {
+    const pool = filtered();
+    document.getElementById('avail').textContent = `Hay ${pool.length} preguntas con estos filtros.`;
+    document.getElementById('go').disabled = pool.length === 0;
+  };
+  app.querySelectorAll('input').forEach(i => i.onchange = upd);
+  upd();
+  document.getElementById('go').onclick = () => {
+    const n = +app.querySelector('input[name=num]:checked').value;
+    const mix = app.querySelector('input[name=ord]:checked').value === 'mix';
+    let pool = filtered();
+    if (mix) pool = shuffle(pool);
+    if (n) pool = pool.slice(0, n);
+    state = { screen: 'q', mix, list: pool.map(q => ({ q, order: mix ? shuffle([0,1,2,3]) : q.o.slice(), pick: null })), i: 0, ok: 0, answered: false };
+    show();
+  };
+}
+function filtered(){
+  const temas = [...app.querySelectorAll('input[name=tema]:checked')].map(i => i.value);
+  const dif = app.querySelector('input[name=dif]:checked').value;
+  return DATA.filter(q => temas.includes(q.tema) && (dif === 'all' || q.dif === dif));
+}
+
+/* ---------- pregunta ---------- */
+function opts(q){ return [q.ok, ...q.d]; } // índice 0 = correcta
+function show(){
+  const it = state.list[state.i], q = it.q, n = state.list.length;
+  state.answered = it.pick !== null;
+  const all = opts(q);
+  app.innerHTML = `
+  <div class="meta"><span>Pregunta <b>${state.i+1}</b> de ${n}</span>
+    <span class="tag">Nº ${q.n}</span>
+    <span class="tag">${TEMAS[q.tema].split(' ')[0]}</span>
+    <span class="tag ${q.dif==='D'?'d':''}">${q.dif==='D'?'Difícil':'Media'}</span>
+    <span class="score">Aciertos: ${state.ok}</span></div>
+  <div class="bar"><i style="width:${(state.i)/n*100}%"></i></div>
+  <div class="card">
+    ${q.img ? `<figure><img src="${IMGS[q.img]}" alt="Esquema: ${esc(q.cap)}" id="fig"><figcaption>${esc(q.cap)}</figcaption></figure>` : ''}
+    <div class="qtext"><span class="qn">${q.n}.</span> ${esc(q.q)}</div>
+    <div class="opts">${it.order.map((o,k) => `<button class="opt" data-k="${k}"><span class="k">${'ABCD'[k]}</span><span>${esc(all[o])}</span></button>`).join('')}</div>
+    <div id="fb"></div>
+  </div>`;
+  const f = document.getElementById('fig'); if (f) f.onclick = () => openZoom(f.src);
+  app.querySelectorAll('.opt').forEach(b => b.onclick = () => answer(+b.dataset.k));
+  if (state.answered) paint();
+  window.scrollTo({ top: 0 });
+}
+function answer(k){
+  if (state.answered) return;
+  const it = state.list[state.i];
+  it.pick = k; state.answered = true;
+  if (it.order[k] === 0) state.ok++;
+  paint();
+  const nb = document.getElementById('next'); if (nb) nb.focus({ preventScroll: true });
+}
+function paint(){
+  const it = state.list[state.i], q = it.q;
+  const good = it.order[it.pick] === 0;
+  app.querySelectorAll('.opt').forEach(b => {
+    const k = +b.dataset.k; b.disabled = true;
+    if (it.order[k] === 0) b.classList.add('right');
+    else if (k === it.pick) b.classList.add('wrong');
+    else b.classList.add('dim');
+  });
+  const okLetter = 'ABCD'[it.order.indexOf(0)];
+  const last = state.i === state.list.length - 1;
+  document.getElementById('fb').innerHTML = `
+    <div class="verdict ${good?'ok':'ko'}">${good ? '✔ ¡Correcto!' : `✘ No es correcta. La buena es la ${okLetter}.`}</div>
+    <div class="box why"><span class="lbl">¿POR QUÉ?</span>${esc(q.j)}</div>
+    <div class="hint">Lo tienes en: ${esc(q.t)}</div>
+    <div class="nav"><button class="go" id="next">${last ? 'Ver resultado' : 'Siguiente →'}</button></div>`;
+  document.getElementById('next').onclick = next;
+  document.querySelector('.score').textContent = `Aciertos: ${state.ok}`;
+}
+function next(){
+  if (state.i < state.list.length - 1) { state.i++; show(); } else result();
+}
+
+/* ---------- resultado ---------- */
+function result(){
+  state.screen = 'end';
+  const n = state.list.length, nota = (state.ok / n * 10);
+  const fails = state.list.filter(it => it.order[it.pick] !== 0);
+  const msg = nota >= 9 ? '¡Muy bien! Lo dominas.' : nota >= 7 ? 'Bien. Repasa los fallos.' : nota >= 5 ? 'Aprobado justo: repasa los fallos con los apuntes.' : 'Toca repasar. Mira los fallos y vuelve a intentarlo.';
+  app.innerHTML = `
+  <h1>Resultado</h1>
+  <div class="card" style="text-align:center">
+    <p class="big">${state.ok} / ${n}</p>
+    <p style="margin:4px 0 0">Nota: <b>${nota.toFixed(1).replace('.',',')}</b> · ${msg}</p>
+  </div>
+  ${fails.length ? `<div class="card"><h2 style="margin:0 0 4px;font-size:20px">Tus fallos (${fails.length})</h2>
+    ${fails.map(it => { const a = opts(it.q); return `<div class="review">
+      <div class="rq">${it.q.n}. ${esc(it.q.q)}${it.q.img ? ` <span class="cnt">(${esc(it.q.cap.split('. ')[0])})</span>` : ''}</div>
+      <div class="ry">Tu respuesta: ${esc(a[it.order[it.pick]])}</div>
+      <div class="ra">Correcta: ${esc(a[0])}</div>
+      <div class="cnt">${esc(it.q.j)} · ${esc(it.q.t)}</div></div>`; }).join('')}
+  </div>` : ''}
+  <div class="nav" style="justify-content:center">
+    ${fails.length ? '<button class="go ghost" id="redo">Repetir solo los fallos</button>' : ''}
+    <button class="go" id="again">Nuevo test</button>
+  </div>`;
+  document.getElementById('again').onclick = start;
+  const r = document.getElementById('redo');
+  if (r) r.onclick = () => { const mix = state.mix; state = { screen: 'q', mix, list: (mix ? shuffle(fails) : fails).map(it => ({ q: it.q, order: mix ? shuffle([0,1,2,3]) : it.q.o.slice(), pick: null })), i: 0, ok: 0, answered: false }; show(); };
+  window.scrollTo({ top: 0 });
+}
+start();
+</script>
+</body>
+</html>
