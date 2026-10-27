@@ -135,20 +135,14 @@ svg .mut{fill:var(--muted)}
       <li>Más tensión con las mismas espiras → más voltios por espira → más cerca del codo.</li></ul></div>
     <div class="box k ojo"><p><span class="lab">¡OJO!</span>Si sale humo a muy poca tensión, <b>no es saturación</b>: son <b>espiras en cortocircuito</b>. Con la hoja de ensayos se distingue:</p>
       <ul><li><b>Saturación</b> (Trafo 3): I<sub>0</sub> sube en línea recta hasta el codo y luego se dispara. A 109 V: 97 W con 3,6 A (casi 400 VA): la mayor parte de la corriente es para magnetizar, no calor.</li>
-      <li><b>Espiras en corto</b> (Trafo 4): I<sub>0</sub> alta desde los primeros voltios, en línea recta. P<sub>0</sub> enorme (100 W con 5,5 A a solo 28 V, unos 150 VA): casi toda es calor. V<sub>2</sub> sale más baja de lo que toca.</li>
+      <li><b>Espiras en corto</b> (Trafo 4): I<sub>0</sub> alta desde los primeros voltios, en línea recta. P<sub>0</sub> enorme (114 W con 5,5 A a solo 28 V, unos 150 VA): casi toda es calor. V<sub>2</sub> sale más baja de lo que toca.</li>
       <li>El polímetro en ohmios y el megger <b>no lo ven</b>.</li></ul></div>
     <div class="box full k taller"><p><span class="lab">EN EL TALLER</span>Nuestros cuatro trafos gastan <b>mucho en vacío</b>: de 1 A (Trafo 1) a 3,6 A (Trafo 3), con decenas de vatios. Es por la <b>mala calidad del hierro</b>: las chapas oxidadas y mal apiladas tienen muchas más pérdidas de vacío (se calientan por corrientes de Foucault e histéresis) y cuesta más magnetizarlas.</p>
       <p>Por eso, al poner la lámpara, <b>I<sub>1</sub> casi no cambia</b> (Trafo 3: de 3,58 a 3,60 A): sus 12 W son poquísimo al lado de lo que ya gasta el hierro. El vatímetro sí lo nota (P<sub>1</sub> sube unos 12 W), pero el rendimiento sale muy bajo: entre el 11 y el 13 %.</p></div>
     <div class="box full" id="bSum"></div>
     <div class="box full"><h2>Las hojas de ensayos de los 4 trafos</h2>
-      <p>Para la memoria (apartado 5) necesitas comparar los cuatro trafos. Aquí los tienes todos juntos en dos caras, y también la hoja de cada grupo:</p>
-      <div class="hojas"><a href="practicas/P1_Resultados_4_trafos.pdf" download style="flex-basis:100%"><span>PDF</span>Los 4 trafos juntos (2 caras)</a></div>
-      <div class="hojas">
-        <a href="practicas/P1_Hoja_ensayos_Trafo1.pdf" download><span>PDF</span>Trafo 1</a>
-        <a href="practicas/P1_Hoja_ensayos_Trafo2.pdf" download><span>PDF</span>Trafo 2</a>
-        <a href="practicas/P1_Hoja_ensayos_Trafo3.pdf" download><span>PDF</span>Trafo 3</a>
-        <a href="practicas/P1_Hoja_ensayos_Trafo4.pdf" download><span>PDF</span>Trafo 4</a>
-      </div></div>
+      <p>Para la memoria (apartado 5) necesitas comparar los cuatro trafos. Aquí tienes las hojas de los cuatro grupos juntas, en dos caras:</p>
+      <div class="hojas"><a href="practicas/P1_Resultados_4_trafos.pdf" download style="flex-basis:100%"><span>PDF</span>Resultados de los 4 trafos (2 caras)</a></div></div>
     <div class="box full"><h2>Cómo funciona esta página</h2>
       <ul><li>Arriba eliges el trafo. Mueve la barra para subir la tensión del primario, o pulsa <b>Subir por escalones</b>: se para en el 25, 50, 75, 90 y 100 % de la V<sub>1</sub> de la tabla, como en la hoja.</li>
       <li>Puedes seguir subiendo con la barra por encima de la tensión de la tabla, para ver qué habría pasado.</li>
@@ -181,15 +175,15 @@ const CASOS=[
   t:'Trafo 3 · como los otros dos, pero con más tensión: se satura',
   p:['Pedía 107 chapas y solo caben <b>85</b>. Hasta 82 V se porta como los trafos 1 y 2: I<sub>0</sub> sube en línea recta, aunque ya es alta: al 75 % (82 V) gasta <b>1 A</b>.',
      'El codo está en unos <b>93 V</b>. A 98 V, 1,44 A, y a 109 V se dispara: <b>3,6 A</b>, más de 2,5 veces la corriente nominal del primario (1,38 A), y P<sub>0</sub> = 97 W. Zumba y se calienta en vacío.',
-     'Este grupo hizo además la <b>sobrecarga</b>: secundario en cortocircuito con unos <b>10 A en el primario</b> (8 veces la nominal). A los <b>30 s</b> empezó a salir bastante humo y se paró. Después, el aislamiento bajó de 2000 a unos <b>500 MΩ</b> y la resistencia en caliente subió un 25 %.'],
+     'Este grupo hizo además la <b>sobrecarga</b>: secundario en cortocircuito, con <b>200-220 V</b> y <b>10-12 A en el primario</b> (7-9 veces su nominal). I<sub>2</sub> no se midió: con el núcleo tan saturado, casi toda esa corriente era para magnetizar, así que I<sub>2</sub> no subió tanto como I<sub>1</sub>. A los <b>30 s</b> empezó a salir bastante humo y se paró. Después, el aislamiento entre primario y secundario bajó de más de 999 MΩ (el fondo de escala del megger) a unos <b>500 MΩ</b>; contra el núcleo siguió por encima de 999. La resistencia del primario en caliente subió un 32 %.'],
   w:'La diferencia con los trafos 1 y 2 es que a este <b>sí le dimos una tensión alta</b>: 0,42 V por espira, frente a 0,15 y 0,34. Además le faltan 22 chapas: a 109 V el hierro trabaja a <b>1,59 T</b>, por encima del codo. Para usarlo sin saturar, conéctalo a unos <b>90 V</b>.'},
- {id:4,n:'Trafo 4',d:'200 VA · 111 / 83 V',S:200,V1t:111,ch:85,chc:124,N1:100,N2:150,R1:.51,In:1.80,cc:true,
+ {id:4,n:'Trafo 4',d:'200 VA · 111 / 83 V',S:200,V1t:111,ch:85,chc:124,N1:150,N2:100,R1:2.1,In:1.80,cc:true,
   meas:[[20,4.0],[27.8,5.5]],
   t:'Trafo 4 · parece que se satura a 20-30 V… pero no',
   p:['A <b>20 V</b> la pinza ya marca 4 A y a <b>28 V</b> sale humo del primario. Parece una saturación rapidísima.',
-     'El primario se bobinó con <b>100 vueltas</b> en lugar de las 200 del cálculo. Aun así, a 28 V el hierro está a 1,06 T, todavía por debajo del codo (1,35 T): la saturación no explica 5,5 A ni el humo. Sin el corto, con el hierro malo, gastaría unos 2,3 A y 22 W. Lo que tiene es un <b>cortocircuito masivo entre espiras</b> del primario (esmalte dañado al bobinar).',
-     'Las pistas de la hoja: I<sub>0</sub> alta desde el primer voltio y en línea recta; <b>P<sub>0</sub> = 100 W</b> (es calor); V<sub>1</sub> / V<sub>2</sub> = 0,94 en vez de 0,67 (100 / 150). El polímetro en ohmios y el megger no notaron nada.'],
-  w:'Las espiras en corto hacen de <b>secundario en cortocircuito</b> dentro del propio trafo: se comen la corriente y se queman, aunque el trafo esté en vacío. Pulsa <b>Quitar el corto</b>: aun sin él, con solo 100 vueltas se saturaría hacia los <b>36 V</b> (1,11 V por espira a 111 V: más del triple de lo que aguanta el hierro). Rebobinado con las 200 vueltas del cálculo, el codo subiría a unos 71 V, pero con 85 chapas (pedía 124) seguiría saturado a 111 V.'},
+     'Se bobinó con <b>150 / 100 vueltas</b> en lugar de las 200 / 150 del cálculo, con hilo de 0,8 mm en los dos devanados. Aun así, a 28 V el hierro está a solo 0,70 T, muy por debajo del codo (1,35 T): la saturación no explica 5,5 A ni el humo. Sin el corto, con el hierro malo, gastaría 1 A y unos 11 W. Lo que tiene es un <b>cortocircuito masivo entre espiras</b> del primario (esmalte dañado al bobinar).',
+     'Las pistas de la hoja: I<sub>0</sub> alta desde el primer voltio y en línea recta; <b>P<sub>0</sub> = 114 W</b> (es calor); V<sub>1</sub> / V<sub>2</sub> = 2,11 en vez de 1,5 (150 / 100). El polímetro en ohmios y el megger no notaron nada: el megger marcó más de 999 MΩ (fondo de escala) antes y después.'],
+  w:'Las espiras en corto hacen de <b>secundario en cortocircuito</b> dentro del propio trafo: se comen la corriente y se queman, aunque el trafo esté en vacío. Pulsa <b>Quitar el corto</b>: aun sin él, con 150 vueltas se saturaría hacia los <b>54 V</b> (a 111 V serían 0,74 V por espira: el doble de lo que aguanta el hierro). Rebobinado con las 200 vueltas del cálculo, el codo subiría a unos 71 V, pero con 85 chapas (pedía 124) seguiría saturado a 111 V.'},
 ];
 let C=CASOS[0], V=0, cc=true, lamp=false, anim=null, puffs=[];
 const afe=c=>c.ch*0.14e-4;                         // m² de hierro
@@ -202,7 +196,7 @@ function calc(v,c=C,sh=shorted(),lp=lamp){
   const B=v/(222*c.N1*afe(c));
   const Im=v>0?Fmag(B)/c.N1:0;                                        // corriente para magnetizar (casi toda reactiva)
   const Pfe=c.ch*KG*8*B*B*(1+3*Math.max(0,B-BK));                     // pérdidas en el hierro
-  const Icc=sh?v/8:0;                                              // espiras en corto: corriente casi proporcional a V
+  const Icc=sh?v/6:0;                                              // espiras en corto: corriente casi proporcional a V
   const V2=v*c.N2/c.N1*(sh?0.71:1);
   const Plamp=lp?100*Math.pow(Math.min(V2,230)/230,1.6):0;
   const Ia=(v>0?(Pfe+Plamp)/v:0)+Icc*0.805;
@@ -237,7 +231,7 @@ function drawTrafo(r){
   for(const p of puffs) el('circle',{class:'puff',cx:p.x,cy:p.y,r:p.r,opacity:p.o},g);
 }
 // ---------- gráfica I0 frente a V1 ----------
-const GX=60,GY=20,GW=430,GH=270,VMAX=120,IMAX=5;
+const GX=60,GY=20,GW=430,GH=270,VMAX=120,IMAX=6;
 // Ejes como la curva B-H: corriente (≈ H) en horizontal, tensión (≈ B) en vertical
 const px=i=>GX+Math.min(i,IMAX)/IMAX*GW, py=v=>GY+GH-v/VMAX*GH;
 function drawGraph(r){
@@ -254,7 +248,7 @@ function drawGraph(r){
   txt(GX+GW-4,py(C.V1t)-5,`${C.V1t} V de la tabla`,{'font-size':12,class:'mut','text-anchor':'end'},g);
   const kV=codo(C);
   if(kV<VMAX){const top=Math.min(VMAX,kV*1.1);el('rect',{x:GX,y:py(top),width:GW,height:py(kV)-py(top),fill:'rgba(232,150,70,.16)'},g);
-    txt(shorted()?px(1.3):GX+GW-6,py(kV)+15,shorted()?'codo (sin el corto)':'codo',{'text-anchor':shorted()?'start':'end','font-size':12,fill:'var(--warn)'},g);}
+    txt(shorted()?px(3.0):GX+GW-6,py(kV)+15,shorted()?'codo (sin el corto)':'codo',{'text-anchor':shorted()?'start':'end','font-size':12,fill:'var(--warn)'},g);}
   const path=(fn)=>{let d='';for(let v=0;v<=VMAX;v+=0.5){const q=fn(v);d+=(v?'L':'M')+px(q.I).toFixed(1)+' '+py(v).toFixed(1);if(q.I>IMAX)break;}return d;};
   if(shorted()){el('path',{d:path(v=>calc(v,C,false,false)),fill:'none',stroke:'var(--muted)','stroke-width':2,'stroke-dasharray':'5 5'},g);
     txt(px(0.3),py(26),'si no tuviera el corto',{'font-size':12,class:'mut'},g);}
@@ -305,8 +299,8 @@ function renderTexts(){
   $('bSum').innerHTML=`<h2>Resumen de los 4 trafos</h2><table class="sum"><tr><th>Trafo</th><th>Chapas · espiras</th><th>V₁ de la tabla</th><th>Codo</th><th>Qué pasó</th></tr>
   ${row(1,'56 · 186 / 100','28 V · 0,15 V/espira','≈ 44 V','Va, porque 28 V es muy poca tensión. En vacío ya gasta 1 A.')}
   ${row(2,'79 · 195 / 112','66 V · 0,34 V/espira','≈ 65 V','Va, pero justo en el límite: en vacío, 1,58 A (casi la nominal). Con 75 V se saturaría.')}
-  ${row(3,'85 (pedía 107) · 260 / 150','109 V · 0,42 V/espira','≈ 93 V','Saturado a 109 V: 3,6 A en vacío (1 A ya al 75 %). Usarlo a unos 90 V. Sobrecarga: humo y el aislamiento baja a unos 500 MΩ.')}
-  ${row(4,'85 (pedía 124) · 100 / 150 (pedía 200)','111 V · 1,11 V/espira','≈ 36 V (sin el corto)','Espiras en corto: humo a 28 V. Rebobinar con 200 vueltas (y aun así saturaría a 111 V).')}</table>`;
+  ${row(3,'85 (pedía 107) · 260 / 150','109 V · 0,42 V/espira','≈ 93 V','Saturado a 109 V: 3,6 A en vacío (1 A ya al 75 %). Usarlo a unos 90 V. Sobrecarga: humo y el aislamiento primario-secundario baja a unos 500 MΩ.')}
+  ${row(4,'85 (pedía 124) · 150 / 100 (pedía 200 / 150)','111 V · 0,74 V/espira','≈ 54 V (sin el corto)','Espiras en corto: humo a 28 V. Rebobinar con 200 vueltas (y aun así saturaría a 111 V).')}</table>`;
 }
 function stop(){if(anim){clearInterval(anim);anim=null;}}
 function pick(c){stop();C=c;V=0;cc=true;lamp=false;puffs=[];
