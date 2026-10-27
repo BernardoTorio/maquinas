@@ -120,7 +120,7 @@ svg .mut{fill:var(--muted)}
   <div class="stage">
     <div class="two">
       <svg id="svT" viewBox="0 0 440 310" role="img" aria-label="El trafo: núcleo de chapas, primario y secundario"></svg>
-      <svg id="svG" viewBox="0 0 520 340" role="img" aria-label="Gráfica de la corriente de vacío frente a la tensión del primario"></svg>
+      <svg id="svG" viewBox="0 0 520 340" role="img" aria-label="Gráfica de la tensión del primario frente a la corriente de vacío, como la curva B-H"></svg>
     </div>
     <div class="meters" id="meters"></div>
     <div id="st"></div>
@@ -149,7 +149,7 @@ svg .mut{fill:var(--muted)}
     <div class="box full"><h2>Cómo funciona esta página</h2>
       <ul><li>Arriba eliges el trafo. Mueve la barra para subir la tensión del primario, o pulsa <b>Subir por escalones</b>: se para en el 25, 50, 75, 90 y 100 % de la V<sub>1</sub> de la tabla, como en la hoja.</li>
       <li>Puedes seguir subiendo con la barra por encima de la tensión de la tabla, para ver qué habría pasado.</li>
-      <li>A la izquierda, el núcleo se pone naranja y rojo cuando se acerca a la saturación, y el bobinado se calienta. A la derecha, la gráfica de I<sub>0</sub> frente a V<sub>1</sub>: los puntos huecos son las medidas de la hoja.</li>
+      <li>A la izquierda, el núcleo se pone naranja y rojo cuando se acerca a la saturación, y el bobinado se calienta. A la derecha, la gráfica con la corriente I<sub>0</sub> en horizontal y la tensión V<sub>1</sub> en vertical, igual que la curva de magnetización del Tema 1 (H en horizontal, B en vertical): la corriente hace de H y la tensión de B. Donde la curva se tumba está el codo. Los puntos huecos son las medidas de la hoja.</li>
       <li>Pulsa <b>Esc</b> para volver al índice.</li></ul></div>
   </div>
 </main>
@@ -235,31 +235,32 @@ function drawTrafo(r){
 }
 // ---------- gráfica I0 frente a V1 ----------
 const GX=60,GY=20,GW=430,GH=270,VMAX=120,IMAX=5;
-const sx=v=>GX+v/VMAX*GW, sy=i=>GY+GH-Math.min(i,IMAX)/IMAX*GH;
+// Ejes como la curva B-H: corriente (≈ H) en horizontal, tensión (≈ B) en vertical
+const px=i=>GX+Math.min(i,IMAX)/IMAX*GW, py=v=>GY+GH-v/VMAX*GH;
 function drawGraph(r){
   const g=$('svG'); g.innerHTML='';
-  for(let v=0;v<=VMAX;v+=20){el('line',{x1:sx(v),y1:GY,x2:sx(v),y2:GY+GH,stroke:'var(--grid)'},g);txt(sx(v),GY+GH+18,v,{'text-anchor':'middle','font-size':12,class:'mut'},g);}
-  for(let i=0;i<=IMAX;i++){el('line',{x1:GX,y1:sy(i),x2:GX+GW,y2:sy(i),stroke:'var(--grid)'},g);txt(GX-8,sy(i)+4,i,{'text-anchor':'end','font-size':12,class:'mut'},g);}
+  for(let i=0;i<=IMAX;i++){el('line',{x1:px(i),y1:GY,x2:px(i),y2:GY+GH,stroke:'var(--grid)'},g);txt(px(i),GY+GH+18,i,{'text-anchor':'middle','font-size':12,class:'mut'},g);}
+  for(let v=0;v<=VMAX;v+=20){el('line',{x1:GX,y1:py(v),x2:GX+GW,y2:py(v),stroke:'var(--grid)'},g);txt(GX-8,py(v)+4,v,{'text-anchor':'end','font-size':12,class:'mut'},g);}
   el('rect',{x:GX,y:GY,width:GW,height:GH,fill:'none',stroke:'var(--line)'},g);
-  txt(GX+GW/2,GY+GH+38,'V<tspan dy="4" font-size="10">1</tspan><tspan dy="-4"> (V)</tspan>',{'text-anchor':'middle','font-size':14},g);
-  txt(16,GY+GH/2,`I<tspan dy="4" font-size="10">${lamp?'1':'0'}</tspan><tspan dy="-4"> (A)</tspan>`,{'text-anchor':'middle','font-size':14,transform:`rotate(-90 16 ${GY+GH/2})`},g);
-  el('line',{x1:GX,y1:sy(C.In),x2:GX+GW,y2:sy(C.In),stroke:'var(--cur)','stroke-dasharray':'6 5','stroke-width':1.5},g);
-  txt(GX+GW-4,sy(C.In)-6,`corriente nominal del primario: ${f(C.In,2)} A`,{'text-anchor':'end','font-size':12,fill:'var(--cur)'},g);
-  el('line',{x1:sx(C.V1t),y1:GY,x2:sx(C.V1t),y2:GY+GH,stroke:'var(--muted)','stroke-dasharray':'3 4'},g);
-  txt(sx(C.V1t)+(C.V1t>90?-4:4),GY+44,`${C.V1t} V de la tabla`,{'font-size':12,class:'mut','text-anchor':C.V1t>90?'end':'start'},g);
+  txt(GX+GW/2,GY+GH+38,`I<tspan dy="4" font-size="10">${lamp?'1':'0'}</tspan><tspan dy="-4"> (A) · como H en la curva B-H</tspan>`,{'text-anchor':'middle','font-size':14},g);
+  txt(16,GY+GH/2,'V<tspan dy="4" font-size="10">1</tspan><tspan dy="-4"> (V) · como B</tspan>',{'text-anchor':'middle','font-size':14,transform:`rotate(-90 16 ${GY+GH/2})`},g);
+  // corriente nominal (vertical) y tensión de la tabla (horizontal)
+  el('line',{x1:px(C.In),y1:GY,x2:px(C.In),y2:GY+GH,stroke:'var(--cur)','stroke-dasharray':'6 5','stroke-width':1.5},g);
+  txt(px(C.In)+5,GY+14,`I nominal: ${f(C.In,2)} A`,{'font-size':12,fill:'var(--cur)'},g);
+  el('line',{x1:GX,y1:py(C.V1t),x2:GX+GW,y2:py(C.V1t),stroke:'var(--muted)','stroke-dasharray':'3 4'},g);
+  txt(GX+GW-4,py(C.V1t)-5,`${C.V1t} V de la tabla`,{'font-size':12,class:'mut','text-anchor':'end'},g);
   const kV=codo(C);
-  if(kV<VMAX){el('rect',{x:sx(kV),y:GY,width:sx(Math.min(VMAX,kV*1.1))-sx(kV),height:GH,fill:'rgba(232,150,70,.16)'},g);
-    txt(sx(kV*1.05),GY+GH-8,shorted()?'codo (sin el corto)':'codo',{'text-anchor':'middle','font-size':12,fill:'var(--warn)'},g);}
-  // curva sin el corto, en gris, para comparar
-  if(shorted()){let d='';for(let v=0;v<=VMAX;v+=0.5){const q=calc(v,C,false,false);d+=(v?'L':'M')+sx(v).toFixed(1)+' '+sy(q.I).toFixed(1);if(q.I>IMAX)break;}
-    el('path',{d,fill:'none',stroke:'var(--muted)','stroke-width':2,'stroke-dasharray':'5 5'},g);
-    txt(sx(34),sy(0.25)-6,'si no tuviera el corto',{'font-size':12,class:'mut','text-anchor':'end'},g);}
-  let d='';for(let v=0;v<=VMAX;v+=0.5){const q=calc(v);d+=(v?'L':'M')+sx(v).toFixed(1)+' '+sy(q.I).toFixed(1);if(q.I>IMAX)break;}
-  el('path',{d,fill:'none',stroke:'var(--acc)','stroke-width':3},g);
-  if(shorted()||!C.cc){for(const [v,i] of C.meas) el('circle',{cx:sx(v),cy:sy(i),r:6,fill:'var(--card)',stroke:'var(--warn)','stroke-width':2.5},g);
-    txt(C.cc?GX+GW-8:GX+8,C.cc?GY+GH/2-30:GY+18,'○ medidas de la hoja (vacío)',{'font-size':12,fill:'var(--warn)','text-anchor':C.cc?'end':'start'},g);}
-  if(r.I>IMAX)txt(sx(V)+(V>100?-12:0),GY+32,'▲ '+(r.I>20?'> 20':f(r.I,1))+' A',{'text-anchor':V>100?'end':'middle','font-size':12,'font-weight':700,fill:'var(--cur)'},g);
-  el('circle',{cx:sx(V),cy:sy(r.I),r:7,fill:'var(--cur)',stroke:'var(--card)','stroke-width':2},g);
+  if(kV<VMAX){const top=Math.min(VMAX,kV*1.1);el('rect',{x:GX,y:py(top),width:GW,height:py(kV)-py(top),fill:'rgba(232,150,70,.16)'},g);
+    txt(shorted()?px(1.3):GX+GW-6,py(kV)+15,shorted()?'codo (sin el corto)':'codo',{'text-anchor':shorted()?'start':'end','font-size':12,fill:'var(--warn)'},g);}
+  const path=(fn)=>{let d='';for(let v=0;v<=VMAX;v+=0.5){const q=fn(v);d+=(v?'L':'M')+px(q.I).toFixed(1)+' '+py(v).toFixed(1);if(q.I>IMAX)break;}return d;};
+  if(shorted()){el('path',{d:path(v=>calc(v,C,false,false)),fill:'none',stroke:'var(--muted)','stroke-width':2,'stroke-dasharray':'5 5'},g);
+    txt(px(0.3),py(26),'si no tuviera el corto',{'font-size':12,class:'mut'},g);}
+  el('path',{d:path(v=>calc(v)),fill:'none',stroke:'var(--acc)','stroke-width':3},g);
+  if(shorted()||!C.cc){for(const [v,i] of C.meas) el('circle',{cx:px(i),cy:py(v),r:6,fill:'var(--card)',stroke:'var(--warn)','stroke-width':2.5},g);
+    txt(GX+GW-8,GY+GH-26,'○ medidas de la hoja (vacío)',{'font-size':12,fill:'var(--warn)','text-anchor':'end'},g);}
+  txt(GX+GW-8,GY+GH-10,shorted()?'Sin codo: una recta tumbada. No es la curva B-H.':'Misma forma que la curva B-H del Tema 1',{'font-size':12,class:'mut','text-anchor':'end','font-style':'italic'},g);
+  if(r.I>IMAX)txt(GX+GW-6,py(V)-10,'► '+(r.I>20?'> 20':f(r.I,1))+' A',{'text-anchor':'end','font-size':12,'font-weight':700,fill:'var(--cur)'},g);
+  el('circle',{cx:px(r.I),cy:py(V),r:7,fill:'var(--cur)',stroke:'var(--card)','stroke-width':2},g);
 }
 function phasor(r){ // suma de corrientes con la lámpara (90°)
   const s=60/Math.max(r.Ir,r.Ia,0.05), ox=20, oy=86;
@@ -288,7 +289,7 @@ function render(){
   else if(sh&&V>=22) s=`<div class="st bad">✖ Humo: las espiras en corto se queman. El hierro está a ${f(r.B,2)} T, por debajo del codo (1,35 T): no es saturación. Mira P₀: ${f(r.P,0)} W de calor.</div>`;
   else if(sh) s=`<div class="st bad">✖ ${f(r.I,1)} A con solo ${V} V: la corriente sube en línea recta desde el primer voltio. Eso no lo hace la saturación: son espiras en corto.</div>`;
   else if(r.r>=1.5) s=`<div class="st bad">✖ Saturado: ${f(r.I,1)} A en vacío, ${f(r.r,1)} veces la nominal. Zumba y el bobinado se calienta mucho aunque no haya carga.</div>`;
-  else if(r.B>BK) s=`<div class="st warn">⚠ Pasado el codo (${f(vpe,2)} V por espira): un poco más de tensión y la corriente se dispara.</div>`;
+  else if(r.B>BK) s=r.r<0.5?`<div class="st warn">⚠ En el codo (${f(vpe,2)} V por espira): todavía va bien, pero con un poco más de tensión la corriente se dispara.</div>`:`<div class="st warn">⚠ Pasado el codo (${f(vpe,2)} V por espira): la corriente ya sube muy deprisa.</div>`;
   else if(r.B>BK*0.9) s=`<div class="st warn">⚠ Cerca del codo: I₀ empieza a subir más deprisa.</div>`;
   else s=`<div class="st ok">✔ Zona recta: la corriente de vacío es pequeña. El hierro trabaja bien.</div>`;
   if(V>C.V1t&&!sh) s+=`<div class="st warn" style="font-weight:400">Estás por encima de los ${C.V1t} V de la tabla: esto no se midió, es lo que habría pasado.</div>`;
