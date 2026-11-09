@@ -227,6 +227,9 @@ details.grp summary{color:var(--ink)}
 (function(){
   // ====== LO ÚNICO QUE HAY QUE CAMBIAR AL PASAR DE TEMA: el número del tema que se está dando ======
   var HOY = 3;
+  // Temas cuyas animaciones todavía NO se enlazan desde la web (las páginas siguen en su sitio, pero aquí no hay acceso).
+  // Para volver a enseñarlas, quita su número de la lista: var SIN_ANIM = [];
+  var SIN_ANIM = [5, 6];
 
   // Los temas del curso. pdf: los apuntes; prac: la práctica que va con el tema; chips: otros accesos
   var PDF13 = 'temas/T1_T3_Electromagnetismo_Transformadores_Maquinas.pdf';
@@ -306,7 +309,7 @@ details.grp summary{color:var(--ink)}
   ANIM.forEach(function(a){ a.p.sort(cmp); }); ANIM.sort(function(a,b){ return cmp(a.p[0], b.p[0]); });
   // la etiqueta de cada animación: su punto de los apuntes («3.15», «1.2 y 1.3», «1.3 a 1.5»)
   function etq(a){ return a.p.length===1 ? a.p[0] : a.p.length===2 ? a.p.join(' y ') : a.p[0]+' a '+a.p[a.p.length-1]; }
-  function delTema(n){ return ANIM.filter(function(a){ return +a.p[0].split('.')[0] === n; }); }
+  function delTema(n){ return SIN_ANIM.indexOf(n) >= 0 ? [] : ANIM.filter(function(a){ return +a.p[0].split('.')[0] === n; }); }
   function nAnim(k){ return k + (k===1 ? ' animación' : ' animaciones'); }
 
   // ---- pestaña Animaciones: un desplegable por tema; abierto el que se está dando ----

@@ -31,6 +31,7 @@ subir.bat                  publica todo con doble clic
 - Arriba, el bloque **«Ahora en clase»**: apuntes, práctica y animaciones (en orden) del tema que se está dando. Al pasar de tema solo se cambia un número: **`var HOY = 3;`**, al principio del primer `<script>`. Debajo está la lista `T` de los temas (apuntes, práctica y otros accesos de cada uno).
 - Después, una fila de pestañas: `#inicio` («Por temas», por defecto), `#temas` (se llama «Apuntes»), `#practicas`, `#animaciones` y `#tests`. Las secciones tienen id `sec-inicio`, `sec-temas`… para que el navegador no salte al abrir con `#…`.
 - **«Por temas»**: el tema de `HOY` y los anteriores, el último arriba; los que aún no se han dado salen debajo, en «Más adelante».
+- **Temas sin enlazar**: `var SIN_ANIM = [5, 6];` (justo debajo de `HOY`) son los temas cuyas animaciones todavía no se enseñan: no salen en la pestaña Animaciones ni en «Por temas». Las páginas siguen en la raíz y se abren con su dirección, pero desde la web no hay acceso. Para volver a enseñarlas, se quita su número de la lista.
 - **Animaciones**: un desplegable por tema (abierto el de `HOY`). Las tarjetas salen de la lista `ANIM` (archivo, título, descripción y puntos de los apuntes): para añadir una animación, una línea ahí. El número de la tarjeta es su punto de los apuntes («3.15», «1.2 y 1.3», «1.3 a 1.5»).
 - Prácticas y Apuntes: un recuadro por PDF con enlace `download`. Si el PDF todavía no está en el servidor, un `fetch HEAD` lo marca en gris como «próximamente» (también en «Ahora en clase» y en «Por temas»).
 - **Marca «✓ vista»**: las animaciones que ya se han abierto en ese navegador salen marcadas. La pone la portada al tocar una tarjeta y cada animación al abrirse (también desde un QR). No se marca en los tests.
@@ -53,6 +54,8 @@ Los cuatro llevan el mismo motor que los de Automatismos (`DATA`, `IMGS`, `show`
 - Vuelven a `index.html#tests` (botón, Esc y Retroceso).
 
 ## Animaciones
+Las de los Temas 5 y 6 están hechas pero **sin enlazar desde la portada** (`SIN_ANIM`), hasta que se den esos temas.
+
 | Grupo | Paso | Archivo | Qué muestra |
 |---|---|---|---|
 | Tema 1 | 1.2 | `imanes_lineas.html` | Un imán, dos que se atraen y dos que se repelen; líneas, limaduras y brújula |
