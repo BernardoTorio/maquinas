@@ -71,21 +71,51 @@ svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif}
 .lcd span{font-size:.9rem;text-align:right;line-height:1.3}
 .box li.part b{color:var(--acc)}
 
+/* --- tira del tema, «Para qué sirve» y botón Siguiente (como las del Tema 6 de Automatismos) --- */
+.tnav{--tok:#2E8B3E;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tnav a{text-decoration:none;color:var(--ink);border:2px solid var(--line);border-radius:10px;font-weight:700;background:var(--card);min-height:44px;display:flex;align-items:center;justify-content:center;padding:0 12px}
+.tnav a:hover{border-color:var(--acc)}
+.tnav .where{flex:1;text-align:center;font-weight:700;color:var(--muted);font-size:.95rem}
+.tnav .steps{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px}
+.tnav .steps a{flex:1 1 auto;min-width:44px;padding:0 4px;font-size:.95rem;white-space:nowrap}
+.tnav .steps a.cur{background:#1F4E79;border-color:#1F4E79;color:#fff}
+.tnav a.off{visibility:hidden}
+.tnav .steps a.seen::after{content:"✓";margin-left:3px;font-size:.78em;color:var(--tok)}
+.tnav .steps a.cur.seen::after{color:#fff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tnav{--tok:#6fd98a}}
+:root[data-theme="dark"] .tnav{--tok:#6fd98a}
+.nextbig{display:flex;align-items:center;justify-content:center;margin:18px 0 0;padding:16px;border-radius:12px;background:#1F4E79;color:#fff;font-weight:700;font-size:1.1rem;text-decoration:none;text-align:center}
+.nextbig:hover{background:#163a5c}
+.box.pqs{border-left:6px solid var(--acc)}
+.box.pqs p{margin:0}
+.boxes>.pqs.full{grid-column:1 / -1}
+@media (min-width:621px){
+  .boxes.b3{grid-template-rows:auto 1fr}
+  .boxes.b3>:first-child{grid-column:1;grid-row:1}
+  .boxes.b3>.pqs{grid-column:1;grid-row:2}
+  .boxes.b3>.pqs+*{grid-column:2;grid-row:1 / span 2}
+}
+@media (max-width:620px){.crumbs{display:none}.theme,.themebtn{margin-left:auto}
+  .tnav>a{padding:0 9px}.tnav .where{font-size:.86rem}
+  .tnav .steps a.seen{position:relative}.tnav .steps a.seen::after{position:absolute;top:1px;right:3px;margin:0;font-size:.62em}}
+/* --- fin de la tira del tema --- */
 </style>
 </head>
 <body>
 <main>
   <nav class="bar" aria-label="Navegación">
-    <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
-    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › Tema 6 › <b>6.1 · 6.2 Variador de frecuencia</b></span>
+    <a class="back" href="index.html#animaciones" aria-label="Volver al índice de animaciones">← Índice</a>
+    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 6 › <b>6.1 · 6.2 Variador de frecuencia</b></span>
     <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
   </nav>
+  <nav class="tnav" aria-label="Animaciones del Tema 6"><a class="tarr off" aria-hidden="true" tabindex="-1">‹ 6.1 y 6.2</a><span class="where">Tema 6 · 1 de 2</span><a class="tarr" href="cargas.html" aria-label="Siguiente: Tipos de carga">6.3 ›</a><div class="steps"><a href="variador.html" class="cur" aria-current="page" title="Así funciona un variador">6.1 y 6.2</a><a href="cargas.html" title="Tipos de carga">6.3</a></div></nav>
   <header class="top"><small>Máquinas Eléctricas 2MB · Tema 6 · Puntos 6.1 y 6.2 (y 5.8)</small><h1>Así funciona un variador de frecuencia</h1><p class="sub">Da la marcha, gira el potenciómetro y mira qué pasa dentro del variador y en el motor.</p></header>
   <div class="grid">
     <div class="left">
       <div class="stage"><svg id="sv" viewBox="0 0 680 500" role="img" aria-label="Bloques del variador con sus formas de onda, motor y gráfica tensión-frecuencia"><g id="g"></g></svg></div>
-      <div class="boxes">
+      <div class="boxes b3">
         <div class="box" id="exp"></div>
+<div class="box pqs"><h2>Para qué sirve</h2><p>Para entender <b>qué hace un variador por dentro</b>: pasa la alterna de la red a continua y con ella crea otra alterna de la frecuencia que elijas. Así se cambia la velocidad del motor. Fíjate en que tiene que subir la tensión a la vez que la frecuencia (control V/f).</p></div>
         <div class="box blue"><h2>Partes del variador</h2><ul>
           <li class="part"><b>Rectificador</b>: pasa la alterna de la red a continua.</li>
           <li class="part"><b>Bus de continua</b>: condensadores que alisan y guardan energía (¡siguen cargados un rato al desconectar!).</li>
@@ -105,10 +135,10 @@ svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif}
     </aside>
   </div>
 
+  <a class="nextbig" href="cargas.html">Siguiente: 6.3 Tipos de carga →</a>
 </main>
 <script>
 // navegación y tema (común a todas las páginas)
-document.addEventListener('keydown',e=>{if(e.key==='Escape')location.href='index.html';});
 (function(){const b=document.getElementById('themeBtn'),r=document.documentElement;
  const cur=()=>r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
  const lab=()=>{b.textContent=cur()==='dark'?'☀ Modo claro':'☾ Modo oscuro';};
@@ -194,6 +224,17 @@ $('rF').oninput=e=>{fset=+e.target.value;texts();};
 document.querySelectorAll('#sC button').forEach(b=>b.onclick=()=>{mode=b.dataset.v;document.querySelectorAll('#sC button').forEach(x=>x.setAttribute('aria-pressed',x===b));texts();});
 texts();requestAnimationFrame(frame);
 
+</script>
+<script>(function(){ // tira del tema: esta animación queda como «vista» y las ya abiertas llevan ✓; Esc y Retroceso vuelven al índice
+  try {
+    var me = location.pathname.split('/').pop(); if (me && !/\.html$/.test(me)) me += '.html';
+    if (me) localStorage.setItem('maq-visto:' + me, '1');
+    document.querySelectorAll('.tnav .steps a').forEach(function(a){
+      if (localStorage.getItem('maq-visto:' + a.getAttribute('href'))) { a.classList.add('seen'); a.title = (a.title ? a.title + ' · ' : '') + 'ya la has visto'; }
+    });
+  } catch(e) {}
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' || e.key === 'Backspace') { var t = e.target.tagName; if (t !== 'INPUT' && t !== 'TEXTAREA' && t !== 'SELECT') { e.preventDefault(); location.href = 'index.html#animaciones'; } } });
+})();
 </script>
 </body>
 </html>

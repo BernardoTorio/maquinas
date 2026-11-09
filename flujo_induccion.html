@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<script>try{const t=localStorage.getItem('maq-tema');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <style>
 :root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--flux:#6A9A1F;--ind:#C0602B;--grid:#e3e8ee;
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -56,11 +57,50 @@ button:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
 
 .back{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
 .back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+/* --- barra de arriba: volver, dónde estás y modo claro/oscuro (como en los Temas 5 y 6) --- */
+.tbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.tbar .back{margin:0}
+.crumbs{font-size:.88rem;color:var(--muted);flex:1 1 auto}
+.crumbs a{color:var(--muted)} .crumbs b{color:var(--ink)}
+.theme{font:inherit;font-size:.9rem;font-weight:700;padding:7px 12px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+/* --- tira del tema, «Para qué sirve» y botón Siguiente (como las del Tema 6 de Automatismos) --- */
+.tnav{--tok:#2E8B3E;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tnav a{text-decoration:none;color:var(--ink);border:2px solid var(--line);border-radius:10px;font-weight:700;background:var(--card);min-height:44px;display:flex;align-items:center;justify-content:center;padding:0 12px}
+.tnav a:hover{border-color:var(--acc)}
+.tnav .where{flex:1;text-align:center;font-weight:700;color:var(--muted);font-size:.95rem}
+.tnav .steps{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px}
+.tnav .steps a{flex:1 1 auto;min-width:44px;padding:0 4px;font-size:.95rem;white-space:nowrap}
+.tnav .steps a.cur{background:#1F4E79;border-color:#1F4E79;color:#fff}
+.tnav a.off{visibility:hidden}
+.tnav .steps a.seen::after{content:"✓";margin-left:3px;font-size:.78em;color:var(--tok)}
+.tnav .steps a.cur.seen::after{color:#fff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tnav{--tok:#6fd98a}}
+:root[data-theme="dark"] .tnav{--tok:#6fd98a}
+.nextbig{display:flex;align-items:center;justify-content:center;margin:18px 0 0;padding:16px;border-radius:12px;background:#1F4E79;color:#fff;font-weight:700;font-size:1.1rem;text-decoration:none;text-align:center}
+.nextbig:hover{background:#163a5c}
+.box.pqs{border-left:6px solid var(--acc)}
+.box.pqs p{margin:0}
+.boxes>.pqs.full{grid-column:1 / -1}
+@media (min-width:621px){
+  .boxes.b3{grid-template-rows:auto 1fr}
+  .boxes.b3>:first-child{grid-column:1;grid-row:1}
+  .boxes.b3>.pqs{grid-column:1;grid-row:2}
+  .boxes.b3>.pqs+*{grid-column:2;grid-row:1 / span 2}
+}
+@media (max-width:620px){.crumbs{display:none}.theme,.themebtn{margin-left:auto}
+  .tnav>a{padding:0 9px}.tnav .where{font-size:.86rem}
+  .tnav .steps a.seen{position:relative}.tnav .steps a.seen::after{position:absolute;top:1px;right:3px;margin:0;font-size:.62em}}
+/* --- fin de la tira del tema --- */
 </style>
 </head>
 <body>
 <main>
-  <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+  <nav class="tbar" aria-label="Navegación">
+    <a class="back" href="index.html#animaciones" title="Volver al índice (tecla Esc)">← Índice</a>
+    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 1 › <b>1.2 y 1.3 Campo, flujo e inducción</b></span>
+    <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
+  </nav>
+  <nav class="tnav" aria-label="Animaciones del Tema 1"><a class="tarr" href="imanes_lineas.html" aria-label="Anterior: Imanes y líneas de fuerza">‹ 1.2</a><span class="where">Tema 1 · 2 de 9</span><a class="tarr" href="circuito_magnetico.html" aria-label="Siguiente: La bobina y el circuito magnético">1.3 a 1.5 ›</a><div class="steps"><a href="imanes_lineas.html" title="Imanes y líneas de fuerza">1.2</a><a href="flujo_induccion.html" class="cur" aria-current="page" title="Campo, flujo e inducción">1.2 y 1.3</a><a href="circuito_magnetico.html" title="La bobina y el circuito magnético">1.3 a 1.5</a><a href="campo_corriente.html" title="La corriente crea un campo magnético">1.6</a><a href="fuerza_conductor.html" title="Fuerza sobre un conductor con corriente">1.7</a><a href="induccion.html" title="Tensión y corriente inducidas">1.8</a><a href="curva_magnetizacion.html" title="Curva de magnetización">1.9</a><a href="histeresis.html" title="Histéresis magnética">1.10</a><a href="foucault.html" title="Corrientes de Foucault">1.11</a></div></nav>
   <header class="top">
     <small>Máquinas Eléctricas 2MB · Tema 1 · Puntos 1.2 y 1.3</small>
     <h1>Campo, flujo e inducción</h1>
@@ -97,6 +137,7 @@ button:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
           <li><b>Reto:</b> consigue unas 20 líneas de flujo con la ventana pequeña y luego con la grande. ¿Dónde tienes que poner cada una? ¿En cuál de los dos sitios hay más inducción?</li>
         </ul>
       </div>
+        <div class="box pqs full"><h2>Para qué sirve</h2><p>Para <b>no confundir flujo con inducción</b>. El flujo es el total de líneas que pasan (weber); la inducción, lo juntas que van en cada sitio (tesla). La inducción es la que usarás al calcular un trafo: dice si el hierro trabaja bien o se satura.</p></div>
     </div>
     </div>
 
@@ -133,6 +174,7 @@ button:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
 
     </aside>
   </div>
+  <a class="nextbig" href="circuito_magnetico.html">Siguiente: 1.3 a 1.5 La bobina y el circuito magnético →</a>
 </main>
 
 <script>
@@ -191,6 +233,21 @@ document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{
 document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{
   mag=+b.dataset.m; document.querySelectorAll('[data-m]').forEach(x=>x.setAttribute('aria-pressed',x===b)); update();});
 update();
+</script>
+<script>(function(){ // tira del tema: esta animación queda como «vista» y las ya abiertas llevan ✓; Esc y Retroceso vuelven al índice
+  try {
+    var me = location.pathname.split('/').pop(); if (me && !/\.html$/.test(me)) me += '.html';
+    if (me) localStorage.setItem('maq-visto:' + me, '1');
+    document.querySelectorAll('.tnav .steps a').forEach(function(a){
+      if (localStorage.getItem('maq-visto:' + a.getAttribute('href'))) { a.classList.add('seen'); a.title = (a.title ? a.title + ' · ' : '') + 'ya la has visto'; }
+    });
+  } catch(e) {}
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' || e.key === 'Backspace') { var t = e.target.tagName; if (t !== 'INPUT' && t !== 'TEXTAREA' && t !== 'SELECT') { e.preventDefault(); location.href = 'index.html#animaciones'; } } });
+})();
+(function(){const b=document.getElementById('themeBtn'),r=document.documentElement;
+ const cur=()=>r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+ const lab=()=>{b.textContent=cur()==='dark'?'☀ Modo claro':'☾ Modo oscuro';};
+ b.onclick=()=>{const n=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('maq-tema',n);}catch(e){}lab();};lab();})();
 </script>
 </body>
 </html>

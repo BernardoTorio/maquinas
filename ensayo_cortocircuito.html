@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<script>try{const t=localStorage.getItem('maq-tema');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <style>
 :root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -58,11 +59,50 @@ button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offse
 
 .back{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
 .back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+/* --- barra de arriba: volver, dónde estás y modo claro/oscuro (como en los Temas 5 y 6) --- */
+.tbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.tbar .back{margin:0}
+.crumbs{font-size:.88rem;color:var(--muted);flex:1 1 auto}
+.crumbs a{color:var(--muted)} .crumbs b{color:var(--ink)}
+.theme{font:inherit;font-size:.9rem;font-weight:700;padding:7px 12px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+/* --- tira del tema, «Para qué sirve» y botón Siguiente (como las del Tema 6 de Automatismos) --- */
+.tnav{--tok:#2E8B3E;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tnav a{text-decoration:none;color:var(--ink);border:2px solid var(--line);border-radius:10px;font-weight:700;background:var(--card);min-height:44px;display:flex;align-items:center;justify-content:center;padding:0 12px}
+.tnav a:hover{border-color:var(--acc)}
+.tnav .where{flex:1;text-align:center;font-weight:700;color:var(--muted);font-size:.95rem}
+.tnav .steps{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px}
+.tnav .steps a{flex:1 1 auto;min-width:44px;padding:0 4px;font-size:.95rem;white-space:nowrap}
+.tnav .steps a.cur{background:#1F4E79;border-color:#1F4E79;color:#fff}
+.tnav a.off{visibility:hidden}
+.tnav .steps a.seen::after{content:"✓";margin-left:3px;font-size:.78em;color:var(--tok)}
+.tnav .steps a.cur.seen::after{color:#fff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tnav{--tok:#6fd98a}}
+:root[data-theme="dark"] .tnav{--tok:#6fd98a}
+.nextbig{display:flex;align-items:center;justify-content:center;margin:18px 0 0;padding:16px;border-radius:12px;background:#1F4E79;color:#fff;font-weight:700;font-size:1.1rem;text-decoration:none;text-align:center}
+.nextbig:hover{background:#163a5c}
+.box.pqs{border-left:6px solid var(--acc)}
+.box.pqs p{margin:0}
+.boxes>.pqs.full{grid-column:1 / -1}
+@media (min-width:621px){
+  .boxes.b3{grid-template-rows:auto 1fr}
+  .boxes.b3>:first-child{grid-column:1;grid-row:1}
+  .boxes.b3>.pqs{grid-column:1;grid-row:2}
+  .boxes.b3>.pqs+*{grid-column:2;grid-row:1 / span 2}
+}
+@media (max-width:620px){.crumbs{display:none}.theme,.themebtn{margin-left:auto}
+  .tnav>a{padding:0 9px}.tnav .where{font-size:.86rem}
+  .tnav .steps a.seen{position:relative}.tnav .steps a.seen::after{position:absolute;top:1px;right:3px;margin:0;font-size:.62em}}
+/* --- fin de la tira del tema --- */
 </style>
 </head>
 <body>
 <main>
-  <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
+  <nav class="tbar" aria-label="Navegación">
+    <a class="back" href="index.html#animaciones" title="Volver al índice (tecla Esc)">← Índice</a>
+    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 3 › <b>3.16 Ensayo de cortocircuito</b></span>
+    <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
+  </nav>
+  <nav class="tnav" aria-label="Animaciones del Tema 3"><a class="tarr" href="ensayo_vacio.html" aria-label="Anterior: Ensayo de vacío">‹ 3.15</a><span class="where">Tema 3 · 5 de 7</span><a class="tarr" href="ensayo_carga.html" aria-label="Siguiente: Ensayo de carga">3.17 ›</a><div class="steps"><a href="trafo_funcionamiento.html" title="Cómo funciona un transformador">3.12</a><a href="homologos.html" title="Terminales homólogos">3.13</a><a href="tipos_trafo.html" title="Tipos de transformadores">3.14</a><a href="ensayo_vacio.html" title="Ensayo de vacío">3.15</a><a href="ensayo_cortocircuito.html" class="cur" aria-current="page" title="Ensayo de cortocircuito">3.16</a><a href="ensayo_carga.html" title="Ensayo de carga">3.17</a><a href="aislamiento.html" title="Pruebas de aislamiento">3.18</a></div></nav>
   <header class="top"><small>Máquinas Eléctricas 2MB · Tema 3 · Punto 3.16</small><h1>Ensayo de cortocircuito</h1><p class="sub">Empieza con la fuente a cero y sube la tensión poco a poco hasta la corriente nominal. El secundario está en cortocircuito.</p></header>
   
   <div class="grid">
@@ -71,7 +111,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offse
 <span><svg width="22" height="22" viewBox="-11 -11 22 22"><circle r="10" fill="var(--card)" stroke="currentColor" stroke-width="2"/><text y="5" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">V</text></svg> voltímetro</span>
 <span><svg width="22" height="22" viewBox="-11 -11 22 22"><rect x="-10" y="-10" width="20" height="20" fill="var(--card)" stroke="currentColor" stroke-width="2"/><text y="5" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">W</text></svg> vatímetro</span>
 <span id="trInfo" style="font-weight:700"></span></div></div>
-      <div class="boxes"><div class="box" id="exp"></div>
+      <div class="boxes b3"><div class="box" id="exp"></div>
+<div class="box pqs"><h2>Para qué sirve</h2><p>Para saber <b>las pérdidas en el cobre</b>: el calor que dan los bobinados cuando pasa la corriente nominal. Se hace con el secundario en cortocircuito y muy poca tensión, subiendo siempre desde cero. Con este ensayo y el de vacío se conocen las dos pérdidas del transformador.</p></div>
 <div class="box blue"><h2>Qué se obtiene</h2><ul>
 <li><b>Vatímetro</b>: las <b>pérdidas en el cobre</b> (el calor en los devanados) a la corriente nominal.</li>
 <li><b>Voltímetro</b>: la <b>tensión de cortocircuito</b>, la que hace falta para que circule la corriente nominal. Es muy pequeña comparada con la nominal.</li>
@@ -81,6 +122,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offse
 <div class="sl"><label for="rU">Tensión de la fuente</label><input id="rU" type="range" min="0" max="10" step="0.05" value="0"></div>
 <div class="inset" style="padding:10px 12px" id="steps"></div></aside>
   </div>
+  <a class="nextbig" href="ensayo_carga.html">Siguiente: 3.17 Ensayo de carga →</a>
 </main>
 <script>
 const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
@@ -142,6 +184,21 @@ $('bOn').onclick=()=>{if(!on&&+$('rU').value>0){warn='Primero pon la fuente a ce
   on=!on;$('bOn').textContent=on?'Desconectar':'Conectar';$('bOn').classList.toggle('on',on);draw();};
 $('rU').oninput=draw;setupSel(pick);
 
+</script>
+<script>(function(){ // tira del tema: esta animación queda como «vista» y las ya abiertas llevan ✓; Esc y Retroceso vuelven al índice
+  try {
+    var me = location.pathname.split('/').pop(); if (me && !/\.html$/.test(me)) me += '.html';
+    if (me) localStorage.setItem('maq-visto:' + me, '1');
+    document.querySelectorAll('.tnav .steps a').forEach(function(a){
+      if (localStorage.getItem('maq-visto:' + a.getAttribute('href'))) { a.classList.add('seen'); a.title = (a.title ? a.title + ' · ' : '') + 'ya la has visto'; }
+    });
+  } catch(e) {}
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' || e.key === 'Backspace') { var t = e.target.tagName; if (t !== 'INPUT' && t !== 'TEXTAREA' && t !== 'SELECT') { e.preventDefault(); location.href = 'index.html#animaciones'; } } });
+})();
+(function(){const b=document.getElementById('themeBtn'),r=document.documentElement;
+ const cur=()=>r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+ const lab=()=>{b.textContent=cur()==='dark'?'☀ Modo claro':'☾ Modo oscuro';};
+ b.onclick=()=>{const n=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('maq-tema',n);}catch(e){}lab();};lab();})();
 </script>
 </body>
 </html>

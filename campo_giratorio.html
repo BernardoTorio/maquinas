@@ -70,22 +70,52 @@ svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif}
 .inset svg{display:block;width:100%;height:auto}
 .cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
 
+/* --- tira del tema, «Para qué sirve» y botón Siguiente (como las del Tema 6 de Automatismos) --- */
+.tnav{--tok:#2E8B3E;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tnav a{text-decoration:none;color:var(--ink);border:2px solid var(--line);border-radius:10px;font-weight:700;background:var(--card);min-height:44px;display:flex;align-items:center;justify-content:center;padding:0 12px}
+.tnav a:hover{border-color:var(--acc)}
+.tnav .where{flex:1;text-align:center;font-weight:700;color:var(--muted);font-size:.95rem}
+.tnav .steps{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px}
+.tnav .steps a{flex:1 1 auto;min-width:44px;padding:0 4px;font-size:.95rem;white-space:nowrap}
+.tnav .steps a.cur{background:#1F4E79;border-color:#1F4E79;color:#fff}
+.tnav a.off{visibility:hidden}
+.tnav .steps a.seen::after{content:"✓";margin-left:3px;font-size:.78em;color:var(--tok)}
+.tnav .steps a.cur.seen::after{color:#fff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tnav{--tok:#6fd98a}}
+:root[data-theme="dark"] .tnav{--tok:#6fd98a}
+.nextbig{display:flex;align-items:center;justify-content:center;margin:18px 0 0;padding:16px;border-radius:12px;background:#1F4E79;color:#fff;font-weight:700;font-size:1.1rem;text-decoration:none;text-align:center}
+.nextbig:hover{background:#163a5c}
+.box.pqs{border-left:6px solid var(--acc)}
+.box.pqs p{margin:0}
+.boxes>.pqs.full{grid-column:1 / -1}
+@media (min-width:621px){
+  .boxes.b3{grid-template-rows:auto 1fr}
+  .boxes.b3>:first-child{grid-column:1;grid-row:1}
+  .boxes.b3>.pqs{grid-column:1;grid-row:2}
+  .boxes.b3>.pqs+*{grid-column:2;grid-row:1 / span 2}
+}
+@media (max-width:620px){.crumbs{display:none}.theme,.themebtn{margin-left:auto}
+  .tnav>a{padding:0 9px}.tnav .where{font-size:.86rem}
+  .tnav .steps a.seen{position:relative}.tnav .steps a.seen::after{position:absolute;top:1px;right:3px;margin:0;font-size:.62em}}
+/* --- fin de la tira del tema --- */
 </style>
 </head>
 <body>
 <main>
   <nav class="bar" aria-label="Navegación">
-    <a class="back" href="index.html" aria-label="Volver al índice de animaciones">← Índice</a>
-    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › Tema 5 › <b>5.4 Campo giratorio</b></span>
+    <a class="back" href="index.html#animaciones" aria-label="Volver al índice de animaciones">← Índice</a>
+    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 5 › <b>5.4 Campo giratorio</b></span>
     <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
   </nav>
+  <nav class="tnav" aria-label="Animaciones del Tema 5"><a class="tarr off" aria-hidden="true" tabindex="-1">‹ 5.4</a><span class="where">Tema 5 · 1 de 4</span><a class="tarr" href="curva_par.html" aria-label="Siguiente: Par, velocidad y corriente del motor">5.4.2 a 5.8 ›</a><div class="steps"><a href="campo_giratorio.html" class="cur" aria-current="page" title="Campo magnético giratorio">5.4</a><a href="curva_par.html" title="Par, velocidad y corriente del motor">5.4.2 a 5.8</a><a href="placa_bornes.html" title="Placa de bornes: estrella o triángulo">5.6</a><a href="arranques.html" title="Arranques del motor">5.7</a></div></nav>
   <header class="top"><small>Máquinas Eléctricas 2MB · Tema 5 · Punto 5.4</small><h1>El campo magnético giratorio</h1><p class="sub">Tres bobinas quietas, tres fases… y un campo que da vueltas. Conecta el motor y mira qué pasa en el rótor.</p></header>
   <div class="grid">
     <div class="left">
       <div class="stage"><svg id="sv" viewBox="0 0 640 548" role="img" aria-label="Corte del motor: estátor con las bobinas de las tres fases, campo giratorio y rótor de jaula"><g id="g"></g></svg>
         <div class="legend"><span><b style="color:var(--ph1)">●</b> fase 1</span><span><b style="color:var(--ph2)">●</b> fase 2</span><span><b style="color:var(--ph3)">●</b> fase 3</span><span>⊙ corriente que sale · ⊗ que entra</span><span><b style="color:var(--acc)">➜</b> campo (de S a N)</span><span>barras del rótor: <b style="color:var(--cur)">rojo</b> / <b style="color:var(--field)">azul</b> = corriente inducida</span></div></div>
-      <div class="boxes">
+      <div class="boxes b3">
         <div class="box" id="exp"></div>
+<div class="box pqs"><h2>Para qué sirve</h2><p>Para entender <b>por qué gira un motor trifásico</b>: las tres fases crean un campo que da vueltas, y el rótor lo sigue un poco más lento. De aquí sale lo demás: la velocidad depende de los polos y de la frecuencia, e intercambiando dos fases el motor gira al revés.</p></div>
         <div class="box blue"><h2>Cómo funciona, en 4 pasos</h2><ol id="steps">
           <li>El estátor crea un <b>campo giratorio</b>.</li>
           <li>El campo "barre" las barras del rótor: se <b>induce tensión</b> en ellas.</li>
@@ -105,10 +135,10 @@ svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif}
     </aside>
   </div>
 
+  <a class="nextbig" href="curva_par.html">Siguiente: 5.4.2 a 5.8 Par, velocidad y corriente del motor →</a>
 </main>
 <script>
 // navegación y tema (común a todas las páginas)
-document.addEventListener('keydown',e=>{if(e.key==='Escape')location.href='index.html';});
 (function(){const b=document.getElementById('themeBtn'),r=document.documentElement;
  const cur=()=>r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
  const lab=()=>{b.textContent=cur()==='dark'?'☀ Modo claro':'☾ Modo oscuro';};
@@ -220,6 +250,17 @@ $('bSw').onclick=()=>{sw=!sw;$('bSw').setAttribute('aria-pressed',sw);ton=Math.m
 $('bLoad').onclick=()=>{load=!load;$('bLoad').setAttribute('aria-pressed',load);$('bLoad').textContent=load?'Quitar carga':'Poner carga';texts();};
 texts();requestAnimationFrame(frame);
 
+</script>
+<script>(function(){ // tira del tema: esta animación queda como «vista» y las ya abiertas llevan ✓; Esc y Retroceso vuelven al índice
+  try {
+    var me = location.pathname.split('/').pop(); if (me && !/\.html$/.test(me)) me += '.html';
+    if (me) localStorage.setItem('maq-visto:' + me, '1');
+    document.querySelectorAll('.tnav .steps a').forEach(function(a){
+      if (localStorage.getItem('maq-visto:' + a.getAttribute('href'))) { a.classList.add('seen'); a.title = (a.title ? a.title + ' · ' : '') + 'ya la has visto'; }
+    });
+  } catch(e) {}
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' || e.key === 'Backspace') { var t = e.target.tagName; if (t !== 'INPUT' && t !== 'TEXTAREA' && t !== 'SELECT') { e.preventDefault(); location.href = 'index.html#animaciones'; } } });
+})();
 </script>
 </body>
 </html>

@@ -91,15 +91,44 @@ svg .mut{fill:var(--muted)}
 .m.ph{flex:0 0 auto;padding:4px 6px}
 .m.ph svg{display:block;width:190px;height:auto}
 .sum td.b{font-weight:700}
+/* --- tira del tema, «Para qué sirve» y botón Siguiente (como las del Tema 6 de Automatismos) --- */
+.tnav{--tok:#2E8B3E;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tnav a{text-decoration:none;color:var(--ink);border:2px solid var(--line);border-radius:10px;font-weight:700;background:var(--card);min-height:44px;display:flex;align-items:center;justify-content:center;padding:0 12px}
+.tnav a:hover{border-color:var(--acc)}
+.tnav .where{flex:1;text-align:center;font-weight:700;color:var(--muted);font-size:.95rem}
+.tnav .steps{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px}
+.tnav .steps a{flex:1 1 auto;min-width:44px;padding:0 4px;font-size:.95rem;white-space:nowrap}
+.tnav .steps a.cur{background:#1F4E79;border-color:#1F4E79;color:#fff}
+.tnav a.off{visibility:hidden}
+.tnav .steps a.seen::after{content:"✓";margin-left:3px;font-size:.78em;color:var(--tok)}
+.tnav .steps a.cur.seen::after{color:#fff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tnav{--tok:#6fd98a}}
+:root[data-theme="dark"] .tnav{--tok:#6fd98a}
+.nextbig{display:flex;align-items:center;justify-content:center;margin:18px 0 0;padding:16px;border-radius:12px;background:#1F4E79;color:#fff;font-weight:700;font-size:1.1rem;text-decoration:none;text-align:center}
+.nextbig:hover{background:#163a5c}
+.box.pqs{border-left:6px solid var(--acc)}
+.box.pqs p{margin:0}
+.boxes>.pqs.full{grid-column:1 / -1}
+@media (min-width:621px){
+  .boxes.b3{grid-template-rows:auto 1fr}
+  .boxes.b3>:first-child{grid-column:1;grid-row:1}
+  .boxes.b3>.pqs{grid-column:1;grid-row:2}
+  .boxes.b3>.pqs+*{grid-column:2;grid-row:1 / span 2}
+}
+@media (max-width:620px){.crumbs{display:none}.theme,.themebtn{margin-left:auto}
+  .tnav>a{padding:0 9px}.tnav .where{font-size:.86rem}
+  .tnav .steps a.seen{position:relative}.tnav .steps a.seen::after{position:absolute;top:1px;right:3px;margin:0;font-size:.62em}}
+/* --- fin de la tira del tema --- */
 </style>
 </head>
 <body>
 <main>
   <header class="topbar">
-    <a class="back" href="index.html" aria-label="Volver al índice">← Índice</a>
-    <nav class="crumbs" aria-label="Dónde estás"><a href="index.html">Máquinas Eléctricas</a> › Taller › <b>Problemas de los trafos</b></nav>
+    <a class="back" href="index.html#practicas" aria-label="Volver al índice">← Índice</a>
+    <nav class="crumbs" aria-label="Dónde estás"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#practicas">Prácticas</a> › Práctica 1 › <b>Problemas de los trafos</b></nav>
     <button id="themeBtn" class="themebtn" type="button" aria-label="Cambiar modo claro u oscuro">🌙</button>
   </header>
+  <nav class="tnav" aria-label="Animaciones de la Práctica 1"><a class="tarr off" aria-hidden="true" tabindex="-1">‹ Anterior</a><span class="where">Práctica 1 · 1 de 4</span><a class="tarr" href="medir.html" aria-label="Siguiente: Cómo medir con calibre y micrómetro">Siguiente ›</a><div class="steps"><a href="problemas_trafos.html" class="cur" aria-current="page" title="Qué les pasó a nuestros trafos">Nuestros trafos</a><a href="medir.html" title="Cómo medir con calibre y micrómetro">Medir</a><a href="ajuste_hierro.html" title="Ajuste del hierro al carrete">Ajuste del hierro</a><a href="calculadora_trafo.html" title="Calculadora de transformadores">Calculadora</a></div></nav>
   <div class="top">
     <small>MÁQUINAS ELÉCTRICAS 2MB · TALLER · PRÁCTICA 1</small>
     <h1>Qué les pasó a nuestros trafos</h1>
@@ -129,6 +158,7 @@ svg .mut{fill:var(--muted)}
   <div class="boxes">
     <div class="box" id="bCase"></div>
     <div class="box" id="bWhy"></div>
+    <div class="box full pqs"><h2>Para qué sirve</h2><p>Para <b>entender los resultados de la práctica</b> y explicarlos en la memoria. Con los datos de las hojas de ensayos se ve qué le pasó a cada trafo y cómo se distingue un núcleo saturado de unas espiras en cortocircuito.</p></div>
     <div class="box k idea"><p><span class="lab">IDEA CLAVE</span>Lo que satura un trafo no es la tensión sola: son los <b>voltios por espira</b> y el <b>hierro</b> que tiene. Con nuestras chapas oxidadas, el codo llega a unos <b>1,35 T</b>.</p>
       <ul><li>Con el carrete lleno (85 chapas), el codo está en unos <b>0,36 V por espira</b>.</li>
       <li>Menos chapas → menos hierro → el codo llega antes (Trafo 1: 56 chapas, codo a 0,24 V por espira).</li>
@@ -149,6 +179,7 @@ svg .mut{fill:var(--muted)}
       <li>A la izquierda, el núcleo se pone naranja y rojo cuando se acerca a la saturación, y el bobinado se calienta. A la derecha, la gráfica con la corriente I<sub>0</sub> en horizontal y la tensión V<sub>1</sub> en vertical, igual que la curva de magnetización del Tema 1 (H en horizontal, B en vertical): la corriente hace de H y la tensión de B. Donde la curva se tumba está el codo. Los puntos huecos son las medidas de la hoja.</li>
       <li>Pulsa <b>Esc</b> para volver al índice.</li></ul></div>
   </div>
+  <a class="nextbig" href="medir.html">Siguiente: Cómo medir con calibre y micrómetro →</a>
 </main>
 <script>
 const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
@@ -321,12 +352,22 @@ $('bUp').onclick=()=>{stop();puffs=[];
 $('bCc').onclick=()=>{cc=!cc;$('bCc').setAttribute('aria-pressed',String(cc));$('bCc').textContent=cc?'Quitar el corto (rebobinado bien)':'Volver a poner el corto';puffs=[];render();};
 $('bLamp').onclick=()=>{lamp=!lamp;$('bLamp').setAttribute('aria-pressed',String(lamp));$('bLamp').textContent=lamp?'Quitar la lámpara':'Conectar la lámpara';render();};
 setInterval(()=>{const r=calc(V);if(puffTick(r)||puffs.length)drawTrafo(r);},60);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'||(e.key==='Backspace'&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)))location.href='index.html';});
 (function(){const b=$('themeBtn'),r=document.documentElement;
  const cur=()=>{const t=r.getAttribute('data-theme');if(t==='light'||t==='dark')return t;return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';};
  const paint=()=>{const d=cur()==='dark';b.textContent=d?'☀️':'🌙';b.setAttribute('aria-label',d?'Cambiar a modo claro':'Cambiar a modo oscuro');};
  b.onclick=()=>{const t=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',t);try{localStorage.setItem('maq-tema',t)}catch(e){}paint();};paint();})();
 pick(CASOS[0]);
+</script>
+<script>(function(){ // tira del tema: esta animación queda como «vista» y las ya abiertas llevan ✓; Esc y Retroceso vuelven al índice
+  try {
+    var me = location.pathname.split('/').pop(); if (me && !/\.html$/.test(me)) me += '.html';
+    if (me) localStorage.setItem('maq-visto:' + me, '1');
+    document.querySelectorAll('.tnav .steps a').forEach(function(a){
+      if (localStorage.getItem('maq-visto:' + a.getAttribute('href'))) { a.classList.add('seen'); a.title = (a.title ? a.title + ' · ' : '') + 'ya la has visto'; }
+    });
+  } catch(e) {}
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' || e.key === 'Backspace') { var t = e.target.tagName; if (t !== 'INPUT' && t !== 'TEXTAREA' && t !== 'SELECT') { e.preventDefault(); location.href = 'index.html#practicas'; } } });
+})();
 </script>
 </body>
 </html>
