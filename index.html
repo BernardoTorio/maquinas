@@ -89,6 +89,7 @@ main{max-width:860px;padding-top:14px}
 .ahora .acts a small{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
 .ahora .ruta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
 .ahora .ruta:last-child{margin-bottom:0}
+@media (max-width:620px){.ahora .ruta::after{content:"";flex:10 0 0}}  /* en el móvil, el último botón de una fila a medias no se estira */
 .ahora .ruta a{flex:1 1 auto;min-width:64px;padding:2px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:52px;border:2px solid var(--line);border-radius:6px;text-decoration:none;color:var(--ink);font-weight:700;background:var(--bg);text-align:center;line-height:1.15}
 .ahora .ruta a:hover,.ahora .acts a:hover{border-color:var(--green)}
 .ahora .rl{font-size:.85rem;color:var(--muted);margin:0 0 6px}
@@ -225,8 +226,9 @@ details.grp summary{color:var(--ink)}
 
 <script>
 (function(){
-  // ====== LO ÚNICO QUE HAY QUE CAMBIAR AL PASAR DE TEMA: el número del tema que se está dando ======
-  var HOY = 3;
+  // ====== LO ÚNICO QUE HAY QUE CAMBIAR AL PASAR DE TEMA: el tema que se está dando ======
+  // Un número (por ejemplo 5) o, si se dan varios temas a la vez, sus números entre corchetes (por ejemplo [1, 3]).
+  var HOY = [1, 3];
   // Temas cuyas animaciones todavía NO se enlazan desde la web (las páginas siguen en su sitio, pero aquí no hay acceso).
   // Para volver a enseñarlas, quita su número de la lista: var SIN_ANIM = [];
   var SIN_ANIM = [5, 6];
@@ -311,11 +313,17 @@ details.grp summary{color:var(--ink)}
   function etq(a){ return a.p.length===1 ? a.p[0] : a.p.length===2 ? a.p.join(' y ') : a.p[0]+' a '+a.p[a.p.length-1]; }
   function delTema(n){ return SIN_ANIM.indexOf(n) >= 0 ? [] : ANIM.filter(function(a){ return +a.p[0].split('.')[0] === n; }); }
   function nAnim(k){ return k + (k===1 ? ' animación' : ' animaciones'); }
+  // los temas de «ahora» (uno o varios) y el último de ellos
+  var HOYS = [].concat(HOY).map(Number).filter(function(n){ return T.some(function(x){ return x.n === n; }); }).sort(function(a,b){ return a-b; });
+  if (!HOYS.length) HOYS = [T[T.length-1].n];
+  var ULT = HOYS[HOYS.length-1];
+  function esHoy(n){ return HOYS.indexOf(n) >= 0; }
+  function lista(a){ return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' y ' + a[a.length-1]; }
 
   // ---- pestaña Animaciones: un desplegable por tema; abierto el que se está dando ----
   document.getElementById('list').innerHTML = T.map(function(x){
     var as = delTema(x.n); if (!as.length) return '';
-    return '<details class="grp"'+(x.n===HOY?' open':'')+'><summary><span class="gt">Tema '+x.n+' · '+x.t+'</span><span class="gn">'+nAnim(as.length)+'</span></summary><div class="cards2">'+
+    return '<details class="grp"'+(esHoy(x.n)?' open':'')+'><summary><span class="gt">Tema '+x.n+' · '+x.t+'</span><span class="gn">'+nAnim(as.length)+'</span></summary><div class="cards2">'+
       as.map(function(a){
         return '<a class="card" href="'+a.f+'"><div class="num">'+etq(a)+'</div><div><h2>'+a.t+'</h2><p>'+a.d+'</p><div class="pts">'+
           a.p.map(function(n){ return '<span class="pt"><b>'+n+'</b> '+(PUNTOS[n]||'')+'</span>'; }).join('')+'</div></div></a>'; }).join('')+
@@ -329,19 +337,28 @@ details.grp summary{color:var(--ink)}
   function link(c){ var f = /\.pdf$/.test(c[1]); return '<a href="'+c[1]+'"'+(f?' download':'')+'>'+c[0]+'</a>'; }
   function tema(x){
     var k = delTema(x.n).length;
-    return '<div class="tema'+(x.n===HOY?' hoy':'')+'"><div class="tn"><small>TEMA</small>'+x.n+'</div><h3>'+x.t+(x.n===HOY?' · <span style="color:var(--green)">ahora</span>':'')+'</h3><div class="chips"><a href="'+x.pdf+'" download>'+(x.pdfn||'Apuntes')+'</a>'+
+    return '<div class="tema'+(esHoy(x.n)?' hoy':'')+'"><div class="tn"><small>TEMA</small>'+x.n+'</div><h3>'+x.t+(esHoy(x.n)?' · <span style="color:var(--green)">ahora</span>':'')+'</h3><div class="chips"><a href="'+x.pdf+'" download>'+(x.pdfn||'Apuntes')+'</a>'+
       (x.prac?'<a href="#practicas">'+x.prac.t+'</a>':'')+(k?'<a href="#animaciones">'+nAnim(k)+'</a>':'')+x.chips.map(link).join('')+'</div></div>';
   }
-  var dados = T.filter(function(x){ return x.n <= HOY; }).reverse(), luego = T.filter(function(x){ return x.n > HOY; });
+  var dados = T.filter(function(x){ return x.n <= ULT; }).reverse(), luego = T.filter(function(x){ return x.n > ULT; });
   document.getElementById('temasList').innerHTML = dados.map(tema).join('') + (luego.length ? '<h2 class="sec mas">Más adelante</h2>' + luego.map(tema).join('') : '');
 
-  // ---- bloque «Ahora en clase»: apuntes, práctica y animaciones del tema, en orden ----
-  var h = T.filter(function(x){ return x.n===HOY; })[0] || T[T.length-1], ruta = delTema(h.n);
+  // ---- bloque «Ahora en clase»: apuntes, práctica y animaciones del tema (o de los temas), en orden ----
+  var hs = T.filter(function(x){ return esHoy(x.n); }), varios = hs.length > 1;
   function paso(a){ return '<a href="'+a.f+'" title="'+a.t+'">'+etq(a)+'</a>'; }
-  document.getElementById('ahora').innerHTML = '<div class="lab">AHORA EN CLASE</div><h2>Tema '+h.n+' · '+h.t+'</h2><div class="acts"><a href="'+h.pdf+'" download><span>Apuntes<small>'+(h.pdfn?h.pdfn.replace(/^Apuntes \(|\)$/g,'')+' · ':'')+'PDF</small></span></a>'+
-    (h.prac?'<a href="'+h.prac.pdf+'" download><span>'+h.prac.t+'<small>Enunciado · PDF</small></span></a>':'')+'</div>'+
-    (ruta.length?'<p class="rl">Las animaciones del tema, en orden:</p><div class="ruta">'+ruta.map(paso).join('')+'</div>':'')+
-    (h.prac&&h.prac.ruta?'<p class="rl">Las de la '+h.prac.t+':</p><div class="ruta">'+h.prac.ruta.map(function(r){ return '<a href="'+r[1]+'">'+r[0]+'</a>'; }).join('')+'</div>':'');
+  function minus(t){ return t.charAt(0).toLowerCase() + t.slice(1); }
+  var pdfs = [], acts = '', rutas = '';
+  hs.forEach(function(h){            // los apuntes, una sola vez si varios temas comparten PDF
+    if (pdfs.indexOf(h.pdf) < 0) { pdfs.push(h.pdf);
+      acts += '<a href="'+h.pdf+'" download><span>Apuntes<small>'+(h.pdfn?h.pdfn.replace(/^Apuntes \(|\)$/g,'')+' · ':(varios?'tema '+h.n+' · ':''))+'PDF</small></span></a>'; } });
+  hs.forEach(function(h){ if (h.prac) acts += '<a href="'+h.prac.pdf+'" download><span>'+h.prac.t+'<small>Enunciado · PDF</small></span></a>'; });
+  hs.forEach(function(h){
+    var ruta = delTema(h.n);
+    if (ruta.length) rutas += '<p class="rl">'+(varios?'Las animaciones del Tema '+h.n+', en orden:':'Las animaciones del tema, en orden:')+'</p><div class="ruta">'+ruta.map(paso).join('')+'</div>'; });
+  hs.forEach(function(h){
+    if (h.prac && h.prac.ruta) rutas += '<p class="rl">Las de la '+h.prac.t+':</p><div class="ruta">'+h.prac.ruta.map(function(r){ return '<a href="'+r[1]+'">'+r[0]+'</a>'; }).join('')+'</div>'; });
+  document.getElementById('ahora').innerHTML = '<div class="lab">AHORA EN CLASE</div><h2>'+(varios?'Temas ':'Tema ')+lista(hs.map(function(h){ return h.n; }))+' · '+
+    lista(hs.map(function(h, i){ return i ? minus(h.t) : h.t; }))+'</h2><div class="acts">'+acts+'</div>'+rutas;
 
   // los enlaces a #seccion cambian de pestaña
   document.addEventListener('click', function(e){ var a = e.target.closest && e.target.closest('a[href^="#"]'); if (a && !a.classList.contains('folder')) { e.preventDefault(); location.hash = a.getAttribute('href'); } });
