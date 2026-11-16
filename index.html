@@ -104,7 +104,7 @@ a.card,.pdf,details.grp{border-radius:6px;box-shadow:none}
 a.card{transition:none}
 a.card:hover,a.card:focus-visible{transform:none;border-color:var(--green)}
 .card h2{color:var(--ink)}
-.num{background:transparent;color:var(--ink);border:2px solid var(--ink);border-radius:999px;height:40px;min-width:58px;font-size:1.05rem;font-variant-numeric:tabular-nums;position:relative;padding:0 10px 0 22px;white-space:nowrap}
+.num{background:transparent;color:var(--ink);border:2px solid var(--ink);border-radius:999px;height:40px;min-width:58px;font-size:1.05rem;font-variant-numeric:tabular-nums;position:relative;padding:0 10px 0 26px;white-space:nowrap}
 .num::before{content:"";position:absolute;left:7px;top:50%;width:10px;height:10px;margin-top:-6px;border:2px solid var(--ink);border-radius:50%;background:linear-gradient(135deg,transparent 42%,var(--ink) 42%,var(--ink) 58%,transparent 58%)}
 .pdf{border:1px solid var(--line);border-left:8px solid var(--green)}
 .pdf .ico{background:transparent;color:var(--fase);border:2px solid var(--fase);width:42px;height:48px}
@@ -309,8 +309,8 @@ details.grp summary{color:var(--ink)}
   function ord(k){ return k.split('.').map(Number); }
   function cmp(a,b){ var x=ord(a), y=ord(b); return x[0]-y[0] || x[1]-y[1] || (x[2]||0)-(y[2]||0); }
   ANIM.forEach(function(a){ a.p.sort(cmp); }); ANIM.sort(function(a,b){ return cmp(a.p[0], b.p[0]); });
-  // la etiqueta de cada animación: su punto de los apuntes («3.15», «1.2 y 1.3», «1.3 a 1.5»)
-  function etq(a){ return a.p.length===1 ? a.p[0] : a.p.length===2 ? a.p.join(' y ') : a.p[0]+' a '+a.p[a.p.length-1]; }
+  // la etiqueta de cada animación: T y su punto de los apuntes («T3.15», «T1.2 y 1.3», «T1.3 a 1.5»); las de la práctica llevan P
+  function etq(a){ return 'T' + (a.p.length===1 ? a.p[0] : a.p.length===2 ? a.p.join(' y ') : a.p[0]+' a '+a.p[a.p.length-1]); }
   function delTema(n){ return SIN_ANIM.indexOf(n) >= 0 ? [] : ANIM.filter(function(a){ return +a.p[0].split('.')[0] === n; }); }
   function nAnim(k){ return k + (k===1 ? ' animación' : ' animaciones'); }
   // los temas de «ahora» (uno o varios) y el último de ellos
@@ -331,7 +331,7 @@ details.grp summary{color:var(--ink)}
 
   // ---- pestaña Prácticas: herramientas del taller ----
   document.getElementById('herr').innerHTML = HERR.map(function(a){
-    return '<a class="card" href="'+a.f+'"><div class="num">Taller</div><div><h2>'+a.t+'</h2><p>'+a.d+'</p></div></a>'; }).join('');
+    return '<a class="card" href="'+a.f+'"><div class="num">P1</div><div><h2>'+a.t+'</h2><p>'+a.d+'</p></div></a>'; }).join('');
 
   // ---- pestaña «Por temas»: el curso tema a tema, el último arriba ----
   function link(c){ var f = /\.pdf$/.test(c[1]); return '<a href="'+c[1]+'"'+(f?' download':'')+'>'+c[0]+'</a>'; }
