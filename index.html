@@ -190,6 +190,8 @@ details.grp summary{color:var(--ink)}
       <div class="num">P1</div>
       <div><h2>Qué les pasó a nuestros trafos</h2><p>Animación resumen de los 4 trafos con los datos de sus hojas: los trafos 1 y 2 van bien solo porque trabajan a poca tensión, el Trafo 3 se satura a 109 V y el Trafo 4 tiene espiras en cortocircuito (parece saturado a 20-30 V). Y por qué la lámpara casi no se nota.</p></div>
     </a>
+    <h2 class="sec" style="margin-top:26px">Práctica 1 · animaciones del tema que te sirven</h2>
+    <div id="prt"></div>
     <h2 class="sec" style="margin-top:26px">Práctica 1 · herramientas del taller</h2>
     <div id="herr"></div>
   </section>
@@ -332,6 +334,11 @@ details.grp summary{color:var(--ink)}
   // ---- pestaña Prácticas: herramientas del taller ----
   document.getElementById('herr').innerHTML = HERR.map(function(a){
     return '<a class="card" href="'+a.f+'"><div class="num">P1</div><div><h2>'+a.t+'</h2><p>'+a.d+'</p></div></a>'; }).join('');
+  // ---- pestaña Prácticas: animaciones del tema que se usan en la Práctica 1 (los ensayos de su hoja de ensayos)
+  var PRAC_T = ['ensayo_vacio.html', 'ensayo_cortocircuito.html', 'ensayo_carga.html', 'aislamiento.html'];
+  document.getElementById('prt').innerHTML = PRAC_T.map(function(f){ return ANIM.filter(function(a){ return a.f === f; })[0]; }).map(function(a){
+    return '<a class="card" href="'+a.f+'"><div class="num">'+etq(a)+'</div><div><h2>'+a.t+'</h2><p>'+a.d+'</p><div class="pts">'+
+      a.p.map(function(n){ return '<span class="pt"><b>'+n+'</b> '+(PUNTOS[n]||'')+'</span>'; }).join('')+'</div></div></a>'; }).join('');
 
   // ---- pestaña «Por temas»: el curso tema a tema, el último arriba ----
   function link(c){ var f = /\.pdf$/.test(c[1]); return '<a href="'+c[1]+'"'+(f?' download':'')+'>'+c[0]+'</a>'; }
