@@ -197,7 +197,7 @@ function avail(){ return Object.keys(PARTS).filter(k=> rtype==='jaula' ? (k!=='r
 // ---------- dibujo
 function draw(){
   const ink=css('--ink'),card=css('--card'),st=css('--steel'),st2=css('--steel2'),cu=css('--cu'),alu=css('--alu'),mut=css('--muted'),hl=css('--hl');
-  const showSel = sel && !reto;
+  const showSel = sel && (!reto || reto.wait);
   const K=id=>showSel&&sel===id; // ¿pieza señalada?
   const SK=(id,w)=>`stroke="${K(id)?hl:ink}" stroke-width="${K(id)?Math.max(4,w+2):w}"`;
   const G=(id,inner,o)=>`<g class="hit" data-p="${id}"${o?` transform="translate(${o[0]} ${o[1]})"`:''}>${inner}</g>`;
@@ -287,7 +287,7 @@ function anchor(id){ const ro=off.rot;
 // ---------- corte de frente (pequeño)
 function drawFront(){
   const ink=css('--ink'),card=css('--card'),st=css('--steel'),st2=css('--steel2'),cu=css('--cu'),alu=css('--alu'),hl=css('--hl');
-  const C=150, on=id=>sel===id&&!reto, sk=id=>on(id)?`stroke="${hl}" stroke-width="5"`:`stroke="${ink}" stroke-width="1.2"`;
+  const C=150, on=id=>sel===id&&(!reto||reto.wait), sk=id=>on(id)?`stroke="${hl}" stroke-width="5"`:`stroke="${ink}" stroke-width="1.2"`;
   let s='';
   for(let k=0;k<24;k++){const a=k*Math.PI/12; s+=`<line x1="${C+128*Math.cos(a)}" y1="${C+128*Math.sin(a)}" x2="${C+142*Math.cos(a)}" y2="${C+142*Math.sin(a)}" stroke="${ink}" stroke-width="5" stroke-linecap="round" opacity=".55"/>`;}
   s+=`<circle cx="${C}" cy="${C}" r="130" fill="${st2}" ${sk('carcasa')}/>`;
@@ -310,7 +310,7 @@ function texts(){
   if(!reto && sel==='jaula' && !cage) m+=' Pulsa <b>Ver la jaula sin chapas</b> para verla entera.';
   $('exp').innerHTML='<h2>Qué pasa</h2><p>'+m+'</p>';
   $('stt').textContent=STEPS[step][0];
-  const pk=$('pick'); if(sel&&!reto){ pk.hidden=false; pk.textContent='👉 '+PARTS[sel][0]; } else pk.hidden=true;
+  const pk=$('pick'); if(sel&&(!reto||reto.wait)){ pk.hidden=false; pk.textContent='👉 '+PARTS[sel][0]; } else pk.hidden=true;
   $('bDes').disabled=step>=4; $('bMon').disabled=step<=0;
   $('bCage').disabled=rtype!=='jaula'; $('bCage').setAttribute('aria-pressed',cage&&rtype==='jaula');
   $('chips').innerHTML=avail().map(k=>`<button data-p="${k}" aria-pressed="${sel===k&&!reto}">${PARTS[k][0]}</button>`).join('');
@@ -318,13 +318,13 @@ function texts(){
   $('bReto').textContent=reto?'Terminar el reto':'Reto: encuentra la pieza'; $('bReto').setAttribute('aria-pressed',!!reto);
 }
 function pick(id){
-  if(reto){ if(reto.wait) return; const good=id===reto.ask; if(good) reto.ok++;
+  if(reto){ if(reto.wait||reto.done) return; const good=id===reto.ask; if(good) reto.ok++;
     reto.msg=(good?'<b>¡Bien!</b> ':`<b>No</b>, eso es: ${PARTS[id][0].toLowerCase()}. `)+`<b>${PARTS[reto.ask][0]}</b>: ${PARTS[reto.ask][1]}`;
-    sel=reto.ask; reto.wait=true; const keep=reto; draw(); const showAns=()=>{};
-    setTimeout(()=>{ if(reto!==keep) return; reto.wait=false; if(reto.n>=8){ reto.msg=`<b>Reto terminado</b>: has acertado ${reto.ok} de 8. Pulsa <b>Terminar el reto</b> o vuelve a empezar.`; reto.done=true; reto.n=8; }
-      else { reto.n++; reto.ask=nextAsk(); reto.msg=null; } texts(); }, 2600);
-    // durante la pausa se ve la pieza buena señalada
-    const r0=reto; reto=null; draw(); reto=r0; texts(); return; }
+    sel=reto.ask; reto.wait=true; const keep=reto;
+    setTimeout(()=>{ if(reto!==keep) return; reto.wait=false; if(reto.n>=8){ reto.msg=`<b>Reto terminado</b>: has acertado ${reto.ok} de 8. Pulsa <b>Terminar el reto</b> o vuelve a empezar.`; reto.done=true; reto.n=8; sel=null; }
+      else { reto.n++; reto.ask=nextAsk(); reto.msg=null; sel=null; } texts(); }, 2600);
+    // durante la pausa se ve señalada la pieza buena
+    texts(); return; }
   sel=(sel===id)?null:id; texts(); }
 function nextAsk(){ const a=avail().filter(k=>k!==(reto&&reto.ask)); return a[Math.floor(Math.random()*a.length)]; }
 $('sv').addEventListener('click',e=>{const h=e.target.closest('[data-p]'); if(h) pick(h.dataset.p); else if(!reto){ sel=null; texts(); }});
