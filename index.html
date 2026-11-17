@@ -162,6 +162,10 @@ details.grp summary{color:var(--ink)}
       <div class="ico">PDF</div>
       <div>Temas 1 y 3 · Electromagnetismo y transformadores<small>Las 18 preguntas que tienes que saber (1.1 a 1.11 y 3.12 a 3.18), cada una en su página, con dibujos, ejemplos y errores típicos</small></div>
     </a>
+    <a class="pdf" href="temas/T4_Devanados_Maquinas.pdf" download>
+      <div class="ico">PDF</div>
+      <div>Tema 4 · Devanados de máquinas rotativas de corriente alterna<small>Bobinas y grupos, tipos de devanado, las cuentas, el dibujo paso a paso de los imbricados de una y de doble capa y de los concéntricos, y la caja de bornes</small></div>
+    </a>
     <a class="pdf" href="temas/T5_Motores_electricos_Maquinas.pdf" download>
       <div class="ico">PDF</div>
       <div>Tema 5 · Motores eléctricos<small>Campo giratorio, par y deslizamiento, curvas, placa de bornes, arranques y regulación de velocidad</small></div>
@@ -194,6 +198,20 @@ details.grp summary{color:var(--ink)}
     <div id="prt"></div>
     <h2 class="sec" style="margin-top:26px">Práctica 1 · herramientas del taller</h2>
     <div id="herr"></div>
+    <h2 class="sec" style="margin-top:26px">Práctica 2 · Cálculo y construcción de un motor</h2>
+    <a class="pdf" href="practicas/P2_Maquinas.pdf" download>
+      <div class="ico">PDF</div>
+      <div>Enunciado<small>Los devanados de 24 y 36 ranuras (los que se pueden hacer y los que no), ajuste final, informe, ensayos y preguntas finales</small></div>
+    </a>
+    <a class="pdf" href="practicas/P2_Plantilla_24_ranuras_Maquinas.pdf" download>
+      <div class="ico">PDF</div>
+      <div>Plantilla de 24 ranuras<small>Para dibujar los devanados del estator de 24 ranuras, con la caja de bornes</small></div>
+    </a>
+    <a class="pdf" href="practicas/P2_Plantilla_36_ranuras_Maquinas.pdf" download>
+      <div class="ico">PDF</div>
+      <div>Plantilla de 36 ranuras<small>Para dibujar los devanados del estator de 36 ranuras, con la caja de bornes</small></div>
+    </a>
+    <div id="prt2"></div>
   </section>
 
   <section id="sec-animaciones">
@@ -233,7 +251,7 @@ details.grp summary{color:var(--ink)}
   var HOY = [1, 3];
   // Temas cuyas animaciones todavía NO se enlazan desde la web (las páginas siguen en su sitio, pero aquí no hay acceso).
   // Para volver a enseñarlas, quita su número de la lista: var SIN_ANIM = [];
-  var SIN_ANIM = [5, 6];
+  var SIN_ANIM = [4, 5, 6];
 
   // Los temas del curso. pdf: los apuntes; prac: la práctica que va con el tema; chips: otros accesos
   var PDF13 = 'temas/T1_T3_Electromagnetismo_Transformadores_Maquinas.pdf';
@@ -242,6 +260,8 @@ details.grp summary{color:var(--ink)}
     {n:3, t:'Transformadores', pdf:PDF13, pdfn:'Apuntes (temas 1 y 3)', chips:[['4 tests','#tests']],
      prac:{t:'Práctica 1', d:'Cálculo y construcción de un trafo', pdf:'practicas/P1_Maquinas.pdf',
            ruta:[['Nuestros trafos','problemas_trafos.html'],['Medir','medir.html'],['Ajuste del hierro','ajuste_hierro.html'],['Calculadora','calculadora_trafo.html']]}},
+    {n:4, t:'Devanados de máquinas rotativas de corriente alterna', pdf:'temas/T4_Devanados_Maquinas.pdf', chips:[],
+     prac:{t:'Práctica 2', d:'Cálculo y construcción de un motor', pdf:'practicas/P2_Maquinas.pdf'}},
     {n:5, t:'Motores eléctricos', pdf:'temas/T5_Motores_electricos_Maquinas.pdf', chips:[]},
     {n:6, t:'Regulación de motores mediante variadores', pdf:'temas/T6_Variadores_Maquinas.pdf', chips:[]}
   ];
@@ -266,6 +286,16 @@ details.grp summary{color:var(--ink)}
     '3.16':'Ensayo de cortocircuito',
     '3.17':'Ensayo de carga',
     '3.18':'Pruebas de aislamiento',
+    '4.4':'Los datos de partida: ranuras, polos y fases',
+    '4.8':'Principios de fase: dónde empieza cada fase',
+    '4.11':'Imbricado de una capa: cálculo',
+    '4.12':'Imbricado de una capa: dibujo paso a paso',
+    '4.13':'Imbricado de doble capa',
+    '4.14':'Concéntrico: cálculo y amplitud',
+    '4.15':'Concéntrico de más de 2 polos: dibujo paso a paso',
+    '4.16':'Concéntrico de 2 polos',
+    '4.17':'¿Se puede hacer este devanado?',
+    '4.18':'Cómo se dibuja en la plantilla',
     '5.4':'Campo magnético giratorio',
     '5.4.2':'Deslizamiento y par motor',
     '5.5':'Curvas de par e intensidad',
@@ -294,6 +324,13 @@ details.grp summary{color:var(--ink)}
     {f:'aislamiento.html',          t:'Pruebas de aislamiento', d:'Las tres medidas con el megóhmetro: el trafo del aula antes y después de quemarse, y un trafo de 1 MW.', p:['3.18']},
     {f:'flujo_induccion.html',    t:'Campo, flujo e inducción', d:'Mueve una ventana sobre el imán y cuenta las líneas: el flujo es el total y la inducción, las líneas por cuadradito.', p:['1.2','1.3']},
     {f:'circuito_magnetico.html', t:'La bobina y el circuito magnético', d:'Corriente, espiras, longitud, grosor, hierro o aire y entrehierro: qué cambia y qué no.', p:['1.3','1.4','1.5']},
+    {f:'dev_calculos.html',       t:'Las cuentas del devanado', d:'Elige tipo, ranuras y polos y haz las cuentas paso a paso: ranuras por polo y fase, bobinas por grupo, paso o amplitud y tabla de principios. Si una no sale entera, no se puede hacer.', p:['4.4','4.8','4.17']},
+    {f:'dev_imb1_bobinas.html',   t:'Imbricado de una capa (1): las bobinas', d:'Los grupos impares desde la tabla de principios, sus bobinas de dos en dos (el hueco), los grupos pares en la ranura de al lado y los saltos.', p:['4.11','4.12']},
+    {f:'dev_imb1_uniones.html',   t:'Imbricado de una capa (2): uniones y caja de bornes', d:'Final con final y principio con principio, U1 y U2 a la caja de bornes, flechas y polos, y después V y W.', p:['4.12','4.18']},
+    {f:'dev_imb2_bobinas.html',   t:'Imbricado de doble capa (1): las bobinas', d:'Paso sin acortar, bobinas del grupo seguidas y grupos pares en la misma ranura: dos lados por ranura, uno arriba y otro abajo.', p:['4.13']},
+    {f:'dev_imb2_uniones.html',   t:'Imbricado de doble capa (2): uniones y caja de bornes', d:'Uniones, caja de bornes, flechas y polos. V y W simplificadas (solo sus lados, como en la práctica) o enteras para comparar.', p:['4.13','4.18']},
+    {f:'dev_conc_grupos.html',    t:'Concéntrico (1): amplitud y grupos', d:'La bobina pequeña con su amplitud, las demás alrededor y los otros grupos de la fase, con 2 polos y con más de 2.', p:['4.14','4.15','4.16']},
+    {f:'dev_conc_uniones.html',   t:'Concéntrico (2): uniones y caja de bornes', d:'Por polos (2 polos) o por polos consecuentes (más de 2): uniones, caja de bornes, flechas y los S que salen solos entre los grupos.', p:['4.15','4.16']},
     {f:'campo_giratorio.html',    t:'Campo magnético giratorio', d:'Tres bobinas quietas y un campo que gira. Cambia los polos y la frecuencia, pon carga e intercambia dos fases.', p:['5.4']},
     {f:'curva_par.html',          t:'Par, velocidad y corriente del motor', d:'Arranca el motor y ponle carga: los 6 puntos de las curvas, el deslizamiento, el térmico y qué pasa al cambiar la tensión o la frecuencia.', p:['5.4.2','5.5','5.8']},
     {f:'placa_bornes.html',       t:'Placa de bornes: estrella o triángulo', d:'Pon tú las chapas, elige motor y red, y comprueba si va bien, va flojo o se quema.', p:['5.6']},
@@ -339,6 +376,12 @@ details.grp summary{color:var(--ink)}
   document.getElementById('prt').innerHTML = PRAC_T.map(function(f){ return ANIM.filter(function(a){ return a.f === f; })[0]; }).map(function(a){
     return '<a class="card" href="'+a.f+'"><div class="num">'+etq(a)+'</div><div><h2>'+a.t+'</h2><p>'+a.d+'</p><div class="pts">'+
       a.p.map(function(n){ return '<span class="pt"><b>'+n+'</b> '+(PUNTOS[n]||'')+'</span>'; }).join('')+'</div></div></a>'; }).join('');
+
+  // ---- pestaña Prácticas: animaciones del Tema 4 que se usan en la Práctica 2 (todas; salen cuando el 4 deja de estar en SIN_ANIM)
+  var p2 = delTema(4);
+  document.getElementById('prt2').innerHTML = p2.length ? '<h2 class="sec" style="margin-top:26px">Práctica 2 · animaciones del tema que te sirven</h2>' + p2.map(function(a){
+    return '<a class="card" href="'+a.f+'"><div class="num">'+etq(a)+'</div><div><h2>'+a.t+'</h2><p>'+a.d+'</p><div class="pts">'+
+      a.p.map(function(n){ return '<span class="pt"><b>'+n+'</b> '+(PUNTOS[n]||'')+'</span>'; }).join('')+'</div></div></a>'; }).join('') : '';
 
   // ---- pestaña «Por temas»: el curso tema a tema, el último arriba ----
   function link(c){ var f = /\.pdf$/.test(c[1]); return '<a href="'+c[1]+'"'+(f?' download':'')+'>'+c[0]+'</a>'; }

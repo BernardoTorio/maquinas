@@ -18,8 +18,9 @@ test_repaso_2.html         Test de iniciación 2 (50 preguntas)
 test_intermedio.html       Test intermedio (100 preguntas; las de la práctica, con la gráfica del ensayo de vacío)
 test_intermedio_2.html     Test intermedio 2 (100 preguntas sobre lo que explican las animaciones)
 *.html                     una animación por archivo (en la raíz)
-temas/                     apuntes en PDF (T1_T3_Electromagnetismo_Transformadores_Maquinas.pdf, T5_Motores_electricos_Maquinas.pdf, T6_Variadores_Maquinas.pdf)
-practicas/                 enunciados y hojas de las prácticas en PDF (P1_Maquinas.pdf, P1_Hoja_ensayos_Maquinas.pdf, P1_Resultados_4_trafos.pdf)
+temas/                     apuntes en PDF (T1_T3_Electromagnetismo_Transformadores_Maquinas.pdf, T4_Devanados_Maquinas.pdf, T5_Motores_electricos_Maquinas.pdf, T6_Variadores_Maquinas.pdf)
+practicas/                 enunciados y hojas de las prácticas en PDF (P1_Maquinas.pdf, P1_Hoja_ensayos_Maquinas.pdf, P1_Resultados_4_trafos.pdf,
+                           P2_Maquinas.pdf, P2_Plantilla_24_ranuras_Maquinas.pdf, P2_Plantilla_36_ranuras_Maquinas.pdf)
 subir.bat                  publica todo con doble clic
 .gitignore                 *.zip y *.docx (no se suben nunca)
 ```
@@ -31,9 +32,9 @@ subir.bat                  publica todo con doble clic
 - Arriba, el bloque **«Ahora en clase»**: apuntes, práctica y animaciones (en orden) del tema que se está dando. Al pasar de tema solo se cambia un número: **`var HOY = [1, 3];`**, al principio del primer `<script>`. Puede ser un tema (`var HOY = 5;`) o varios que se dan a la vez, entre corchetes (hoy, el 1 y el 3: comparten apuntes). Con varios, el bloque junta sus apuntes (una vez si el PDF es el mismo), sus prácticas y una fila de animaciones por tema. Debajo está la lista `T` de los temas (apuntes, práctica y otros accesos de cada uno).
 - Después, una fila de pestañas: `#inicio` («Por temas», por defecto), `#temas` (se llama «Apuntes»), `#practicas`, `#animaciones` y `#tests`. Las secciones tienen id `sec-inicio`, `sec-temas`… para que el navegador no salte al abrir con `#…`.
 - **«Por temas»**: los temas de `HOY` (marcados «ahora») y los anteriores, el último arriba; los que aún no se han dado salen debajo, en «Más adelante».
-- **Temas sin enlazar**: `var SIN_ANIM = [5, 6];` (justo debajo de `HOY`) son los temas cuyas animaciones todavía no se enseñan: no salen en la pestaña Animaciones ni en «Por temas». Las páginas siguen en la raíz y se abren con su dirección, pero desde la web no hay acceso. Para volver a enseñarlas, se quita su número de la lista.
+- **Temas sin enlazar**: `var SIN_ANIM = [4, 5, 6];` (justo debajo de `HOY`) son los temas cuyas animaciones todavía no se enseñan: no salen en la pestaña Animaciones ni en «Por temas». Las páginas siguen en la raíz y se abren con su dirección, pero desde la web no hay acceso. Para volver a enseñarlas, se quita su número de la lista.
 - **Animaciones**: un desplegable por tema (abiertos los de `HOY`). Las tarjetas salen de la lista `ANIM` (archivo, título, descripción y puntos de los apuntes): para añadir una animación, una línea ahí. El número de la tarjeta es **T y su punto de los apuntes** («T3.15», «T1.2 y 1.3», «T1.3 a 1.5»): lo pone `etq()`.
-- **Prácticas**: debajo de los PDF y de «Qué les pasó a nuestros trafos», «Práctica 1 · animaciones del tema que te sirven» (lista `PRAC_T`: los cuatro ensayos del Tema 3, T3.15 a T3.18, que son los de la hoja de ensayos) y después las herramientas del taller (`HERR`). Como en Automatismos, las animaciones de un tema que se usan en una práctica salen también con ella; al añadir una, mirar si va en `PRAC_T`.
+- **Prácticas**: debajo de los PDF y de «Qué les pasó a nuestros trafos», «Práctica 1 · animaciones del tema que te sirven» (lista `PRAC_T`: los cuatro ensayos del Tema 3, T3.15 a T3.18, que son los de la hoja de ensayos) y después las herramientas del taller (`HERR`). Como en Automatismos, las animaciones de un tema que se usan en una práctica salen también con ella; al añadir una, mirar si va en `PRAC_T`. Debajo, «Práctica 2 · Cálculo y construcción de un motor»: enunciado, las dos plantillas (24 y 36 ranuras) y, cuando el 4 no está en `SIN_ANIM`, «Práctica 2 · animaciones del tema que te sirven» (las 7 del Tema 4, `prt2`). **El solucionario de la Práctica 2 no se sube nunca** (está en el repositorio privado `provisional`).
 - Prácticas y Apuntes: un recuadro por PDF con enlace `download`. Si el PDF todavía no está en el servidor, un `fetch HEAD` lo marca en gris como «próximamente» (también en «Ahora en clase» y en «Por temas»).
 - **Marca «✓ vista»**: las animaciones que ya se han abierto en ese navegador salen marcadas. La pone la portada al tocar una tarjeta y cada animación al abrirse (también desde un QR). No se marca en los tests.
 - En todas las páginas, la primera miga («Máquinas Eléctricas») lleva a `index.html`.
@@ -57,7 +58,7 @@ Los cuatro llevan el mismo motor que los de Automatismos (`DATA`, `IMGS`, `show`
 - Vuelven a `index.html#tests` (botón, Esc y Retroceso).
 
 ## Animaciones
-Las de los Temas 5 y 6 están hechas pero **sin enlazar desde la portada** (`SIN_ANIM`), hasta que se den esos temas.
+Las de los Temas 4, 5 y 6 están hechas pero **sin enlazar desde la portada** (`SIN_ANIM`), hasta que se den esos temas. Al empezar el Tema 4: `var HOY = 4;` y quitar el 4 de `SIN_ANIM`.
 
 | Grupo | Paso | Archivo | Qué muestra |
 |---|---|---|---|
@@ -77,6 +78,13 @@ Las de los Temas 5 y 6 están hechas pero **sin enlazar desde la portada** (`SIN
 | Tema 3 | 3.16 | `ensayo_cortocircuito.html` | Ensayo de cortocircuito |
 | Tema 3 | 3.17 | `ensayo_carga.html` | Ensayo de carga: caída de tensión y rendimiento |
 | Tema 3 | 3.18 | `aislamiento.html` | Las tres medidas con el megóhmetro |
+| Tema 4 | 4.4 a 4.17 | `dev_calculos.html` | Las cuentas paso a paso (Kpq, U, paso o amplitud, tabla de principios) y si se puede hacer; 12, 18, 30 y 48 ranuras |
+| Tema 4 | 4.11 y 4.12 | `dev_imb1_bobinas.html` | Imbricado de una capa (1): grupos impares, el hueco, grupos pares y saltos |
+| Tema 4 | 4.12 y 4.18 | `dev_imb1_uniones.html` | Imbricado de una capa (2): uniones, U1 y U2, flechas y polos, V y W, caja |
+| Tema 4 | 4.13 | `dev_imb2_bobinas.html` | Imbricado de doble capa (1): paso entero, grupos pares en la misma ranura |
+| Tema 4 | 4.13 y 4.18 | `dev_imb2_uniones.html` | Imbricado de doble capa (2): uniones y caja; V y W simplificadas o enteras |
+| Tema 4 | 4.14 a 4.16 | `dev_conc_grupos.html` | Concéntrico (1): bobina pequeña y amplitud, grupos con 2 y con más polos |
+| Tema 4 | 4.15 y 4.16 | `dev_conc_uniones.html` | Concéntrico (2): por polos o polos consecuentes, caja, flechas y polos |
 | Tema 5 | 5.4 | `campo_giratorio.html` | Campo giratorio, polos, frecuencia, carga e intercambio de fases |
 | Tema 5 | 5.4.2 a 5.8 | `curva_par.html` | Curvas de par e intensidad, deslizamiento, térmico |
 | Tema 5 | 5.6 | `placa_bornes.html` | Estrella o triángulo según la placa y la red |
@@ -96,6 +104,11 @@ Las de los Temas 5 y 6 están hechas pero **sin enlazar desde la portada** (`SIN
 - Debajo de «Qué pasa» (el cajón que cambia en cada momento), un cajón fijo **«Para qué sirve»** de dos o tres frases, con lenguaje sencillo y sin fórmulas.
 - Cada animación se marca como vista al abrirse (`maq-visto:<archivo>`).
 - Las explicaciones van en cajones debajo del dibujo; nada de una columna lateral alta.
+
+### Las del Tema 4 (devanados)
+- Las siete salen de un mismo motor (cálculo y dibujo como los esquemas del tema): fuentes en el proyecto «Materiales para instituto», `claude/maquinas/T4_animaciones/` (`motor.js`, `pasos.js`, `ui.js`, `calc.js`, `pagina.js` y `build.py`). Para cambiarlas se toca allí y se regeneran con `python3 build.py <carpeta>`; después, `tira_tema.py`. No editar a mano los `dev_*.html`.
+- **Ningún ejemplo es de la práctica** (24 y 36 ranuras): los hacen los alumnos. Ejemplos: una capa 48·2 y 48·8; doble capa 12·2, 18·2 y 18·6; concéntrico 12·2, 48·2, 12·4 y 48·8. En las cuentas, 12, 18, 30 y 48 ranuras.
+- Mismos criterios que los dibujos del tema: U rojo, V azul, W verde; cabezas arriba; saltos, uniones y cables abajo; doble capa continua arriba y discontinua abajo; cables a la caja siempre en vertical; flechas solo en U; S grises en los polos consecuentes.
 
 ### Al añadir, quitar o reordenar una animación
 1. `index.html`: una línea en `ANIM` (o en `HERR`, si es una herramienta de la práctica).
