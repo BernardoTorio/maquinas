@@ -305,7 +305,7 @@ function geometria(D) {
   const nvu = new Niveles(1.4 * MM); G.lvUn = {};
   un.slice().sort((A, B) => Math.abs(G.xv(A.s1.k, A.s1.c) - G.xv(A.s2.k, A.s2.c)) - Math.abs(G.xv(B.s1.k, B.s1.c) - G.xv(B.s2.k, B.s2.c)))
     .forEach(u => { const a = G.xv(u.s1.k, u.s1.c), b = G.xv(u.s2.k, u.s2.c); G.lvUn[u.id] = nvu.pon([[Math.min(a, b), Math.max(a, b)]]); });
-  G.dy = 2.5 * MM; G.yU0 = G.yJ1 + 3.5 * MM;
+  G.dy = 2.5 * MM; G.yU0 = G.yJ1 + 3.5 * MM; G.nUn = nvu.niv.length;
   const yT0 = G.yU0 + nvu.niv.length * G.dy + 1.0 * MM;
   G.yT = [0, 1, 2, 3, 4, 5].map(i => yT0 + i * G.dy);
   // caja de bornes: tornillos en medias ranuras
@@ -316,7 +316,7 @@ function geometria(D) {
   C.yf1 = C.y0 + 7.5 * MM; C.yl1 = C.y0 + 14 * MM; C.yl2 = C.y0 + 22 * MM; C.yf2 = C.y0 + 28.5 * MM;
   C.pos = {U1: [C.xs[0], C.yf1], V1: [C.xs[1], C.yf1], W1: [C.xs[2], C.yf1], W2: [C.xs[0], C.yf2], U2: [C.xs[1], C.yf2], V2: [C.xs[2], C.yf2]};
   G.H = C.y1 + 9 * MM + 6;
-  G.HA = Math.max(G.yJ1, G.yNum + G.fsN * 0.9 + 34) + 14;   // alto sin uniones ni caja (animaciones de las bobinas)
+  G.yCota = G.yNum + G.fsN * 0.9 + 8;                       // raya de las cotas («5 saltos», «+1»), con dos líneas de texto debajo
   // rutas de los terminales (el orden de niveles que menos cruces da)
   const media = x => { const k = Math.round((x - G.x0) / G.p - 0.5); return G.x0 + (k + 0.5) * G.p; };
   let lW = media(C.x0 - 0.7 * G.p); if (lW > C.x0 - 6) lW -= G.p;
@@ -343,6 +343,14 @@ function geometria(D) {
   });
   nom.forEach(n => R[n].y = G.yT[mejor[1][n]]);
   G.rutas = R;
+  // tabla de principios: a la izquierda de la caja (sin tocar los cables que bajan por ese lado);
+  // en las animaciones sin caja, debajo de las ranuras
+  const izq = Object.values(R).filter(r => r.tipo !== 'arriba' && r.xh < cx).map(r => r.xh);
+  const lim = (izq.length ? Math.min(...izq) : C.x0) - 16, tx0 = G.xmin + 8, nf = D.tabla.length;
+  G.tab = {x0: tx0, cw: Math.max(34, Math.min(58, (lim - tx0) / 3)), ch: Math.min(26, (C.h - 22) / (nf + 1)), nf};
+  G.tab.yCaja = C.y0 + 18;
+  G.tab.ySin = Math.max(G.yJ1 + 14, G.yCota + 58) + 18;
+  G.HA = G.tab.ySin + (nf + 1) * G.tab.ch + 14;             // alto sin uniones ni caja (animaciones de las bobinas)
   return G;
 }
 
@@ -433,6 +441,28 @@ function svgDevanado(D, G, V) {
     const yl = n[1] === '1' ? C.yl1 : C.yl2, on = V.term && V.term.has(n);
     o.push(`<text x="${x}" y="${yl}" font-size="22" font-weight="${on ? 700 : 400}" text-anchor="middle" dominant-baseline="central" style="fill:${on ? COL[n[0]] : 'var(--muted2)'}">${n}</text>`);
   });
+  // rótulos en amarillo de las uniones nuevas («por polos · final con final»…), en una fila debajo de las uniones
+  (V.etqUn || []).forEach(e => {
+    const u = D.uniones.U.find(x => x.id === e.id); if (!u) return;
+    const x1 = G.xv(u.s1.k, u.s1.c), x2 = G.xv(u.s2.k, u.s2.c), xm = (x1 + x2) / 2, yb = G.yU0 + G.lvUn[u.id] * G.dy, yl = G.yU0 + G.nUn * G.dy + 14;
+    o.push(`<line x1="${xm}" y1="${yb + 3}" x2="${xm}" y2="${yl - 2}" style="stroke:var(--cota);stroke-width:2" stroke-dasharray="3 3"/>` +
+      `<text x="${xm}" y="${yl + 13}" font-size="14" font-weight="700" text-anchor="middle" paint-order="stroke" style="fill:var(--cota);stroke:var(--card);stroke-width:5px">${e.l1}</text>` +
+      `<text x="${xm}" y="${yl + 31}" font-size="16" font-weight="700" text-anchor="middle" paint-order="stroke" style="fill:var(--cota);stroke:var(--card);stroke-width:5px">${e.l2}</text>`);
+  });
+  // tabla de principios (siempre) y, en su paso, una línea de cada número a su ranura
+  if (G.tab) {
+    const T = G.tab, ty = conCaja ? T.yCaja : T.ySin;
+    const celda = (i, j) => [T.x0 + (j + 0.5) * T.cw, ty + (i + 1.5) * T.ch];
+    if (V.lineasTabla) D.tabla.forEach((fila, i) => fila.forEach((k, j) => { if (k === null) return;
+      const [x, y] = celda(i, j);
+      o.push(`<line x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${G.xl(k, 's').toFixed(1)}" y2="${(G.yNum + G.fsN * 0.75).toFixed(1)}" style="stroke:${COL[FASES[j]]};stroke-width:2;opacity:.85" stroke-dasharray="6 4" class="nuevo"/>`); }));
+    o.push(`<text x="${T.x0}" y="${ty - 7}" font-size="15" font-weight="700" style="fill:var(--muted)">Tabla de principios</text>`);
+    FASES.forEach((f, j) => { const x = T.x0 + j * T.cw;
+      o.push(`<rect x="${x}" y="${ty}" width="${T.cw}" height="${T.ch}" style="fill:var(--card);stroke:var(--line);stroke-width:1.5"/><text x="${x + T.cw / 2}" y="${ty + T.ch / 2}" font-size="${Math.min(18, T.ch * 0.7)}" font-weight="700" text-anchor="middle" dominant-baseline="central" style="fill:${COL[f]}">${f}</text>`); });
+    D.tabla.forEach((fila, i) => fila.forEach((k, j) => { const x = T.x0 + j * T.cw, y = ty + (i + 1) * T.ch;
+      o.push(`<rect x="${x}" y="${y}" width="${T.cw}" height="${T.ch}" style="fill:var(--card);stroke:var(--line);stroke-width:1.5"/>`);
+      if (k !== null) o.push(`<text x="${x + T.cw / 2}" y="${y + T.ch / 2}" font-size="${Math.min(18, T.ch * 0.7)}" font-weight="700" text-anchor="middle" dominant-baseline="central" style="fill:${V.lineasTabla ? COL[FASES[j]] : 'var(--ink)'}">${k}</text>`); }));
+  }
   // flechas de la fase U y polos
   if (V.flechas) {
     const ym = (G.yHB + G.yBT) / 2 + 1, h = 11, w = 4.5;
@@ -448,11 +478,17 @@ function svgDevanado(D, G, V) {
     et.forEach(([x, t, cons]) => [0, -G.L, G.L].forEach(sh => { const xx = x + sh; if (xx < G.xmin - 2 || xx > G.xmax + 2) return;
       o.push(`<text x="${xx}" y="${G.yNS}" font-size="26" font-weight="700" text-anchor="middle" dominant-baseline="central" style="fill:${cons ? 'var(--muted)' : 'var(--ink)'}">${t}</text>`); }));
   }
-  // cota (para señalar un paso: «5 saltos», «+1», «misma ranura»…)
+  // cota (para señalar un paso: «Y_k = 5 saltos», «+1»…), con una segunda línea que dice de dónde sale
   if (V.cota) {
-    const c = V.cota, xa = G.xl(c.a, 's'), xb = G.xl(c.b, 's'), y = G.yNum + G.fsN * 0.9 + 8;
+    const c = V.cota, xa = G.xl(c.a, 's'), xb = G.xl(c.b, 's'), y = G.yCota;
+    const sub = s => s.replace(/([A-Z])_(\w+)/g, '$1<tspan dy="5" style="font-size:.7em">$2</tspan><tspan dy="-5">\u200b</tspan>');
+    const largo = t => t.replace(/_/g, '').length;
+    const pon = (t, yy, fs) => { const w = largo(t) * fs * 0.52, xm = (xa + xb) / 2, izq = xm - w / 2 < G.xmin + 4;
+      return `<text x="${izq ? Math.max(G.xmin + 4, xa - 6) : xm}" y="${yy}" font-size="${fs}" font-weight="700" text-anchor="${izq ? 'start' : 'middle'}" paint-order="stroke" style="fill:var(--cota);stroke:var(--card);stroke-width:6px">${sub(t)}</text>`; };
     o.push(`<g class="cota"><line x1="${xa}" y1="${y}" x2="${xb}" y2="${y}" style="stroke:var(--cota);stroke-width:2.5" marker-start="url(#fl)" marker-end="url(#fl)"/>` +
-      `<text x="${(xa + xb) / 2}" y="${y + 18}" font-size="20" font-weight="700" text-anchor="middle" paint-order="stroke" style="fill:var(--cota);stroke:var(--card);stroke-width:6px">${c.txt}</text></g>`);
+      pon(c.txt, y + 20, 20) + (c.txt2 ? pon(c.txt2, y + 42, 16) : '') + '</g>');
+    if (c.sin) { const xs = G.xl(c.sin, 's');   // dónde llegaría la bobina sin acortar el paso
+      o.push(`<line x1="${xb}" y1="${G.yBT - 7}" x2="${xs}" y2="${G.yBT - 7}" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:4 4"/><circle cx="${xs}" cy="${G.yBT - 7}" r="5" style="fill:var(--muted)"/>`); }
     o[0] = o[0].replace('<defs>', '<defs><marker id="fl" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" style="fill:var(--cota)"/></marker>');
   }
   return o.join('');
@@ -472,8 +508,8 @@ const parTxt = (D, us) => us.map(u => `${D.r(u.s1.k)} con ${D.r(u.s2.k)}`).join(
 
 function pasoTabla(D, extra) {
   const cu = colU(D);
-  return {t: 'La tabla de principios', h: `Y<sub>120</sub> = K / 3p = ${D.K} / ${3 * D.p} = <b>${D.Y120}</b>. Sumando ${D.Y120} desde la 1 sale la tabla: <b>${tablaTxt(D)}</b>. ${extra || `La <b>columna U</b> dice dónde empiezan los grupos impares de la fase U: ranura${cu.length > 1 ? 's' : ''} <b>${lista(cu)}</b>.`}`,
-    v: {marca: cu.map(k => ({k, c: 'U'}))}};
+  return {t: 'La tabla de principios', h: `Y<sub>120</sub> = K / 3p = ${D.K} / ${3 * D.p} = <b>${D.Y120}</b>. Sumando ${D.Y120} desde la 1 sale la tabla: <b>${tablaTxt(D)}</b> (abajo, a la izquierda: cada número va a su ranura). ${extra || `La <b>columna U</b> dice dónde empiezan los grupos impares de la fase U: ranura${cu.length > 1 ? 's' : ''} <b>${lista(cu)}</b>.`}`,
+    v: {marca: D.tabla.flatMap(f => f.map((k, j) => k === null ? null : {k, c: FASES[j]})).filter(Boolean), lineasTabla: true}};
 }
 
 const PASOS = {
@@ -485,8 +521,13 @@ const PASOS = {
     const resto = imp.flatMap(G => G.bobinas.slice(1).map(c => c.id)), todPar = par.flatMap(G => G.bobinas.map(c => c.id));
     const c0 = imp[0].bobinas[0], marca = cu.map(k => ({k, c: 'U'}));
     const s = [pasoTabla(D)];
-    s.push({t: 'La primera bobina de cada grupo impar', h: `El paso de ranura es Y<sub>k</sub> = <b>${Yk}</b>${D.Yp % 2 === 0 ? ` (el paso polar, ${D.Yp}, es par, y en una capa se acorta a impar)` : ''}. La bobina sale de la ${c0.a} y avanza ${Yk} saltos: llega a la <b>${c0.b}</b>.${cu.length > 1 ? ` Lo mismo desde ${lista(cu.slice(1))}.` : ''}`,
-      v: {marca, coils: prim, nuevo: prim, cota: {a: c0.a, b: c0.b, txt: Yk + ' saltos'}}});
+    const acorta = D.Yp % 2 === 0;
+    s.push({t: 'La primera bobina de cada grupo impar', h: `El paso polar es Y<sub>p</sub> = K / 2p = ${D.K} / ${D.polos} = ${D.Yp}. ` + (acorta
+        ? `Es par, y en una capa el paso de ranura tiene que ser impar (salir de impar y llegar a par): se acorta uno, <b>Y<sub>k</sub> = Y<sub>p</sub> − 1 = ${D.Yp} − 1 = ${Yk}</b>. Sin acortar llegaría a la ${c0.a + D.Yp} (el punto gris).`
+        : `Es impar: <b>Y<sub>k</sub> = Y<sub>p</sub> = ${Yk}</b>.`) +
+        ` La bobina sale de la ${c0.a} y avanza ${Yk} saltos: llega a la <b>${c0.b}</b>.${cu.length > 1 ? ` Lo mismo desde ${lista(cu.slice(1))}.` : ''}`,
+      v: {marca, coils: prim, nuevo: prim, cota: {a: c0.a, b: c0.b, txt: `Y_k = ${Yk} saltos`,
+        txt2: acorta ? `Y_k = Y_p − 1 = ${D.Yp} − 1` : `Y_k = Y_p = ${D.Yp}`, sin: acorta ? c0.a + D.Yp : null}}});
     if (U > 1) s.push({t: 'Las demás bobinas del grupo', h: `Cada grupo lleva U = <b>${U}</b> bobinas iguales. En una capa van <b>de dos en dos ranuras</b>: salen de impares (${lista(imp[0].bobinas.map(c => c.a))}) y llegan a pares (${lista(imp[0].bobinas.map(c => D.r(c.b)))}). Entre ellas queda un <b>hueco</b> (${lista(imp[0].bobinas.slice(0, -1).map(c => c.a + 1))}): no se queda vacío, ahí llegará una bobina del otro grupo de U.`,
       v: {coils: todImp, nuevo: resto}});
     else s.push({t: 'Un grupo, una bobina', h: `Aquí U = <b>1</b>: cada grupo es una sola bobina. En los grupos impares no hay que poner nada más.`, v: {coils: prim}});
@@ -508,7 +549,7 @@ const PASOS = {
     const c0 = imp[0].bobinas[0], marca = cu.map(k => ({k, c: 'U'}));
     const s = [pasoTabla(D)];
     s.push({t: 'Los grupos impares', h: `En doble capa el paso <b>no se acorta</b>: Y<sub>k</sub> = Y<sub>p</sub> = ${D.K} / ${D.polos} = <b>${Yk}</b>. Cada grupo lleva U = <b>${U}</b> bobina${U > 1 ? 's seguidas' : ''}: ${imp[0].bobinas.map(c => c.a + '→' + D.r(c.b)).join(', ')}. La línea <b>continua</b> es el lado de la capa de arriba (el que sale) y la <b>discontinua</b>, el de la capa de abajo (el que llega).`,
-      v: {marca, coils: todImp, nuevo: todImp, cota: {a: c0.a, b: c0.b, txt: Yk + ' saltos'}}});
+      v: {marca, coils: todImp, nuevo: todImp, cota: {a: c0.a, b: c0.b, txt: `Y_k = ${Yk} saltos`, txt2: `Y_k = Y_p = ${D.K} / ${D.polos} (no se acorta)`}}});
     s.push({t: 'Los grupos pares, en la misma ranura', h: `Empiezan <b>en la misma ranura</b> a la que llega la primera bobina del grupo impar: la <b>${D.r(c0.b)}</b>. Allí ya hay un lado abajo (discontinua) y el grupo nuevo pone otro arriba (continua): cada ranura acaba con <b>dos lados</b>.`,
       v: {marca: [{k: D.r(c0.b), c: 'U'}], coils: [...todImp, ...todPar], nuevo: todPar}});
     if (U > 1) s.push({t: 'Los saltos entre bobinas', h: `Las ${U} bobinas de un grupo se hacen seguidas, sin cortar el hilo: abajo, el <b>salto</b> del final de una al principio de la siguiente. En la animación siguiente se unen los grupos.`,
@@ -555,12 +596,15 @@ const PASOS = {
     if (D.conexion === 'polos') {
       const ff = D.uniones.U.filter(u => u.tipo === 'ff'), pp = D.uniones.U.filter(u => u.tipo === 'pp');
       v = mas(v, {uniones: ff.map(u => u.id), nuevo: ff.map(u => 'u' + u.id)});
+      v.etqUn = ff.map(u => ({id: u.id, l1: 'unión por polos', l2: 'final con final'}));
       s.push({t: 'Final con final', h: `${D.tipo === 'conc' ? 'Con 2 polos, el concéntrico' : 'Los imbricados'} se unen <b>por polos</b>. Primero, el <b>final</b> de un grupo con el <b>final</b> del siguiente: ${parTxt(D, ff)}. Así la corriente recorre el grupo siguiente al revés y su polo sale contrario.`, v});
       if (pp.length) { v = mas(v, {uniones: pp.map(u => u.id), nuevo: pp.map(u => 'u' + u.id)});
+        v.etqUn = pp.map(u => ({id: u.id, l1: 'unión por polos', l2: 'principio con principio'}));
         s.push({t: 'Principio con principio', h: `Después, el <b>principio</b> de un grupo con el <b>principio</b> del siguiente: ${parTxt(D, pp)}. Se van alternando: final con final, principio con principio…`, v}); }
     } else {
       const fp = D.uniones.U;
       v = mas(v, {uniones: fp.map(u => u.id), nuevo: fp.map(u => 'u' + u.id)});
+      v.etqUn = fp.map(u => ({id: u.id, l1: 'polos consecuentes', l2: 'final con principio'}));
       s.push({t: 'Final con principio', h: `Con más de 2 polos, el concéntrico se une <b>por polos consecuentes</b>: el <b>final</b> de un grupo con el <b>principio</b> del siguiente: ${parTxt(D, fp)}. Todos los grupos se recorren en el mismo sentido.`, v});
     }
     const t = D.term;
