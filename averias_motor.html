@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Averías del motor: encuentra la causa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<script>try{const t=localStorage.getItem('maq-tema');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;--ph1:#D9362E;--ph2:#2E75B6;--ph3:#3F8F2A;--steel:#9aa5b1;--steel2:#c3cbd3;--warn:#C00000;--ok:#3F8F2A;--grid:#e3e8ee;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:16px 16px 36px}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.back{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+.crumbs{font-size:.88rem;color:var(--muted);flex:1 1 auto}
+.crumbs a{color:var(--muted)} .crumbs b{color:var(--ink)}
+.theme{font:inherit;font-size:.9rem;font-weight:700;padding:7px 12px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage svg{display:block;width:100%;height:auto;touch-action:manipulation;user-select:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button,.seg button{font:inherit;font-weight:700;padding:11px 12px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 120px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}
+.seg button{flex:1 1 70px;padding:8px 8px;font-size:.92rem;border-width:2px}
+.seg button[aria-pressed="true"],.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.lab{font-weight:700;font-size:.95rem;margin:2px 0 2px}
+.sl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700} .sl output{font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
+.sl input{grid-column:1/3}
+input[type=range]{width:100%;accent-color:var(--acc);height:28px}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.read{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
+.read div{border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.read small{display:block;color:var(--muted);font-size:.8rem}
+.read b{font-size:1.25rem;font-variant-numeric:tabular-nums}
+.state{border-radius:10px;padding:8px 12px;font-weight:700;margin-bottom:10px;background:var(--grid)}
+.state.ok{background:rgba(63,143,42,.16);color:var(--ok)} .state.bad{background:rgba(217,54,46,.15);color:var(--warn)} .state.mid{background:rgba(242,180,0,.2)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box.green{background:rgba(63,143,42,.10);border-left:6px solid var(--force)}
+.box ul,.box ol{margin:0;padding-left:20px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.box li.on{background:rgba(242,180,0,.25);border-radius:6px}
+.hint{font-size:.88rem;color:var(--muted);margin:6px 4px 0}
+svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif}
+.hit{cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+
+:root{--hl:#F2B400;--l1:#8B4513;--l2:#1b1b1b;--l3:#8c8c8c;--pe1:#2E8B3E;--pe2:#E8C400;--hot:#E07B00;--brass:#d9b44a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--l1:#B8743A;--l2:#050505;--l3:#a7a7a7;--hot:#FFA94D}}
+:root[data-theme="dark"]{--l1:#B8743A;--l2:#050505;--l3:#a7a7a7;--hot:#FFA94D}
+.ctrl button:disabled{opacity:.45;cursor:default}
+.ctrl button.warnb{border-color:var(--cur);color:var(--cur)}
+.disp{display:flex;align-items:baseline;justify-content:space-between;gap:10px;border-radius:10px;padding:8px 12px;margin:0 0 10px;background:#1d2a22;color:#b9f6c5;font-variant-numeric:tabular-nums}
+.disp small{color:#9fd3ab;font-size:.8rem;font-weight:700}
+.disp b{font-size:1.6rem}
+.log{list-style:none;margin:0 0 12px;padding:0;font-size:.9rem;max-height:9.5em;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.log li{padding:4px 10px;border-bottom:1px solid var(--line)}
+.log li:last-child{border-bottom:0}
+.log li b{font-variant-numeric:tabular-nums}
+.placa{border:2px solid #8a939c;border-radius:8px;background:linear-gradient(#f3f5f7,#dfe4e9);color:#1a1a1a;padding:8px 10px;font-size:.88rem;margin-bottom:12px;cursor:pointer}
+.placa table{width:100%;border-collapse:collapse}
+.placa td{padding:1px 4px;border-bottom:1px solid #c3cbd3}
+.placa .ti{font-weight:700;text-align:center;letter-spacing:.03em;margin-bottom:4px}
+.placa.leida{outline:3px solid var(--ok);outline-offset:2px}
+.met li.done::marker{content:"✓ ";color:var(--ok);font-weight:700}
+.met li.done{color:var(--muted)}
+.diag{margin-top:16px;background:var(--card);border:1px solid var(--line);border-left:6px solid #F2B400;border-radius:12px;padding:14px 16px}
+.diag h2{font-size:1.05rem;margin:0 0 8px;color:var(--acc)}
+.diag .opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.diag .opts button{font:inherit;font-weight:700;font-size:.95rem;text-align:left;padding:10px 12px;border-radius:10px;border:2px solid var(--acc);background:var(--card);color:var(--acc);cursor:pointer}
+.diag .opts button.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.diag .opts button.bad{background:var(--warn);border-color:var(--warn);color:#fff}
+.diag .fb{margin:10px 0 0;min-height:1.4em}
+.diag .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.diag .row button{font:inherit;font-weight:700;padding:10px 14px;border-radius:10px;border:2px solid var(--acc);background:var(--acc);color:#fff;cursor:pointer}
+.diag .row button.sec{background:var(--card);color:var(--acc)}
+[hidden]{display:none!important}
+
+/* --- tira del tema, «Para qué sirve» y botón Siguiente (como las del Tema 6 de Automatismos) --- */
+.tnav{--tok:#2E8B3E;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tnav a{text-decoration:none;color:var(--ink);border:2px solid var(--line);border-radius:10px;font-weight:700;background:var(--card);min-height:44px;display:flex;align-items:center;justify-content:center;padding:0 12px}
+.tnav a:hover{border-color:var(--acc)}
+.tnav .where{flex:1;text-align:center;font-weight:700;color:var(--muted);font-size:.95rem}
+.tnav .steps{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px}
+.tnav .steps a{flex:1 1 auto;min-width:44px;padding:0 4px;font-size:.95rem;white-space:nowrap}
+.tnav .steps a.cur{background:#1F4E79;border-color:#1F4E79;color:#fff}
+.tnav a.off{visibility:hidden}
+.tnav .steps a.seen::after{content:"✓";margin-left:3px;font-size:.78em;color:var(--tok)}
+.tnav .steps a.cur.seen::after{color:#fff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tnav{--tok:#6fd98a}}
+:root[data-theme="dark"] .tnav{--tok:#6fd98a}
+.nextbig{display:flex;align-items:center;justify-content:center;margin:18px 0 0;padding:16px;border-radius:12px;background:#1F4E79;color:#fff;font-weight:700;font-size:1.1rem;text-decoration:none;text-align:center}
+.nextbig:hover{background:#163a5c}
+.box.pqs{border-left:6px solid var(--acc)}
+.box.pqs p{margin:0}
+.boxes>.pqs.full{grid-column:1 / -1}
+@media (min-width:621px){
+  .boxes.b3{grid-template-rows:auto 1fr}
+  .boxes.b3>:first-child{grid-column:1;grid-row:1}
+  .boxes.b3>.pqs{grid-column:1;grid-row:2}
+  .boxes.b3>.pqs+*{grid-column:2;grid-row:1 / span 2}
+}
+@media (max-width:620px){.crumbs{display:none}.theme,.themebtn{margin-left:auto}
+  .tnav>a{padding:0 9px}.tnav .where{font-size:.86rem}
+  .tnav .steps a.seen{position:relative}.tnav .steps a.seen::after{position:absolute;top:1px;right:3px;margin:0;font-size:.62em}}
+/* --- fin de la tira del tema --- */
+</style>
+</head>
+<body>
+<main>
+  <nav class="bar" aria-label="Navegación">
+    <a class="back" href="index.html#animaciones" aria-label="Volver al índice de animaciones">← Índice</a>
+    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 5 › <b>T5.9 Averías del motor</b></span>
+    <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
+  </nav>
+  <nav class="tnav" aria-label="Animaciones del Tema 5"><a class="tarr" href="arranques.html" aria-label="Anterior: Arranques del motor">‹ T5.7</a><span class="where">Tema 5 · 7 de 7</span><a class="tarr" href="index.html#animaciones" aria-label="Volver a las animaciones">Fin ›</a><div class="steps"><a href="motor_generador.html" title="Motor o generador: la misma máquina">T5.1</a><a href="partes_motor.html" title="Las partes del motor asíncrono">T5.3</a><a href="campo_giratorio.html" title="Campo magnético giratorio">T5.4</a><a href="curva_par.html" title="Par, velocidad y corriente del motor">T5.4.2 a 5.8</a><a href="placa_bornes.html" title="Placa de bornes: estrella o triángulo">T5.6</a><a href="arranques.html" title="Arranques del motor">T5.7</a><a href="averias_motor.html" class="cur" aria-current="page" title="Averías del motor: encuentra la causa">T5.9</a></div></nav>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 5 · Punto 5.9</small><h1>Averías del motor: encuentra la causa</h1><p class="sub">Este motor tiene una avería. Arráncalo, mira qué hace, mide con los aparatos y descubre qué le pasa. Sin cambiar piezas «a ver si suena la flauta».</p></header>
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 600 620" role="img" aria-label="Cuadro con diferencial, fusibles, contactor y térmico; caja de bornes del motor abierta; motor con una bomba. Se puede medir con polímetro, megóhmetro y pinza"><g id="g"></g></svg>
+        <div class="legend"><span>Cables: <b style="color:var(--l1)">L1 marrón</b> · <b>L2 negro</b> · <b style="color:var(--l3)">L3 gris</b> · <b style="color:var(--pe1)">tierra</b></span><span>● tornillos donde puedes medir</span></div></div>
+      <div class="boxes b3">
+        <div class="box" id="exp"></div>
+<div class="box pqs"><h2>Para qué sirve</h2><p>Para <b>buscar una avería con método</b>, como en el taller: observar, leer la placa, medir sin tensión y medir con tensión. Cada medida descarta causas, hasta que solo queda una. Y sin cambiar piezas «a ver si suena la flauta».</p></div>
+        <div class="box blue met"><h2>El método, paso a paso</h2><ol id="met">
+          <li><b>Observa</b>: arráncalo. ¿No arranca? ¿Zumba? ¿Se calienta? ¿Hace ruido? ¿Qué protección salta?</li>
+          <li><b>Lee la placa</b> y comprueba la conexión (estrella o triángulo) con la tensión de la red.</li>
+          <li><b>Sin tensión</b>: mide las tres bobinas con el polímetro (Ω): tienen que dar <b>igual</b>. Y el aislamiento con el <b>megóhmetro</b>, entre bobinas y entre cada bobina y la masa.</li>
+          <li><b>Con tensión</b>: tensión entre fases y corriente de las tres fases con la <b>pinza</b> (iguales y no mayores que la de la placa).</li></ol>
+          <p class="hint">Cómo se usa: elige un aparato y toca dos tornillos para medir (con la pinza, toca un cable). Para medir en ohmios o con el megóhmetro, primero <b>quita la tensión</b> y <b>las chapas y los cables</b>.</p></div>
+      </div>
+    </div>
+    <aside class="panel">
+      <div class="ctrl"><button id="bRun" class="main">Arrancar</button><button id="bStop">Parar</button></div>
+      <div class="ctrl" id="rearm"></div>
+      <div class="state" id="stt">Parado</div>
+      <div class="read"><div><small>Velocidad</small><b id="vN">0 rpm</b></div><div><small>Temperatura de la carcasa</small><b id="vT">25 °C</b></div></div>
+      <div class="ctrl"><button id="bTen" aria-pressed="false">Quitar la tensión</button><button id="bMon" aria-pressed="false">Quitar chapas y cables</button></div>
+      <div class="lab">Aparato de medida</div>
+      <div class="seg" id="sIns"><button data-v="V" aria-pressed="true">Polímetro V~</button><button data-v="R" aria-pressed="false">Polímetro Ω</button><button data-v="M" aria-pressed="false">Megóhmetro</button><button data-v="A" aria-pressed="false">Pinza</button></div>
+      <div class="disp"><small id="dWhat">Toca dos tornillos</small><b id="dVal">—</b></div>
+      <div class="lab">Tus medidas</div>
+      <ul class="log" id="log"><li>Todavía no has medido nada.</li></ul>
+      <div class="placa" id="placa" role="button" tabindex="0" aria-label="Placa de características del motor"><div class="ti">MOTOR ASÍNCRONO TRIFÁSICO · M1</div>
+        <table><tr><td>5,5 kW</td><td>50 Hz</td><td>1455 rpm</td></tr><tr><td>Δ 400 V</td><td>11 A</td><td>cos φ 0,83</td></tr><tr><td>Y 690 V</td><td>6,4 A</td><td>IP55 · cl. F</td></tr></table></div>
+    </aside>
+  </div>
+  <section class="diag" aria-labelledby="dgH"><h2 id="dgH">¿Qué le pasa al motor?</h2>
+    <div class="opts" id="opts"></div>
+    <p class="fb" id="fb" aria-live="polite">Cuando lo tengas claro, elige la causa. Si fallas, te doy una pista.</p>
+    <div class="row"><button id="bNew" type="button">Otro motor con otra avería</button><button id="bSol" class="sec" type="button" hidden>Ver la solución</button></div></section>
+  <a class="nextbig" href="index.html#animaciones">Has llegado al final del Tema 5 · Volver a las animaciones →</a>
+</main>
+<script>
+// navegación y tema (común a todas las páginas)
+(function(){const b=document.getElementById('themeBtn'),r=document.documentElement;
+ const cur=()=>r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+ const lab=()=>{b.textContent=cur()==='dark'?'☀ Modo claro':'☾ Modo oscuro';};
+ b.onclick=()=>{const n=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('maq-tema',n);}catch(e){}lab();};lab();})();
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmt=(x,d=0)=>x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+function el(t,a,txt){let s='<'+t;for(const k in a)s+=` ${k}="${a[k]}"`;return s+(txt!==undefined?'>'+txt+'</'+t+'>':'/>');}
+function arrowSvg(x1,y1,x2,y2,c,w,op){const a=Math.atan2(y2-y1,x2-x1),h=w*2.4;const bx=x2-h*Math.cos(a),by=y2-h*Math.sin(a);
+  return `<g opacity="${op===undefined?1:op}"><line x1="${x1}" y1="${y1}" x2="${bx}" y2="${by}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/><path d="M${x2} ${y2}L${bx-h*.6*Math.sin(a)} ${by+h*.6*Math.cos(a)}L${bx+h*.6*Math.sin(a)} ${by-h*.6*Math.cos(a)}Z" fill="${c}"/></g>`;}
+// ---------- las averías (las de la tabla del punto 5.9)
+const FAULTS={
+ fase:{n:'Falta una fase (fusible fundido)', sol:'Cambia el <b>fusible fundido</b> por otro igual, y busca por qué se fundió.', pista:'Pon la <b>pinza</b> en los tres cables mientras zumba, o mide la <b>tensión entre fases</b> a la salida de los fusibles (y, sin tensión, cada fusible en ohmios).'},
+ masa:{n:'Derivación a masa (aislamiento dañado)', sol:'Una bobina toca la carcasa. Si es humedad, <b>secar el motor</b>; si no, <b>rebobinarlo</b>. Así no se puede volver a conectar.', pista:'Si salta el <b>diferencial</b>, mide el aislamiento entre cada bobina y la <b>masa</b> con el megóhmetro.'},
+ sobrecarga:{n:'Sobrecarga: la máquina va muy dura', sol:'El motor está bien: es la <b>bomba</b> la que se atasca y pide demasiado. Revisa la mecánica. <b>No subas el térmico</b>.', pista:'Pon la <b>pinza</b> y compara la corriente con la de la <b>placa</b>.'},
+ termico:{n:'Térmico mal regulado', sol:'Regula el térmico a la <b>intensidad de la placa: 11 A</b>.', pista:'Mira a cuántos amperios está la <b>ruleta del térmico</b> y compárala con la placa y con la pinza.'},
+ espiras:{n:'Espiras en cortocircuito en una bobina', sol:'Una bobina tiene espiras en cortocircuito: hay que <b>rebobinar o cambiar</b> el motor.', pista:'Mide en ohmios la <b>resistencia de las tres bobinas</b>: tienen que dar igual. Y mira la pinza en las tres fases.'},
+ reves:{n:'Dos fases cambiadas', sol:'<b>Intercambia dos fases</b>: dos cables en la caja de bornes.', pista:'Mira <b>hacia dónde gira</b>, si sale agua, y cómo llegan los cables L1, L2 y L3 a la caja de bornes.'},
+ estrella:{n:'Mal conectado: en estrella en vez de en triángulo', sol:'La placa dice <b>Δ 400 V</b> y la red es de 400 V: pon las <b>chapas en triángulo</b>.', pista:'<b>Lee la placa</b> y mira cómo están puestas las <b>chapas</b> en la caja de bornes.'},
+ rodam:{n:'Rodamientos gastados', sol:'Las medidas eléctricas salen bien: el problema es mecánico. <b>Cambia los rodamientos</b>.', pista:'Arráncalo y <b>escucha</b>. ¿Las medidas eléctricas salen bien?'}};
+const KEYS=Object.keys(FAULTS);
+// ---------- geometría
+const XL=[70,125,180], BR={U1:[370,300],V1:[445,300],W1:[520,300],W2:[370,215],U2:[445,215],V2:[520,215]}, MASA=[566,182];
+const PTS={}; for(let k=0;k<3;k++){ PTS['A'+k]={x:XL[k],y:118,n:'entrada del fusible L'+(k+1)}; PTS['B'+k]={x:XL[k],y:198,n:'salida del fusible L'+(k+1)}; }
+for(const b in BR) PTS[b]={x:BR[b][0],y:BR[b][1],n:'borne '+b}; PTS.PE={x:MASA[0],y:MASA[1],n:'masa'};
+const WIND={U1:0,U2:0,V1:1,V2:1,W1:2,W2:2};
+// ---------- estado
+let F, fp, ten, dif, run, th, mont, tRun, T, ins='V', p1=null, p2=null, clamp=null, tries=0, solved=false, logs=[], did=[false,false,false,false], msg='', last=performance.now(), t=0, rot=0;
+function newCase(){ F=KEYS[Math.floor(Math.random()*KEYS.length)]; if(F===(window._lastF)) F=KEYS[(KEYS.indexOf(F)+1+Math.floor(Math.random()*7))%8]; window._lastF=F; fp=Math.floor(Math.random()*3);
+  ten=true; dif=false; run=false; th=false; mont=true; tRun=0; T=25; p1=p2=clamp=null; tries=0; solved=false; logs=[]; did=[false,false,false,false]; msg='';
+  $('placa').classList.remove('leida'); buildOpts(); $('fb').textContent='Cuando lo tengas claro, elige la causa. Si fallas, te doy una pista.'; $('bSol').hidden=true; setDisp('Toca dos tornillos','—'); renderLog(); texts(); }
+const conn=()=>F==='estrella'?'Y':'D', map=()=>F==='reves'?[0,2,1]:[0,1,2], setA=()=>F==='termico'?8:11;
+const RW=()=>[0,1,2].map(w=>F==='espiras'&&w===fp?1.4:1.8);
+// corriente de cada cable con el motor en marcha
+function amps(){ if(!run) return [0,0,0];
+  if(tRun<0.8 && F!=='fase') return [54,55,54];
+  const b={fase:65,sobrecarga:12.6,termico:9.0,espiras:9.3,reves:9.0,estrella:7.6,rodam:9.6}[F]||9;
+  return [0,1,2].map(k=> F==='fase'&&k===fp?0 : F==='espiras'&&map().indexOf(fp)===k?12.4 : b+(k===1?0.1:0)); }
+const rpm=()=>!run?0:F==='fase'?0:({sobrecarga:1415,termico:1455,espiras:1440,reves:1455,estrella:1390,rodam:1450}[F]||1455)*Math.min(1,tRun/0.8);
+const TRIP={fase:3,sobrecarga:12,termico:12,espiras:22};
+const TT={fase:105,sobrecarga:88,termico:58,espiras:92,reves:58,estrella:96,rodam:70};
+// ---------- tensiones: cada punto tiene un fasor (o no está unido a nada)
+const PH=k=>{const a=-k*2*Math.PI/3; return [231*Math.cos(a),231*Math.sin(a)];};
+const add=(a,b)=>[a[0]+b[0],a[1]+b[1]], mul=(a,k)=>[a[0]*k,a[1]*k];
+function pots(){ const P={PE:[0,0]}; const q1=ten&&!dif;
+  const blown=k=>F==='fase'&&k===fp;
+  for(let k=0;k<3;k++){ P['A'+k]=q1?PH(k):null; P['B'+k]=q1&&!blown(k)?PH(k):null; }
+  const km=run&&!th&&q1&&mont, m=map(), term=[null,null,null];
+  if(km){ for(let k=0;k<3;k++) term[m[k]]=P['B'+k];
+    const nulls=term.map((x,i)=>x?null:i).filter(i=>i!==null);
+    if(nulls.length===1){ const i=nulls[0], o=[0,1,2].filter(j=>j!==i); term[i]=mul(add(term[o[0]],term[o[1]]),0.5); // la fase que falta llega «de rebote» por las bobinas
+      const k=m.indexOf(i); P['B'+k]=term[i]; } }
+  P.U1=term[0]; P.V1=term[1]; P.W1=term[2];
+  if(mont&&term.some(x=>x)){ if(conn()==='D'){ P.W2=P.U1; P.U2=P.V1; P.V2=P.W1; } else { const s=mul(add(add(term[0]||[0,0],term[1]||[0,0]),term[2]||[0,0]),1/3); P.W2=P.U2=P.V2=s; } }
+  else { P.W2=P.U2=P.V2=null; }
+  return P; }
+// ---------- medidas
+const isMotor=id=>id in BR, isMasa=id=>id==='PE';
+function measure(a,b){
+  const na=PTS[a].n, nb=PTS[b].n; let val, note='';
+  if(ins==='V'){ const P=pots(), x=P[a], y=P[b]; val=(x&&y)?Math.round(Math.hypot(x[0]-y[0],x[1]-y[1])):0; val=fmt(val)+' V';
+    if(ten&&!dif) did[3]=did[3]||true; }
+  else if(ins==='R'||ins==='M'){
+    if(ten){ return say(dif?'Aunque haya saltado el diferencial, primero <b>quita la tensión y consígnala</b>: alguien podría rearmarlo mientras mides.':'¡Con tensión no se mide en ohmios ni con el megóhmetro! Primero <b>quita la tensión</b>.'); }
+    const mot=isMotor(a)||isMotor(b);
+    if(mot&&mont) return say('Quita primero <b>las chapas y los cables</b> de la caja de bornes: si no, mides las bobinas todas juntas y lo que venga del cuadro.');
+    if(ins==='M'&&!mot) return say('El megóhmetro se usa aquí para el <b>aislamiento del motor</b>: entre bobinas y entre cada bobina y la masa.');
+    if(!mot){ // en el cuadro: continuidad de los fusibles
+      const fa=a[0]==='A'||a[0]==='B', fb=b[0]==='A'||b[0]==='B';
+      if(fa&&fb&&a[1]===b[1]&&a[0]!==b[0]) val=F==='fase'&&+a[1]===fp?'OL':'0,1 Ω'; else val='OL';
+      if(fa&&fb&&a[1]===b[1]&&a[0]!==b[0]) note=val==='OL'?' (fusible abierto: fundido)':' (fusible bien)'; }
+    else { did[2]=true;
+      const wa=isMasa(a)?'m':WIND[a], wb=isMasa(b)?'m':WIND[b];
+      if(wa==='m'||wb==='m'){ const w=wa==='m'?wb:wa; if(w==='m') val=ins==='R'?'0,0 Ω':'0,00 MΩ'; else { const bad=F==='masa'&&w===fp; val=ins==='R'?(bad?'3,2 kΩ':'OL'):(bad?'0,00 MΩ':'> 999 MΩ'); } }
+      else if(wa===wb){ if(a===b) return; val=ins==='R'?fmt(RW()[wa],1)+' Ω':'0,00 MΩ'; if(ins==='M') note=' (es la misma bobina: un hilo de cobre)'; }
+      else val=ins==='R'?'OL':'> 999 MΩ'; } }
+  setDisp(na+' ↔ '+nb, val); logs.unshift(`${ins==='V'?'V~':ins==='R'?'Ω':'Megóhmetro'}: ${na} ↔ ${nb} → <b>${val}</b>${note}`); renderLog(); msg=''; texts(); }
+function clampOn(k){ clamp=k; const I=amps()[k]; const val=fmt(I,1)+' A'; setDisp('pinza en el cable L'+(k+1),val);
+  logs.unshift(`Pinza: cable L${k+1} → <b>${val}</b>${run?'':' (motor parado)'}`); renderLog(); if(run) did[3]=true; msg=''; texts(); }
+function say(m){ msg=m; texts(); }
+function setDisp(w,v){ $('dWhat').textContent=w; $('dVal').textContent=v; }
+function renderLog(){ $('log').innerHTML=logs.length?logs.slice(0,12).map(x=>`<li>${x}</li>`).join(''):'<li>Todavía no has medido nada.</li>'; }
+// ---------- controles
+$('bRun').onclick=()=>{ if(run) return; did[0]=true;
+  if(!ten) return say('No hay tensión: Q1 está abierto. Pulsa <b>Dar la tensión</b>.');
+  if(dif) return say('El <b>diferencial</b> está disparado: rearma primero.');
+  if(th) return say('El <b>térmico</b> está disparado: rearma primero.');
+  if(!mont) return say('Faltan <b>las chapas y los cables</b> en la caja de bornes: así no se puede arrancar.');
+  run=true; tRun=0; msg='';
+  if(F==='masa'){ run=false; dif=true; msg='¡Nada más arrancar ha <b>saltado el diferencial</b>! Se ha ido la tensión de todo.'; }
+  texts(); };
+$('bStop').onclick=()=>{ run=false; msg=''; texts(); };
+$('bTen').onclick=()=>{ if(ten){ ten=false; run=false; msg='Q1 abierto y <b>consignado</b> (bloqueado y señalizado): ya no hay tensión. Comprueba con el polímetro que no hay tensión antes de tocar.'; } else { if(!mont){ return say('Antes de dar tensión, vuelve a poner <b>las chapas y los cables</b>.'); } ten=true; msg=''; } texts(); };
+$('bMon').onclick=()=>{ if(mont){ if(ten) return say(dif?'Aunque haya saltado el diferencial, primero <b>quita la tensión y consígnala</b>: alguien podría rearmarlo.':'¡Con tensión no se tocan los bornes! Primero <b>quita la tensión</b>.'); mont=false; run=false; msg='Has quitado las <b>chapas y los cables</b> de la caja de bornes: cada bobina queda suelta y se puede medir sola.'; }
+  else { mont=true; msg='Chapas y cables puestos otra vez, <b>como estaban</b>.'; } p1=p2=null; texts(); };
+document.querySelectorAll('#sIns button').forEach(b=>b.onclick=()=>{ ins=b.dataset.v; document.querySelectorAll('#sIns button').forEach(x=>x.setAttribute('aria-pressed',x===b)); p1=p2=clamp=null;
+  setDisp(ins==='A'?'Toca un cable':'Toca dos tornillos','—'); msg=''; texts(); });
+$('placa').onclick=$('placa').onkeydown=e=>{ if(e.type==='keydown'&&e.key!=='Enter'&&e.key!==' ') return; did[1]=true; $('placa').classList.add('leida');
+  say('<b>Placa</b>: 5,5 kW, 1455 rpm. <b>Δ 400 V · 11 A</b> y <b>Y 690 V · 6,4 A</b>. La red es de <b>400 V</b>, así que este motor va en <b>triángulo</b> y su corriente normal no puede pasar de <b>11 A</b>. El térmico se regula a 11 A.'); };
+$('sv').addEventListener('click',e=>{ const h=e.target.closest('[data-pt],[data-cab],[data-chapa]'); if(!h) return;
+  if(h.dataset.chapa!==undefined){ did[1]=true; return say(conn()==='D'?'Las chapas están en <b>triángulo</b>: tres chapas en vertical (U1-W2, V1-U2, W1-V2).':'Las chapas están en <b>estrella</b>: una chapa en horizontal que une W2, U2 y V2.'); }
+  if(ins==='A'){ if(h.dataset.cab!==undefined) clampOn(+h.dataset.cab); else say('Con la pinza se abraza <b>un cable</b>: toca uno de los cables L1, L2 o L3.'); return; }
+  if(h.dataset.pt===undefined) return say('Con '+(ins==='V'?'el polímetro':ins==='R'?'el polímetro':'el megóhmetro')+' se tocan <b>dos tornillos</b>. La pinza es para los cables.');
+  const id=h.dataset.pt; if(p1===null||p2!==null){ p1=id; p2=null; setDisp('punta negra en '+PTS[id].n+'… ahora la roja','—'); msg=''; texts(); } else if(id!==p1){ p2=id; measure(p1,p2); } });
+function rearm(){ const r=$('rearm'); let h=''; if(th) h+='<button id="bTh" class="warnb">Rearmar el térmico</button>'; if(dif) h+='<button id="bDif" class="warnb">Rearmar el diferencial</button>'; r.innerHTML=h; r.hidden=!h;
+  if(th) $('bTh').onclick=()=>{ th=false; msg='Térmico rearmado.'; texts(); }; if(dif) $('bDif').onclick=()=>{ dif=false; msg='Diferencial rearmado. Si vuelves a arrancar sin arreglar nada, volverá a saltar.'; texts(); }; }
+// ---------- diagnóstico
+function buildOpts(){ const o=KEYS.slice(); $('opts').innerHTML=o.map(k=>`<button data-k="${k}">${FAULTS[k].n}</button>`).join('');
+  document.querySelectorAll('#opts button').forEach(b=>b.onclick=()=>{ if(solved) return; const k=b.dataset.k;
+    if(k===F){ solved=true; b.classList.add('ok'); $('fb').innerHTML='<b>¡Correcto!</b> '+FAULTS[F].sol+' '+where(); $('bSol').hidden=true; }
+    else { tries++; b.classList.add('bad'); b.disabled=true; $('fb').innerHTML='<b>No es eso.</b> Pista: '+FAULTS[F].pista; if(tries>=2) $('bSol').hidden=false; }
+    texts(); }); }
+function where(){ if(F==='fase') return `(Era el fusible de <b>L${fp+1}</b>.)`; if(F==='masa') return `(Era la bobina <b>${['U','V','W'][fp]}</b>.)`; if(F==='espiras') return `(Era la bobina <b>${['U','V','W'][fp]}</b>: 1,4 Ω en vez de 1,8 Ω.)`; return ''; }
+$('bSol').onclick=()=>{ solved=true; document.querySelector(`#opts button[data-k="${F}"]`).classList.add('ok'); $('fb').innerHTML='Era: <b>'+FAULTS[F].n+'</b>. '+FAULTS[F].sol+' '+where(); $('bSol').hidden=true; texts(); };
+$('bNew').onclick=()=>newCase();
+// ---------- textos
+function texts(){
+  const I=amps(), sy=symptom();
+  let m=msg||sy.t;
+  $('exp').innerHTML='<h2>Qué pasa</h2><p>'+m+'</p>';
+  $('stt').textContent=sy.s; $('stt').className='state '+sy.c;
+  $('vN').textContent=fmt(rpm())+' rpm'+(run&&F==='reves'&&rpm()>0?' ↺':run&&rpm()>0?' ↻':'');
+  $('vT').textContent=fmt(T)+' °C';
+  $('bRun').disabled=run; $('bStop').disabled=!run;
+  $('bTen').textContent=ten?'Quitar la tensión':'Dar la tensión'; $('bTen').setAttribute('aria-pressed',!ten);
+  $('bMon').textContent=mont?'Quitar chapas y cables':'Poner chapas y cables'; $('bMon').setAttribute('aria-pressed',!mont);
+  document.querySelectorAll('#met li').forEach((li,i)=>li.classList.toggle('done',did[i]));
+  rearm();
+}
+function symptom(){
+  if(dif) return {s:'Ha saltado el diferencial',c:'bad',t:'Ha saltado el <b>diferencial</b> (Q1): se ha ido la tensión de todo. Un diferencial salta cuando se escapa corriente a tierra por algún sitio.'};
+  if(th&&!run) return {s:'Ha saltado el térmico',c:'bad',t:'Ha saltado el <b>térmico</b> (F2): el contactor se ha soltado y el motor se ha parado. El térmico salta cuando pasa más corriente de la que tiene puesta en su ruleta durante un rato.'};
+  if(!ten) return {s:'Sin tensión (consignado)',c:'mid',t:'No hay tensión. Ahora sí puedes quitar las chapas y medir en ohmios o con el megóhmetro.'};
+  if(!run) return {s:'Parado',c:'',t:'El motor está parado y tiene una avería. Empieza por <b>observar</b>: pulsa <b>Arrancar</b>.'};
+  if(tRun<0.8&&F!=='fase') return {s:'Arrancando…',c:'mid',t:'Arrancando: un momento pide mucha corriente (punto 5.7).'};
+  switch(F){
+    case 'fase': return {s:'Zumba y no arranca',c:'bad',t:'El motor <b>zumba y no arranca</b>. Se va a calentar enseguida y saltará el térmico.'};
+    case 'sobrecarga': return {s:'Gira, pero se calienta',c:'mid',t:'El motor arranca y gira un poco más despacio de lo normal. Se va calentando… espera un poco.'};
+    case 'termico': return {s:'Gira con normalidad',c:'ok',t:'El motor arranca y gira bien, a su velocidad. Espera un poco a ver qué pasa.'};
+    case 'espiras': return {s:'Gira, pero se calienta',c:'mid',t:'El motor arranca y gira, pero <b>se calienta más de lo normal</b>.'};
+    case 'reves': return {s:'Gira al revés',c:'bad',t:'El motor gira, pero <b>al revés</b>: la bomba no saca agua.'};
+    case 'estrella': return {s:'Va flojo y se calienta',c:'mid',t:'El motor gira más despacio de lo normal y <b>se calienta mucho</b>, aunque no salta nada. Huele a barniz caliente…'};
+    case 'rodam': return {s:'Hace ruido y vibra',c:'bad',t:'El motor gira a su velocidad, pero <b>hace ruido y vibra</b>.'};
+  }
+  return {s:'En marcha',c:'ok',t:''};
+}
+// ---------- dibujo
+function draw(){
+  const ink=css('--ink'),card=css('--card'),st=css('--steel'),st2=css('--steel2'),mut=css('--muted'),hl=css('--hl'),brass=css('--brass'),cur=css('--cur'),okc=css('--ok'),hot=css('--hot'),acc=css('--acc'),line=css('--line');
+  const LC=[css('--l1'),css('--l2'),css('--l3')], q1=ten&&!dif, km=run&&!th&&q1&&mont;
+  let s='';
+  const T_=(x,y,txt,o={})=>el('text',Object.assign({x,y,'font-size':o.fs||16,'font-weight':o.fw||700,fill:o.fill||ink,'text-anchor':o.a||'start'},o.extra||{}),txt);
+  // --- red y tierra
+  for(let k=0;k<3;k++) s+=T_(XL[k],22,'L'+(k+1),{a:'middle',fs:15});
+  s+=`<path d="M288 12L288 182L${MASA[0]-12} 182" stroke="${css('--pe1')}" stroke-width="5" fill="none"/><path d="M288 12L288 182L${MASA[0]-12} 182" stroke="${css('--pe2')}" stroke-width="5" fill="none" stroke-dasharray="10 10"/>`+T_(274,24,'PE',{a:'end',fs:13});
+  // --- líneas del cuadro
+  const seg=(k,y1,y2)=>`<line x1="${XL[k]}" y1="${y1}" x2="${XL[k]}" y2="${y2}" stroke="${LC[k]}" stroke-width="4"/>`;
+  for(let k=0;k<3;k++){ s+=seg(k,28,52)+seg(k,82,118)+seg(k,198,236)+seg(k,268,310)+seg(k,342,352); }
+  // Q1 diferencial
+  s+=el('rect',{x:46,y:40,width:160,height:52,rx:6,fill:'none',stroke:ink,'stroke-width':2});
+  for(let k=0;k<3;k++){ const x=XL[k]; s+= q1?`<line x1="${x}" y1="52" x2="${x}" y2="82" stroke="${ink}" stroke-width="3"/>`:`<line x1="${x}" y1="82" x2="${x-12}" y2="56" stroke="${ink}" stroke-width="3"/>`; }
+  s+=T_(10,62,'Q1',{fs:17})+T_(10,80,'difer.',{fs:12,fw:400,fill:mut});
+  s+=el('rect',{x:212,y:48,width:18,height:36,rx:4,fill:q1?okc:cur})+el('rect',{x:214,y:q1?50:68,width:14,height:14,rx:3,fill:'#fff'});
+  if(dif) s+=T_(236,72,'¡Saltó!',{fs:13,fill:cur}); else if(!ten) s+=T_(236,66,'🔒',{fs:18})+T_(236,86,'abierto',{fs:11,fw:400,fill:mut});
+  // F1 fusibles
+  for(let k=0;k<3;k++){ const x=XL[k]; s+=el('rect',{x:x-12,y:130,width:24,height:56,rx:5,fill:'#efe6cf',stroke:ink,'stroke-width':1.5})+el('rect',{x:x-12,y:150,width:24,height:16,fill:'#c9b98f'});
+    if(solved&&F==='fase'&&k===fp) s+=`<path d="M${x-8} ${148}L${x+8} ${168}M${x+8} ${148}L${x-8} ${168}" stroke="${cur}" stroke-width="4"/>`; }
+  s+=T_(10,163,'F1',{fs:17});
+  // KM1 contactor
+  s+=el('rect',{x:46,y:226,width:160,height:52,rx:6,fill:'none',stroke:ink,'stroke-width':2});
+  for(let k=0;k<3;k++){ const x=XL[k]; s+= km?`<line x1="${x}" y1="236" x2="${x}" y2="268" stroke="${ink}" stroke-width="3"/>`:`<line x1="${x}" y1="268" x2="${x-12}" y2="242" stroke="${ink}" stroke-width="3"/>`; }
+  s+=T_(6,258,'KM1',{fs:17});
+  // F2 térmico con su ruleta
+  s+=el('rect',{x:46,y:300,width:160,height:52,rx:6,fill:'none',stroke:ink,'stroke-width':2});
+  for(let k=0;k<3;k++){ const x=XL[k]; s+=`<path d="M${x} 310L${x} 316L${x+7} 320L${x-7} 326L${x+7} 332L${x} 336L${x} 342" stroke="${ink}" stroke-width="2.5" fill="none"/>`; }
+  s+=T_(10,332,'F2',{fs:17});
+  const sa=setA(), ang=-Math.PI*0.75+(sa-7)/(13-7)*Math.PI*1.5;
+  s+=el('circle',{cx:222,cy:326,r:14,fill:card,stroke:ink,'stroke-width':2})+`<line x1="222" y1="326" x2="${222+11*Math.cos(ang-Math.PI/2)}" y2="${326+11*Math.sin(ang-Math.PI/2)}" stroke="${cur}" stroke-width="3" stroke-linecap="round"/>`;
+  s+=T_(222,358,fmt(sa)+' A',{a:'middle',fs:15});
+  if(th) s+=T_(240,332,'¡Saltó!',{fs:13,fill:cur});
+  // --- cables hasta la caja de bornes
+  const m=map(), bx=[BR.U1[0],BR.V1[0],BR.W1[0]];
+  for(let k=0;k<3;k++){ const y=392+k*12, X=bx[m[k]], yEnd=mont?BR.U1[1]+16:360;
+    const d=`M${XL[k]} 352L${XL[k]} ${y}L${X} ${y}L${X} ${yEnd}`;
+    s+=`<path d="${d}" stroke="${line}" stroke-width="8" fill="none" stroke-linejoin="round"/><path d="${d}" stroke="${LC[k]}" stroke-width="5" fill="none" stroke-linejoin="round"/>`;
+    if(!mont) s+=el('circle',{cx:X,cy:yEnd,r:5,fill:LC[k],stroke:ink});
+    if(km&&amps()[k]>0.5){ const off=(-t*20)%16; s+=`<path d="${d}" stroke="#FFE28A" stroke-width="3" stroke-linecap="round" stroke-dasharray="0.5 15.5" stroke-dashoffset="${off}" fill="none"/>`; }
+    // zona para la pinza
+    s+=`<g class="hit" data-cab="${k}"><rect x="${XL[k]-14}" y="354" width="28" height="${y-350}" fill="transparent"/>`+T_(XL[k]-15,382,'L'+(k+1),{a:'end',fs:13,fill:mut})+`</g>`;
+    if(clamp===k&&ins==='A') s+=`<ellipse cx="${XL[k]}" cy="372" rx="12" ry="8" fill="none" stroke="${acc}" stroke-width="5"/><line x1="${XL[k]+12}" y1="372" x2="${XL[k]+34}" y2="372" stroke="${acc}" stroke-width="3"/>`;
+  }
+  // --- caja de bornes (abierta, en grande)
+  s+=T_(445,142,'Caja de bornes de M1',{a:'middle',fs:16});
+  s+=el('rect',{x:300,y:150,width:290,height:232,rx:12,fill:st2,'fill-opacity':.55,stroke:ink,'stroke-width':2});
+  // chapas
+  s+=`<g class="hit" data-chapa="1">`;
+  if(mont){ if(conn()==='D'){ for(const x of [370,445,520]) s+=el('rect',{x:x-9,y:215,width:18,height:85,rx:4,fill:'#c9ced4',stroke:ink,'stroke-width':1.5}); }
+    else s+=el('rect',{x:370,y:206,width:150,height:18,rx:4,fill:'#c9ced4',stroke:ink,'stroke-width':1.5}); }
+  else { for(const x of [548,562,576]) s+=el('rect',{x:x-5,y:222,width:10,height:58,rx:3,fill:'#c9ced4',stroke:ink}); s+=T_(562,296,'chapas',{a:'middle',fs:12,fill:mut})+T_(562,310,'quitadas',{a:'middle',fs:12,fill:mut}); }
+  s+=`</g>`;
+  for(const b in BR){ const [x,y]=BR[b]; const top=y<250; s+=`<g class="hit" data-pt="${b}">`+el('circle',{cx:x,cy:y,r:18,fill:'transparent'})+el('circle',{cx:x,cy:y,r:13,fill:brass,stroke:(p1===b||p2===b)?hl:ink,'stroke-width':(p1===b||p2===b)?5:1.5})+el('circle',{cx:x,cy:y,r:4,fill:ink})+`</g>`;
+    s+=T_(x+(top?0:0),top?y-22:y+36,b,{a:'middle',fs:16}); }
+  s+=`<g class="hit" data-pt="PE">`+el('circle',{cx:MASA[0],cy:MASA[1],r:16,fill:'transparent'})+el('circle',{cx:MASA[0],cy:MASA[1],r:10,fill:brass,stroke:(p1==='PE'||p2==='PE')?hl:ink,'stroke-width':(p1==='PE'||p2==='PE')?5:1.5})+`</g>`+T_(MASA[0],MASA[1]+28,'masa',{a:'middle',fs:13});
+  // tornillos del cuadro donde se puede medir
+  for(let k=0;k<3;k++) for(const L of ['A','B']){ const id=L+k, P=PTS[id], on=p1===id||p2===id;
+    s+=`<g class="hit" data-pt="${id}">`+el('circle',{cx:P.x,cy:P.y,r:14,fill:'transparent'})+el('circle',{cx:P.x,cy:P.y,r:7,fill:brass,stroke:on?hl:ink,'stroke-width':on?4:1.5})+`</g>`; }
+  // puntas del aparato
+  const tip=(id,c,ox)=>{ const P=PTS[id]; return `<path d="M${P.x} ${P.y}Q${(P.x+ox)/2} ${P.y-60} ${ox} 6" stroke="${c}" stroke-width="3" fill="none" opacity=".85"/><circle cx="${P.x}" cy="${P.y}" r="5" fill="${c}"/>`; };
+  if(ins!=='A'){ if(p1) s+=tip(p1,ink,320); if(p2) s+=tip(p2,cur,350); }
+  // --- el motor y la bomba
+  const shake=(run&&F==='rodam'&&tRun>0.8)?`translate(${(Math.sin(t*47)*2.2).toFixed(1)} ${(Math.cos(t*39)*1.6).toFixed(1)})`:'';
+  let mo='';
+  mo+=`<path d="M92 482L60 482Q48 482 48 494L48 572Q48 584 60 584L92 584Z" fill="${st}" stroke="${ink}" stroke-width="2"/>`;
+  mo+=el('rect',{x:92,y:470,width:208,height:126,rx:10,fill:st2,stroke:ink,'stroke-width':2});
+  for(let k=0;k<6;k++) mo+=el('rect',{x:98,y:482+k*18,width:196,height:6,rx:3,fill:st,stroke:ink,'stroke-width':.6});
+  mo+=el('rect',{x:166,y:452,width:62,height:18,rx:3,fill:st2,stroke:ink,'stroke-width':1.5});
+  mo+=el('rect',{x:300,y:524,width:52,height:18,fill:'#7d868f',stroke:ink,'stroke-width':1.5})+el('rect',{x:352,y:510,width:18,height:46,rx:3,fill:st,stroke:ink,'stroke-width':1.5});
+  mo+=T_(196,540,'M1',{a:'middle',fs:26,extra:{'paint-order':'stroke',stroke:st2,'stroke-width':6}});
+  // bomba
+  mo+=el('circle',{cx:430,cy:533,r:44,fill:card,stroke:ink,'stroke-width':2.5});
+  mo+=`<path d="M450 494L450 468L590 468" stroke="${ink}" stroke-width="16" fill="none"/><path d="M450 494L450 468L590 468" stroke="${card}" stroke-width="10" fill="none"/>`;
+  const fw=run&&F!=='reves'&&F!=='fase'&&tRun>0.8;
+  if(fw){ const off=(-t*40)%16; mo+=`<path d="M450 494L450 468L590 468" stroke="#2E75B6" stroke-width="5" stroke-dasharray="3 13" stroke-dashoffset="${off}" fill="none" stroke-linecap="round"/>`+T_(560,456,'agua',{a:'middle',fs:14,fill:'#2E75B6'}); }
+  if(run&&F==='reves'&&tRun>0.8) mo+=T_(520,456,'¡no sale agua!',{a:'middle',fs:14,fill:cur});
+  const rr=rpm()>0?(F==='reves'?-1:1):0; rot+=rr*0.12;
+  for(let k=0;k<5;k++){ const a=rot+k*2*Math.PI/5; mo+=`<line x1="430" y1="533" x2="${430+34*Math.cos(a)}" y2="${533+34*Math.sin(a)}" stroke="${acc}" stroke-width="5" stroke-linecap="round"/>`; }
+  mo+=el('circle',{cx:430,cy:533,r:9,fill:ink})+T_(430,600,'bomba',{a:'middle',fs:14,fill:mut});
+  if(rr){ mo+=`<path d="M361 ${rr>0?560:506}A22 22 0 0 ${rr>0?0:1} 361 ${rr>0?506:560}" stroke="${okc}" stroke-width="3" fill="none"/>`+arrowSvg(361,rr>0?506:560,rr>0?372:372,rr>0?503:563,okc,3); }
+  s+=`<g transform="${shake}">${mo}</g>`;
+  s+=`<line x1="228" y1="452" x2="300" y2="382" stroke="${mut}" stroke-width="1.5" stroke-dasharray="5 4"/>`;
+  // síntomas en el dibujo
+  if(run&&F==='fase') s+=el('rect',{x:110,y:430,width:84,height:26,rx:13,fill:cur})+T_(152,449,'¡zumba!',{a:'middle',fs:15,fill:'#fff'});
+  if(run&&F==='rodam'&&tRun>0.8) s+=T_(300,505,')))',{fs:20,fill:cur,extra:{transform:`rotate(-20 300 505)`}})+T_(66,476,'(((',{fs:20,fill:cur});
+  if(T>70){ const op=Math.min(1,(T-70)/25); for(let k=0;k<3;k++){ const x=130+k*50, ph=(t*0.8+k*0.33)%1, y=466-ph*28; s+=`<path d="M${x} ${y}q7 -6 0 -12q-7 -6 0 -12" stroke="${hot}" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="${(op*(1-ph)).toFixed(2)}"/>`; } }
+  // aparato (arriba a la derecha)
+  s+=el('rect',{x:310,y:6,width:280,height:104,rx:12,fill:'#1d2a22',stroke:ink,'stroke-width':2});
+  const nm={V:'POLÍMETRO · V~',R:'POLÍMETRO · Ω',M:'MEGÓHMETRO · 500 V',A:'PINZA · A~'}[ins];
+  s+=T_(326,32,nm,{fs:14,fill:'#9fd3ab'})+T_(574,88,$('dVal').textContent,{a:'end',fs:40,fill:'#b9f6c5',extra:{'font-variant-numeric':'tabular-nums'}});
+  $('g').innerHTML=s;
+}
+// ---------- tiempo
+let tt=0;
+function frame(now){ const dt=Math.min(.05,(now-last)/1000); last=now; t+=dt;
+  if(run){ tRun+=dt; const tr=TRIP[F]; if(tr&&tRun>tr){ run=false; th=true; msg=''; texts(); } }
+  const tg=run?(tRun<0.8?40:TT[F]||60):25; T+=(tg-T)*Math.min(1,dt*(run?0.12:0.05));
+  if(clamp!==null&&ins==='A'){ const I=amps()[clamp]; $('dVal').textContent=fmt(I,1)+' A'; }
+  draw(); tt+=dt; if(tt>0.25){ tt=0; texts(); } requestAnimationFrame(frame); }
+newCase(); requestAnimationFrame(frame);
+</script>
+<script>(function(){ // tira del tema: esta animación queda como «vista» y las ya abiertas llevan ✓; Esc y Retroceso vuelven al índice
+  try {
+    var me = location.pathname.split('/').pop(); if (me && !/\.html$/.test(me)) me += '.html';
+    if (me) localStorage.setItem('maq-visto:' + me, '1');
+    document.querySelectorAll('.tnav .steps a').forEach(function(a){
+      if (localStorage.getItem('maq-visto:' + a.getAttribute('href'))) { a.classList.add('seen'); a.title = (a.title ? a.title + ' · ' : '') + 'ya la has visto'; }
+    });
+  } catch(e) {}
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' || e.key === 'Backspace') { var t = e.target.tagName; if (t !== 'INPUT' && t !== 'TEXTAREA' && t !== 'SELECT') { e.preventDefault(); location.href = 'index.html#animaciones'; } } });
+})();
+</script>
+</body>
+</html>

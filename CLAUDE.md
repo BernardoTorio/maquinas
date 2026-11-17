@@ -32,7 +32,7 @@ subir.bat                  publica todo con doble clic
 - Arriba, el bloque **«Ahora en clase»**: apuntes, práctica y animaciones (en orden) del tema que se está dando. Al pasar de tema solo se cambia un número: **`var HOY = [1, 3];`**, al principio del primer `<script>`. Puede ser un tema (`var HOY = 5;`) o varios que se dan a la vez, entre corchetes (hoy, el 1 y el 3: comparten apuntes). Con varios, el bloque junta sus apuntes (una vez si el PDF es el mismo), sus prácticas y una fila de animaciones por tema. Debajo está la lista `T` de los temas (apuntes, práctica y otros accesos de cada uno).
 - Después, una fila de pestañas: `#inicio` («Por temas», por defecto), `#temas` (se llama «Apuntes»), `#practicas`, `#animaciones` y `#tests`. Las secciones tienen id `sec-inicio`, `sec-temas`… para que el navegador no salte al abrir con `#…`.
 - **«Por temas»**: los temas de `HOY` (marcados «ahora») y los anteriores, el último arriba; los que aún no se han dado salen debajo, en «Más adelante».
-- **Temas sin enlazar**: `var SIN_ANIM = [5, 6];` (justo debajo de `HOY`) son los temas cuyas animaciones todavía no se enseñan: no salen en la pestaña Animaciones ni en «Por temas». Las páginas siguen en la raíz y se abren con su dirección, pero desde la web no hay acceso. Para volver a enseñarlas, se quita su número de la lista.
+- **Temas sin enlazar**: `var SIN_ANIM = [6];` (justo debajo de `HOY`) son los temas cuyas animaciones todavía no se enseñan: no salen en la pestaña Animaciones ni en «Por temas». Las páginas siguen en la raíz y se abren con su dirección, pero desde la web no hay acceso. Para volver a enseñarlas, se quita su número de la lista.
 - **Animaciones**: un desplegable por tema (abiertos los de `HOY`). Las tarjetas salen de la lista `ANIM` (archivo, título, descripción y puntos de los apuntes): para añadir una animación, una línea ahí. El número de la tarjeta es **T y su punto de los apuntes** («T3.15», «T1.2 y 1.3», «T1.3 a 1.5»): lo pone `etq()`.
 - **Prácticas**: debajo de los PDF y de «Qué les pasó a nuestros trafos», «Práctica 1 · animaciones del tema que te sirven» (lista `PRAC_T`: los cuatro ensayos del Tema 3, T3.15 a T3.18, que son los de la hoja de ensayos) y después las herramientas del taller (`HERR`). Como en Automatismos, las animaciones de un tema que se usan en una práctica salen también con ella; al añadir una, mirar si va en `PRAC_T`. Debajo, «Práctica 2 · Cálculo y construcción de un motor»: enunciado, las dos plantillas (24 y 36 ranuras) y, cuando el 4 no está en `SIN_ANIM`, «Práctica 2 · animaciones del tema que te sirven» (las 7 del Tema 4, `prt2`). **El solucionario de la Práctica 2 no se sube nunca** (está en el repositorio privado `provisional`).
 - Prácticas y Apuntes: un recuadro por PDF con enlace `download`. Si el PDF todavía no está en el servidor, un `fetch HEAD` lo marca en gris como «próximamente» (también en «Ahora en clase» y en «Por temas»).
@@ -58,7 +58,7 @@ Los cuatro llevan el mismo motor que los de Automatismos (`DATA`, `IMGS`, `show`
 - Vuelven a `index.html#tests` (botón, Esc y Retroceso).
 
 ## Animaciones
-Las del Tema 4 ya se enseñan (desde el 17/11/2026, también en Prácticas con la Práctica 2). Las de los Temas 5 y 6 están hechas pero **sin enlazar desde la portada** (`SIN_ANIM`), hasta que se den esos temas.
+Las de los Temas 4 y 5 ya se enseñan (las dos desde el 17/11/2026; las del 4, también en Prácticas con la Práctica 2; el Tema 5 tiene ya sus apuntes en `temas/`). Las del Tema 6 están hechas pero **sin enlazar desde la portada** (`SIN_ANIM`), hasta que se dé ese tema.
 
 | Grupo | Paso | Archivo | Qué muestra |
 |---|---|---|---|
@@ -85,10 +85,13 @@ Las del Tema 4 ya se enseñan (desde el 17/11/2026, también en Prácticas con l
 | Tema 4 | 4.13 y 4.18 | `dev_imb2_uniones.html` | Imbricado de doble capa (2): uniones y caja; V y W simplificadas o enteras |
 | Tema 4 | 4.14 a 4.16 | `dev_conc_grupos.html` | Concéntrico (1): bobina pequeña y amplitud, grupos con 2 y con más polos |
 | Tema 4 | 4.15 y 4.16 | `dev_conc_uniones.html` | Concéntrico (2): por polos o polos consecuentes, caja, flechas y polos |
+| Tema 5 | 5.1 | `motor_generador.html` | Motor o generador: coche eléctrico (acelerar, soltar el pedal, bajar un puerto) y central de bombeo; reto ¿motor o generador? |
+| Tema 5 | 5.3 | `partes_motor.html` | Las partes del motor: se desmonta en 4 pasos, jaula o rótor bobinado, corte de frente y reto de encontrar piezas |
 | Tema 5 | 5.4 | `campo_giratorio.html` | Campo giratorio, polos, frecuencia, carga e intercambio de fases |
 | Tema 5 | 5.4.2 a 5.8 | `curva_par.html` | Curvas de par e intensidad, deslizamiento, térmico |
 | Tema 5 | 5.6 | `placa_bornes.html` | Estrella o triángulo según la placa y la red |
 | Tema 5 | 5.7 | `arranques.html` | Directo, estrella-triángulo, arrancador suave y variador |
+| Tema 5 | 5.9 | `averias_motor.html` | Un motor con una avería al azar (las 8 de la tabla del 5.9): se observa, se lee la placa y se mide con polímetro V~ y Ω, megóhmetro y pinza |
 | Tema 6 | 6.1 y 6.2 | `variador.html` | Partes del variador, marcha, rampas y curva V/f |
 | Tema 6 | 6.3 | `cargas.html` | Par constante, cuadrático y potencia constante |
 | Práctica 1 | Nuestros trafos | `problemas_trafos.html` | Qué les pasó a los 4 trafos, con los datos de sus hojas |
@@ -109,6 +112,12 @@ Las del Tema 4 ya se enseñan (desde el 17/11/2026, también en Prácticas con l
 - Las siete salen de un mismo motor (cálculo y dibujo como los esquemas del tema), guardado en un solo archivo en el proyecto «Materiales para instituto»: `claude/maquinas/T4_animaciones.py` (el JavaScript va dentro, en `FUENTES`). Para cambiarlas se toca allí y se regeneran con `python3 T4_animaciones.py <carpeta>`; después, `python3 tira_tema.py <carpeta>`. No editar a mano los `dev_*.html`.
 - **Ningún ejemplo es de la práctica** (24 y 36 ranuras): los hacen los alumnos. Las soluciones animadas de la práctica (D1 a D14 y las cuentas de los 18 casos) están en la web provisional (`BernardoTorio/provisional`, `m2_*.html`, sección `#m2`) y salen del mismo archivo con `--soluciones`: **nunca se copian aquí**. Ejemplos: una capa 48·2 y 48·8; doble capa 12·2, 18·2 y 18·6; concéntrico 12·2, 48·2, 12·4 y 48·8. En las cuentas, 12, 18, 30 y 48 ranuras.
 - Mismos criterios que los dibujos del tema: U rojo, V azul, W verde; cabezas arriba; saltos, uniones y cables abajo; doble capa continua arriba y discontinua abajo; cables a la caja siempre en vertical; flechas solo en U; S grises en los polos consecuentes.
+
+### Las del Tema 5 nuevas (5.1, 5.3 y 5.9)
+- Salen de un solo archivo del proyecto «Materiales para instituto»: `claude/maquinas/T5_animaciones.py` (HTML, CSS y JavaScript dentro, en `FUENTES`; la cabecera de estilos la copia de `campo_giratorio.html`). Para cambiarlas se toca allí y se regeneran con `python3 T5_animaciones.py <carpeta>`; después, `python3 tira_tema.py <carpeta>`. No editar a mano esos tres `.html`.
+- `motor_generador.html` tiene dos dibujos: uno ancho y otro estrecho para el móvil (menos de 560 px).
+- `averias_motor.html`: motor de 5,5 kW, Δ 400 V 11 A / Y 690 V 6,4 A, red de 400 V (va en triángulo), bobinas de 1,8 Ω, aislamiento bueno «> 999 MΩ» (como en `aislamiento.html`). Las 8 averías: falta una fase (fusible fundido), derivación a masa (salta el diferencial), sobrecarga, térmico mal regulado (ruleta a 8 A), espiras en cortocircuito (1,4 Ω), dos fases cambiadas, estrella en vez de triángulo y rodamientos gastados. Para medir en Ω o con el megóhmetro hay que quitar antes la tensión (consignar) y las chapas y los cables. Con la fase que falta y el contactor cerrado, ese borne marca unos 200 V con las otras (le llega por las bobinas); con el contactor abierto, 0 V.
+- En el Word del tema, los tres llevan su recuadro «MÍRALO EN MARCHA» con QR (en el 5.1, el 5.3 y el 5.9).
 
 ### Al añadir, quitar o reordenar una animación
 1. `index.html`: una línea en `ANIM` (o en `HERR`, si es una herramienta de la práctica).

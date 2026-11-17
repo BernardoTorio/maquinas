@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Motor o generador: la misma máquina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<script>try{const t=localStorage.getItem('maq-tema');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;--ph1:#D9362E;--ph2:#2E75B6;--ph3:#3F8F2A;--steel:#9aa5b1;--steel2:#c3cbd3;--warn:#C00000;--ok:#3F8F2A;--grid:#e3e8ee;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:16px 16px 36px}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.back{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+.crumbs{font-size:.88rem;color:var(--muted);flex:1 1 auto}
+.crumbs a{color:var(--muted)} .crumbs b{color:var(--ink)}
+.theme{font:inherit;font-size:.9rem;font-weight:700;padding:7px 12px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage svg{display:block;width:100%;height:auto;touch-action:manipulation;user-select:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button,.seg button{font:inherit;font-weight:700;padding:11px 12px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 120px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}
+.seg button{flex:1 1 70px;padding:8px 8px;font-size:.92rem;border-width:2px}
+.seg button[aria-pressed="true"],.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.lab{font-weight:700;font-size:.95rem;margin:2px 0 2px}
+.sl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700} .sl output{font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
+.sl input{grid-column:1/3}
+input[type=range]{width:100%;accent-color:var(--acc);height:28px}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.read{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
+.read div{border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.read small{display:block;color:var(--muted);font-size:.8rem}
+.read b{font-size:1.25rem;font-variant-numeric:tabular-nums}
+.state{border-radius:10px;padding:8px 12px;font-weight:700;margin-bottom:10px;background:var(--grid)}
+.state.ok{background:rgba(63,143,42,.16);color:var(--ok)} .state.bad{background:rgba(217,54,46,.15);color:var(--warn)} .state.mid{background:rgba(242,180,0,.2)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box.green{background:rgba(63,143,42,.10);border-left:6px solid var(--force)}
+.box ul,.box ol{margin:0;padding-left:20px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.box li.on{background:rgba(242,180,0,.25);border-radius:6px}
+.hint{font-size:.88rem;color:var(--muted);margin:6px 4px 0}
+svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif}
+.hit{cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+
+:root{--hot:#E07B00;--water:#2E75B6;--tyre:#2b2f33}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--hot:#FFA94D;--water:#6FAEE8;--tyre:#0d0f11}}
+:root[data-theme="dark"]{--hot:#FFA94D;--water:#6FAEE8;--tyre:#0d0f11}
+.ctrl.acts button{flex:1 1 100%}
+.ctrl.acts button[aria-pressed="true"]{background:var(--acc);color:#fff}
+.read b.big{font-size:1.15rem}
+.reto{margin-top:16px;background:var(--card);border:1px solid var(--line);border-left:6px solid #F2B400;border-radius:12px;padding:14px 16px}
+.reto h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.reto .q{font-size:1.15rem;font-weight:700;margin:6px 0 10px;min-height:2.6em}
+.reto .opts{display:flex;gap:10px;flex-wrap:wrap}
+.reto .opts button{font:inherit;font-weight:700;flex:1 1 140px;padding:12px;border-radius:10px;border:2px solid var(--acc);background:var(--card);color:var(--acc);cursor:pointer}
+.reto .opts button.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.reto .opts button.bad{background:var(--warn);border-color:var(--warn);color:#fff}
+.reto .fb{margin:10px 0 0;min-height:1.5em}
+.reto .cnt{color:var(--muted);font-size:.92rem;font-weight:700}
+.reto .next{font:inherit;font-weight:700;margin-top:10px;padding:10px 14px;border-radius:10px;border:2px solid var(--acc);background:var(--acc);color:#fff;cursor:pointer}
+[hidden]{display:none!important}
+
+/* --- tira del tema, «Para qué sirve» y botón Siguiente (como las del Tema 6 de Automatismos) --- */
+.tnav{--tok:#2E8B3E;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tnav a{text-decoration:none;color:var(--ink);border:2px solid var(--line);border-radius:10px;font-weight:700;background:var(--card);min-height:44px;display:flex;align-items:center;justify-content:center;padding:0 12px}
+.tnav a:hover{border-color:var(--acc)}
+.tnav .where{flex:1;text-align:center;font-weight:700;color:var(--muted);font-size:.95rem}
+.tnav .steps{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px}
+.tnav .steps a{flex:1 1 auto;min-width:44px;padding:0 4px;font-size:.95rem;white-space:nowrap}
+.tnav .steps a.cur{background:#1F4E79;border-color:#1F4E79;color:#fff}
+.tnav a.off{visibility:hidden}
+.tnav .steps a.seen::after{content:"✓";margin-left:3px;font-size:.78em;color:var(--tok)}
+.tnav .steps a.cur.seen::after{color:#fff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tnav{--tok:#6fd98a}}
+:root[data-theme="dark"] .tnav{--tok:#6fd98a}
+.nextbig{display:flex;align-items:center;justify-content:center;margin:18px 0 0;padding:16px;border-radius:12px;background:#1F4E79;color:#fff;font-weight:700;font-size:1.1rem;text-decoration:none;text-align:center}
+.nextbig:hover{background:#163a5c}
+.box.pqs{border-left:6px solid var(--acc)}
+.box.pqs p{margin:0}
+.boxes>.pqs.full{grid-column:1 / -1}
+@media (min-width:621px){
+  .boxes.b3{grid-template-rows:auto 1fr}
+  .boxes.b3>:first-child{grid-column:1;grid-row:1}
+  .boxes.b3>.pqs{grid-column:1;grid-row:2}
+  .boxes.b3>.pqs+*{grid-column:2;grid-row:1 / span 2}
+}
+@media (max-width:620px){.crumbs{display:none}.theme,.themebtn{margin-left:auto}
+  .tnav>a{padding:0 9px}.tnav .where{font-size:.86rem}
+  .tnav .steps a.seen{position:relative}.tnav .steps a.seen::after{position:absolute;top:1px;right:3px;margin:0;font-size:.62em}}
+/* --- fin de la tira del tema --- */
+</style>
+</head>
+<body>
+<main>
+  <nav class="bar" aria-label="Navegación">
+    <a class="back" href="index.html#animaciones" aria-label="Volver al índice de animaciones">← Índice</a>
+    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 5 › <b>T5.1 Motor o generador</b></span>
+    <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
+  </nav>
+  <nav class="tnav" aria-label="Animaciones del Tema 5"><a class="tarr off" aria-hidden="true" tabindex="-1">‹ T5.1</a><span class="where">Tema 5 · 1 de 7</span><a class="tarr" href="partes_motor.html" aria-label="Siguiente: Las partes del motor asíncrono">T5.3 ›</a><div class="steps"><a href="motor_generador.html" class="cur" aria-current="page" title="Motor o generador: la misma máquina">T5.1</a><a href="partes_motor.html" title="Las partes del motor asíncrono">T5.3</a><a href="campo_giratorio.html" title="Campo magnético giratorio">T5.4</a><a href="curva_par.html" title="Par, velocidad y corriente del motor">T5.4.2 a 5.8</a><a href="placa_bornes.html" title="Placa de bornes: estrella o triángulo">T5.6</a><a href="arranques.html" title="Arranques del motor">T5.7</a><a href="averias_motor.html" title="Averías del motor: encuentra la causa">T5.9</a></div></nav>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 5 · Punto 5.1</small><h1>Motor o generador: la misma máquina</h1><p class="sub">Una máquina rotativa convierte electricidad en giro o giro en electricidad. Lo que cambia es quién le da la energía.</p></header>
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><svg id="sv" viewBox="0 0 680 470" role="img" aria-label="Una máquina eléctrica rotativa entre una batería y una rueda: puede funcionar como motor o como generador"><g id="g"></g></svg>
+        <div class="legend"><span>⊙ corriente que sale · ⊗ que entra</span><span><b style="color:var(--force)">➜</b> fuerza sobre la espira</span><span><b style="color:var(--field)">➜</b> campo (de N a S)</span><span><b style="color:var(--hot)">≈</b> calor</span></div></div>
+      <div class="boxes b3">
+        <div class="box" id="exp"></div>
+<div class="box pqs"><h2>Para qué sirve</h2><p>Para entender que <b>un motor y un generador son la misma máquina</b>: si le das electricidad, da giro; si le das giro, da electricidad. Así recargan la batería los coches eléctricos al frenar y así guardan energía las centrales de bombeo.</p></div>
+        <div class="box green"><h2>Las dos leyes que ya conoces</h2><ol id="leyes">
+          <li data-k="m"><b>Motor</b> (2ª ley): corriente dentro de un campo magnético = <b>fuerza</b>. Entra electricidad y sale giro.</li>
+          <li data-k="g"><b>Generador</b> (3ª ley): un conductor que se mueve dentro de un campo = <b>tensión inducida</b>. Entra giro y sale electricidad.</li>
+          <li data-k="x">Las dos cosas las hace <b>la misma máquina</b>: el <b>estátor</b> (quieto), el <b>rótor</b> (gira) y, entre los dos, un hueco de aire muy pequeño: el <b>entrehierro</b>.</li></ol>
+          <p class="hint">Cómo se usa: elige un ejemplo y pulsa los botones. También puedes tocar el dibujo: la batería (o la red) le da electricidad; la rueda (o el agua), giro.</p></div>
+      </div>
+    </div>
+    <aside class="panel">
+      <div class="lab">Ejemplo</div>
+      <div class="seg" id="sEx"><button data-v="coche" aria-pressed="true">Coche eléctrico</button><button data-v="bombeo" aria-pressed="false">Central de bombeo</button></div>
+      <div class="ctrl acts" id="acts"></div>
+      <div class="state" id="stt">Parada</div>
+      <div class="read"><div><small>Funciona como</small><b id="vMode" class="big">–</b></div><div><small id="lSpd">Velocidad</small><b id="vSpd">0</b></div><div><small id="lSto">Batería</small><b id="vSto">60 %</b></div><div><small>Sentido de giro</small><b id="vDir">–</b></div></div>
+    </aside>
+  </div>
+  <section class="reto" aria-labelledby="retoH"><h2 id="retoH">Reto: ¿motor o generador?</h2>
+    <div class="cnt" id="rCnt"></div><div class="q" id="rQ"></div>
+    <div class="opts"><button data-a="m">Motor</button><button data-a="g">Generador</button></div>
+    <p class="fb" id="rFb" aria-live="polite"></p><button class="next" id="rNext" type="button" hidden>Siguiente pregunta →</button></section>
+  <a class="nextbig" href="partes_motor.html">Siguiente: T5.3 Las partes del motor asíncrono →</a>
+</main>
+<script>
+// navegación y tema (común a todas las páginas)
+(function(){const b=document.getElementById('themeBtn'),r=document.documentElement;
+ const cur=()=>r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+ const lab=()=>{b.textContent=cur()==='dark'?'☀ Modo claro':'☾ Modo oscuro';};
+ b.onclick=()=>{const n=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('maq-tema',n);}catch(e){}lab();};lab();})();
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmt=(x,d=0)=>x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+function el(t,a,txt){let s='<'+t;for(const k in a)s+=` ${k}="${a[k]}"`;return s+(txt!==undefined?'>'+txt+'</'+t+'>':'/>');}
+function arrowSvg(x1,y1,x2,y2,c,w,op){const a=Math.atan2(y2-y1,x2-x1),h=w*2.4;const bx=x2-h*Math.cos(a),by=y2-h*Math.sin(a);
+  return `<g opacity="${op===undefined?1:op}"><line x1="${x1}" y1="${y1}" x2="${bx}" y2="${by}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/><path d="M${x2} ${y2}L${bx-h*.6*Math.sin(a)} ${by+h*.6*Math.cos(a)}L${bx+h*.6*Math.sin(a)} ${by-h*.6*Math.cos(a)}Z" fill="${c}"/></g>`;}
+// ---------- estado
+let ex='coche', act='parar', v=0, bat=60, lvl=45, rot=0, dir=1, want=1, P=0, t=0, last=performance.now();
+const RS=110, RY=90, RR=62;
+// dos dibujos: ancho (pantalla grande) y estrecho (móvil), con las piezas en otro sitio
+const LW={W:680,H:480,CX:340,CY:230, E:{x:38,y:168,w:112,h:134,term:'der',lab:[94,330]}, tow:{x:95,y0:150,y1:318,lab:[95,140]},
+  wires:[[[160,205],[232,205]],[[160,255],[232,255]]], G:{x:575,y:230}, T:{x:575,y:252}, road:[485,672],
+  res:{x:548,y:30,w:118,h:70,lab:[607,20]}, pipe:[[618,100],[618,232],[615,232]], low:{x:540,y:322,w:134,h:34},
+  lbl:{est:[244,368,'end',250,356], rot:[426,368,'start',420,356], calor:[410,78], heat:[296,112], rueda:[575,142], tb:[577,314]},
+  strip:{y:394,h:62,b:[[8,212],[250,180],[460,212]],two:true}};
+const LN={W:400,H:760,CX:200,CY:300, E:{x:96,y:22,w:112,h:122,term:'abajo',lab:[152,170]}, tow:{x:150,y0:20,y1:170,lab:[64,40]},
+  wires:[[[128,154],[128,226]],[[176,154],[176,203]]], G:{x:200,y:520}, T:{x:200,y:520}, road:[95,305],
+  res:{x:258,y:46,w:128,h:64,lab:[322,36]}, pipe:[[372,110],[372,520],[246,520]], low:{x:140,y:588,w:120,h:28},
+  lbl:{est:[14,438,'start',112,366], rot:[358,438,'end',236,350], calor:[256,150], heat:[240,206], rueda:[64,470], tb:[300,470]},
+  strip:{y:654,h:94,b:[[4,126],[137,126],[270,126]],two:false}};
+let L=LW;
+function pickLayout(){ const w=$('sv').getBoundingClientRect().width||680; const n=w<560?LN:LW; if(n!==L){L=n;$('sv').setAttribute('viewBox',`0 0 ${L.W} ${L.H}`);} }
+const ACTS={coche:[['acel','Pisar el acelerador'],['soltar','Soltar el pedal (frenar)'],['cuesta','Bajar un puerto sin acelerar']],
+            bombeo:[['bombear','Bombear agua arriba (sobra luz)'],['turbinar','Soltar el agua (falta luz)'],['parar','Parar la central']]};
+function setAct(a){act=a;document.querySelectorAll('#acts button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===a));}
+function buildActs(){$('acts').innerHTML=ACTS[ex].map(([k,n])=>`<button data-v="${k}" aria-pressed="false">${n}</button>`).join('');
+  document.querySelectorAll('#acts button').forEach(b=>b.onclick=()=>{setAct(b.dataset.v);texts();});}
+// ---------- física sencilla
+function update(dt){
+  if(ex==='coche'){
+    if(act==='acel'){ if(bat>0.2){ v+=(1-v)*0.45*dt; P=0.45+0.55*(1-v); bat=Math.max(0,bat-0.9*dt*P);} else { P=0; v=Math.max(0,v-0.08*dt);} }
+    else if(act==='soltar'){ if(v>0.01){ P=-Math.min(1,0.25+0.75*v); v=Math.max(0,v-0.2*dt); bat=Math.min(100,bat+0.7*v*dt);} else {v=0;P=0;} }
+    else if(act==='cuesta'){ v+=(0.75-v)*0.5*dt; P=v>0.05?-0.7:0; bat=Math.min(100,bat+0.5*v*dt); }
+    else { v=Math.max(0,v-0.1*dt); P=0; }
+    dir=1;
+  } else {
+    want = act==='turbinar'?-1:1;
+    const can = act==='bombear'?lvl<100 : act==='turbinar'?lvl>0 : false;
+    if(act!=='parar' && can && (dir===want || v<0.02)){ dir=want; v+=(1-v)*0.7*dt; P=act==='bombear'?0.8:-0.8; lvl=Math.min(100,Math.max(0,lvl+(act==='bombear'?3:-3)*v*dt)); }
+    else { v=Math.max(0,v-0.5*dt); P=0; }
+  }
+  rot+=dir*v*2*Math.PI*0.22*dt;
+}
+// ---------- dibujo
+function draw(){
+  pickLayout();
+  const ink=css('--ink'),card=css('--card'),st=css('--steel'),st2=css('--steel2'),acc=css('--acc'),cur=css('--cur'),fld=css('--field'),frc=css('--force'),hot=css('--hot'),mut=css('--muted'),wat=css('--water'),cu=css('--cu'),tyre=css('--tyre'),okc=css('--ok'),warn=css('--warn');
+  const mot=P>0.02, gen=P<-0.02, mag=Math.min(1,Math.abs(P)*1.3);
+  const CX=L.CX, CY=L.CY, G=ex==='coche'?L.G:L.T;
+  let s='';
+  // --- lado eléctrico
+  if(ex==='coche'){
+    const E=L.E; s+=`<g class="hit" data-hit="E">`;
+    s+=el('rect',{x:E.x,y:E.y,width:E.w,height:E.h,rx:12,fill:card,stroke:ink,'stroke-width':3});
+    const h=(E.h-16)*bat/100; s+=el('rect',{x:E.x+8,y:E.y+8+(E.h-16)-h,width:E.w-16,height:h,rx:6,fill:bat<20?warn:okc,'fill-opacity':.55});
+    s+=el('text',{x:E.x+E.w/2,y:E.y+E.h/2+9,'text-anchor':'middle','font-size':26,'font-weight':700,fill:ink},fmt(bat)+' %');
+    if(E.term==='der'){ s+=el('rect',{x:E.x+E.w,y:194,width:10,height:22,rx:3,fill:ink})+el('rect',{x:E.x+E.w,y:244,width:10,height:22,rx:3,fill:ink});
+      s+=el('text',{x:E.x+E.w+20,y:192,'font-size':18,'font-weight':700,fill:ink},'+')+el('text',{x:E.x+E.w+21,y:284,'font-size':22,'font-weight':700,fill:ink},'−'); }
+    else { s+=el('rect',{x:117,y:E.y+E.h,width:22,height:10,rx:3,fill:ink})+el('rect',{x:165,y:E.y+E.h,width:22,height:10,rx:3,fill:ink});
+      s+=el('text',{x:106,y:E.y+E.h+26,'font-size':18,'font-weight':700,fill:ink},'+')+el('text',{x:190,y:E.y+E.h+28,'font-size':22,'font-weight':700,fill:ink},'−'); }
+    s+=el('text',{x:E.lab[0],y:E.lab[1],'text-anchor':E.term==='der'?'middle':'start','font-size':18,'font-weight':700,fill:ink},E.term==='der'?'Batería':'')+`</g>`;
+    if(E.term!=='der') s+=el('text',{x:E.x-12,y:E.y+E.h/2+6,'text-anchor':'end','font-size':18,'font-weight':700,fill:ink},'Batería');
+  } else {
+    const T=L.tow, px=T.x; s+=`<g class="hit" data-hit="E">`+el('rect',{x:px-60,y:T.y0,width:120,height:T.y1-T.y0,fill:'transparent'});
+    const k=(T.y1-T.y0)/168, Y=y=>T.y0+(y-150)*k;
+    s+=`<path d="M${px-34} ${Y(318)}L${px-10} ${Y(150)}L${px+10} ${Y(150)}L${px+34} ${Y(318)}M${px-27} ${Y(268)}L${px+27} ${Y(268)}M${px-20} ${Y(215)}L${px+20} ${Y(215)}M${px-27} ${Y(268)}L${px+20} ${Y(215)}M${px+27} ${Y(268)}L${px-20} ${Y(215)}M${px-50} ${Y(168)}L${px+50} ${Y(168)}M${px-40} ${Y(190)}L${px+40} ${Y(190)}" stroke="${ink}" stroke-width="3" fill="none"/>`;
+    s+=el('text',{x:T.lab[0],y:T.lab[1],'text-anchor':'middle','font-size':18,'font-weight':700,fill:ink},L===LN?'Red':'Red eléctrica')+`</g>`;
+  }
+  // cables hasta la máquina, con la corriente moviéndose
+  const W=L.wires.map(w=>w.map(p=>p.slice()));
+  if(ex!=='coche'&&L===LN){ W[0][0]=[130,170]; W[1][0]=[170,170]; W[0][1][0]=130; W[1][1][0]=170; }
+  W.forEach(([a,b])=>{ s+=el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:ink,'stroke-width':5}); });
+  if(mot||gen){const off=((mot?-1:1)*t*18)%16, op=(0.4+0.6*mag).toFixed(2);
+    s+=`<g stroke="#FFE28A" stroke-width="3" stroke-linecap="round" stroke-dasharray="0.5 15.5" opacity="${op}">`;
+    W.forEach(([a,b],i)=>{ const [p,q]=i===0?[a,b]:[b,a]; s+=`<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke-dashoffset="${off}"/>`; }); s+='</g>';}
+  // correa (va por detrás de la máquina: la polea está en la parte de atrás del eje)
+  s+=belt(CX,CY,22,G.x,G.y,ex==='coche'?34:28,ink);
+  // --- la máquina (corte de frente)
+  s+=`<g class="hit" data-hit="M">`;
+  s+=el('circle',{cx:CX,cy:CY,r:RS,fill:st2,stroke:ink,'stroke-width':2});
+  s+=el('circle',{cx:CX,cy:CY,r:RY,fill:card,stroke:ink,'stroke-width':1.5});
+  s+=`<path d="M${CX-46} ${CY-RY+6}L${CX+46} ${CY-RY+6}L${CX+46} ${CY-82}Q${CX} ${CY-60} ${CX-46} ${CY-82}Z" fill="${st2}" stroke="${ink}" stroke-width="1.5"/>`+el('rect',{x:CX-46,y:CY-RY-2,width:92,height:10,fill:st2});
+  s+=`<path d="M${CX-46} ${CY+RY-6}L${CX+46} ${CY+RY-6}L${CX+46} ${CY+82}Q${CX} ${CY+60} ${CX-46} ${CY+82}Z" fill="${st2}" stroke="${ink}" stroke-width="1.5"/>`+el('rect',{x:CX-46,y:CY+RY-8,width:92,height:10,fill:st2});
+  s+=el('circle',{cx:CX,cy:CY-RY+14,r:15,fill:acc})+el('text',{x:CX,y:CY-RY+20,'text-anchor':'middle','font-size':17,'font-weight':700,fill:'#fff'},'N');
+  s+=el('circle',{cx:CX,cy:CY+RY-14,r:15,fill:cur})+el('text',{x:CX,y:CY+RY-8,'text-anchor':'middle','font-size':17,'font-weight':700,fill:'#fff'},'S');
+  s+=el('circle',{cx:CX,cy:CY,r:RR,fill:st,stroke:ink,'stroke-width':1.5});
+  for(let k=0;k<6;k++){const a=-rot+k*Math.PI/3; s+=el('line',{x1:CX+18*Math.cos(a),y1:CY+18*Math.sin(a),x2:CX+RR*Math.cos(a),y2:CY+RR*Math.sin(a),stroke:ink,'stroke-width':.8,opacity:.25});}
+  for(const dx of [-30,0,30]) s+=arrowSvg(CX+dx,CY-56,CX+dx,CY+58,fld,3,.55);
+  const R=44, A=Math.PI/2-rot;
+  const cs=[A,A+Math.PI].map(a=>({x:CX+R*Math.cos(a),y:CY-R*Math.sin(a),a}));
+  s+=el('line',{x1:cs[0].x,y1:cs[0].y,x2:cs[1].x,y2:cs[1].y,stroke:cu,'stroke-width':3,'stroke-dasharray':'6 5'});
+  cs.forEach(c=>{
+    // motor: la batería mete la corriente para que la fuerza vaya a favor del giro; generador: la corriente inducida va al revés
+    let I=0; if(mot) I=dir*Math.sin(c.a)*mag; else if(gen) I=-dir*Math.sin(c.a)*mag;
+    if(Math.abs(I)>0.12) s+=el('circle',{cx:c.x,cy:c.y,r:17,fill:cur,'fill-opacity':(0.15+0.35*Math.abs(I)).toFixed(2)});
+    s+=el('circle',{cx:c.x,cy:c.y,r:12,fill:cu,stroke:ink,'stroke-width':1.5});
+    if(Math.abs(I)>0.12){ if(I>0) s+=el('circle',{cx:c.x,cy:c.y,r:4,fill:ink}); else s+=`<path d="M${c.x-6} ${c.y-6}L${c.x+6} ${c.y+6}M${c.x+6} ${c.y-6}L${c.x-6} ${c.y+6}" stroke="${ink}" stroke-width="2.6"/>`;
+      const Lf=16+34*Math.abs(I), sg=Math.sign(I); // con el campo hacia abajo, la fuerza es horizontal
+      s+=arrowSvg(c.x+sg*14,c.y,c.x+sg*(14+Lf),c.y,frc,4.5);}
+  });
+  s+=el('circle',{cx:CX,cy:CY,r:22,fill:'#6b737b',stroke:ink,'stroke-width':2});
+  s+=`<line x1="${CX}" y1="${CY}" x2="${CX+18*Math.cos(-rot)}" y2="${CY+18*Math.sin(-rot)}" stroke="#fff" stroke-width="4" stroke-linecap="round"/>`;
+  s+=`</g>`;
+  const lb=L.lbl;
+  s+=`<line x1="${CX-RS*0.72}" y1="${CY+RS*0.72}" x2="${lb.est[3]}" y2="${lb.est[4]+(L===LN?60:0)}" stroke="${mut}" stroke-width="1.5"/>`+el('text',{x:lb.est[0],y:lb.est[1],'text-anchor':lb.est[2],'font-size':16,'font-weight':700,fill:mut},'estátor (quieto)');
+  s+=`<line x1="${CX+RR*0.6}" y1="${CY+RR*0.75}" x2="${L===LN?310:lb.rot[3]}" y2="${L===LN?420:lb.rot[4]}" stroke="${mut}" stroke-width="1.5"/>`+el('text',{x:lb.rot[0],y:lb.rot[1],'text-anchor':lb.rot[2],'font-size':16,'font-weight':700,fill:mut},'rótor (gira)');
+  if(mot||gen){ for(let k=0;k<3;k++){ const x=lb.heat[0]+k*44, ph=(t*0.8+k*0.33)%1, y=lb.heat[1]-ph*44, op=(0.85*mag*(1-ph)).toFixed(2);
+      s+=`<path d="M${x} ${y}q8 -8 0 -16q-8 -8 0 -16" stroke="${hot}" stroke-width="4" fill="none" stroke-linecap="round" opacity="${op}"/>`;}
+    s+=el('text',{x:lb.calor[0],y:lb.calor[1],'font-size':17,'font-weight':700,fill:hot},'calor'); }
+  // --- lado mecánico
+  const r1=22;
+  if(ex==='coche'){
+    const r2=34; s+=`<g class="hit" data-hit="G">`;
+    s+=el('circle',{cx:G.x,cy:G.y,r:72,fill:'none',stroke:tyre,'stroke-width':18});
+    s+=el('circle',{cx:G.x,cy:G.y,r:62,fill:st2,stroke:ink,'stroke-width':1.5});
+    const rw=rot*r1/r2;
+    for(let k=0;k<5;k++){const a=-rw+k*2*Math.PI/5; s+=el('line',{x1:G.x+34*Math.cos(a),y1:G.y+34*Math.sin(a),x2:G.x+58*Math.cos(a),y2:G.y+58*Math.sin(a),stroke:ink,'stroke-width':7,'stroke-linecap':'round'});}
+    s+=el('circle',{cx:G.x,cy:G.y,r:r2,fill:'#6b737b',stroke:ink,'stroke-width':2})+el('circle',{cx:G.x,cy:G.y,r:7,fill:ink});
+    s+=el('line',{x1:L.road[0],y1:G.y+82,x2:L.road[1],y2:G.y+82,stroke:ink,'stroke-width':3});
+    const off=(rot*r1)%40; s+=`<line x1="${L.road[0]}" y1="${G.y+96}" x2="${L.road[1]}" y2="${G.y+96}" stroke="${mut}" stroke-width="4" stroke-dasharray="22 18" stroke-dashoffset="${off}"/>`;
+    s+=el('text',{x:lb.rueda[0],y:lb.rueda[1],'text-anchor':'middle','font-size':18,'font-weight':700,fill:ink},'Rueda')+`</g>`;
+  } else {
+    const r2=28; s+=`<g class="hit" data-hit="G">`;
+    const R0=L.res, wh=R0.h*lvl/100;
+    s+=el('rect',{x:R0.x,y:R0.y+R0.h-wh,width:R0.w,height:wh,fill:wat,'fill-opacity':.45});
+    s+=`<path d="M${R0.x} ${R0.y}L${R0.x} ${R0.y+R0.h}L${R0.x+R0.w} ${R0.y+R0.h}L${R0.x+R0.w} ${R0.y}" stroke="${ink}" stroke-width="3" fill="none"/>`;
+    s+=el('text',{x:R0.lab[0],y:R0.lab[1],'text-anchor':'middle','font-size':15,'font-weight':700,fill:ink},'Embalse de arriba');
+    const pp=L.pipe, pd=`M${pp[0][0]} ${pp[0][1]}L${pp[1][0]} ${pp[1][1]}L${pp[2][0]} ${pp[2][1]}`, lw=L.low, pd2=`M${G.x} ${G.y+44}L${G.x} ${lw.y}`;
+    s+=`<path d="${pd}" stroke="${ink}" stroke-width="14" fill="none" stroke-linejoin="round"/><path d="${pd}" stroke="${card}" stroke-width="8" fill="none" stroke-linejoin="round"/>`;
+    s+=`<path d="${pd2}" stroke="${ink}" stroke-width="14"/><path d="${pd2}" stroke="${card}" stroke-width="8"/>`;
+    if(v>0.05){const off=(act==='turbinar'?-1:1)*t*30%14;
+      s+=`<g stroke="${wat}" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 12" fill="none" opacity="${Math.min(1,v+.2).toFixed(2)}"><path d="${pd}" stroke-dashoffset="${off}"/><path d="${pd2}" stroke-dashoffset="${off}"/></g>`;}
+    s+=el('circle',{cx:G.x,cy:G.y,r:46,fill:card,stroke:ink,'stroke-width':3});
+    const rt=rot*r1/r2;
+    for(let k=0;k<6;k++){const a=-rt+k*Math.PI/3; const x1=G.x+r2*Math.cos(a),y1=G.y+r2*Math.sin(a),x2=G.x+42*Math.cos(a+0.5),y2=G.y+42*Math.sin(a+0.5);
+      s+=`<path d="M${x1} ${y1}Q${G.x+40*Math.cos(a+0.1)} ${G.y+40*Math.sin(a+0.1)} ${x2} ${y2}" stroke="${wat}" stroke-width="5" fill="none"/>`;}
+    s+=el('circle',{cx:G.x,cy:G.y,r:r2,fill:'#6b737b',stroke:ink,'stroke-width':2});
+    const bw=Math.max(4,(100-lvl)/100*lw.h);
+    s+=el('rect',{x:lw.x,y:lw.y+lw.h-bw,width:lw.w,height:bw,fill:wat,'fill-opacity':.45});
+    s+=`<path d="M${lw.x} ${lw.y}L${lw.x} ${lw.y+lw.h}L${lw.x+lw.w} ${lw.y+lw.h}L${lw.x+lw.w} ${lw.y}" stroke="${ink}" stroke-width="3" fill="none"/>`;
+    s+=el('text',{x:lb.tb[0],y:lb.tb[1],'text-anchor':'middle','font-size':15,'font-weight':700,fill:ink},'turbina-bomba');
+    s+=el('text',{x:lw.x+lw.w/2,y:lw.y+lw.h+18,'text-anchor':'middle','font-size':15,'font-weight':700,fill:ink},'Embalse de abajo')+`</g>`;
+  }
+  // --- tira de la energía
+  const S=L.strip, by=S.y, bh=S.h, col=k=>k?acc:mut, on=mot||gen;
+  const eLab=ex==='coche'?'BATERÍA':'RED', gLab=ex==='coche'?'RUEDA':'AGUA';
+  const lines=(x,w,arr,on)=>{ let o=el('rect',{x,y:by,width:w,height:bh,rx:10,fill:card,stroke:col(on),'stroke-width':on?3:1.5});
+    arr.forEach((t,i)=>{ o+=el('text',{x:x+w/2,y:by+24+i*(S.two?23:23),'text-anchor':'middle','font-size':16,'font-weight':i?400:700,fill:i?ink:col(on)},t); }); return o; };
+  const nE=mot?['da 100','de electricidad']:gen?['recibe 90','de electricidad']:['—'], nG=mot?['recibe 90','de giro']:gen?['da 100','de giro']:['—'], nM=on?['10 se van','en calor']:['parada'];
+  const J=a=>S.two?[a[0],a.slice(1).join(' ')]:a;
+  const [b1,b2,b3]=S.b;
+  s+=lines(b1[0],b1[1],J([eLab,...nE]),on)+lines(b2[0],b2[1],J(['MÁQUINA',...nM]),on)+lines(b3[0],b3[1],J([gLab,...nG]),on);
+  const ya=by+bh/2, g1=[b1[0]+b1[1],b2[0]], g2=[b2[0]+b2[1],b3[0]];
+  if(mot){ s+=arrowSvg(g1[0]+1,ya,g1[1]-1,ya,acc,5)+arrowSvg(g2[0]+1,ya,g2[1]-1,ya,acc,5); }
+  if(gen){ s+=arrowSvg(g2[1]-1,ya,g2[0]+1,ya,acc,5)+arrowSvg(g1[1]-1,ya,g1[0]+1,ya,acc,5); }
+  $('g').innerHTML=s;
+}
+function belt(x1,y1,r1,x2,y2,r2,c){const d=Math.hypot(x2-x1,y2-y1), ang=Math.atan2(y2-y1,x2-x1), ph=Math.asin((r2-r1)/d);
+  const Pt=(x,y,r,sg)=>{const a=ang+sg*(Math.PI/2+ph); return [x+r*Math.cos(a),y+r*Math.sin(a)];};
+  const [ax,ay]=Pt(x1,y1,r1+3,-1),[bx,by]=Pt(x2,y2,r2+3,-1),[cx,cy]=Pt(x1,y1,r1+3,1),[dx,dy]=Pt(x2,y2,r2+3,1);
+  const off=(-rot*r1)%18;
+  return `<g stroke="${c}" stroke-width="5" stroke-linecap="round"><line x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}"/><line x1="${cx}" y1="${cy}" x2="${dx}" y2="${dy}"/></g>`+
+    `<g stroke="#FFE28A" stroke-width="2" stroke-dasharray="6 12" opacity=".8"><line x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}" stroke-dashoffset="${off}"/><line x1="${dx}" y1="${dy}" x2="${cx}" y2="${cy}" stroke-dashoffset="${off}"/></g>`;}
+// ---------- textos
+function texts(){
+  const mot=P>0.02, gen=P<-0.02;
+  let m='', st='Parada', cls='';
+  const perd=' <b>Ojo</b>: de cada 100 que entran, salen unos 90; los otros 10 se pierden en <b>calor</b> (en el cobre, en el hierro y por rozamiento).';
+  if(ex==='coche'){
+    if(act==='acel'&&bat<=0.2){ m='La batería está <b>vacía</b>: sin electricidad la máquina no puede hacer de motor. Baja un puerto o suelta el pedal para cargarla un poco.'; }
+    else if(mot){ m='Funciona como <b>MOTOR</b>. La batería le da <b>electricidad</b>: por la espira pasa corriente y, como está dentro del campo del estátor, aparece una <b>fuerza</b> (2ª ley) que hace girar el rótor. El rótor mueve la rueda y la batería se va gastando.'+perd; st='Motor: electricidad → giro'; cls='ok'; }
+    else if(gen&&act==='soltar'){ m='Funciona como <b>GENERADOR</b>: es el <b>frenado regenerativo</b>. Ahora es la rueda la que hace girar al rótor. La espira se mueve dentro del campo y en ella se <b>induce una tensión</b> (3ª ley): sale electricidad hacia la batería, que se carga. Mira las flechas verdes: la corriente va al revés que antes y la fuerza empuja <b>contra el giro</b>. Por eso el coche frena.'+perd; st='Generador: giro → electricidad'; cls='mid'; }
+    else if(gen){ m='Bajando un puerto, la cuesta empuja el coche y la rueda hace girar al rótor: la máquina funciona como <b>GENERADOR</b> todo el rato. Hace de freno (el coche no se embala) y carga la batería.'+perd; st='Generador: giro → electricidad'; cls='mid'; }
+    else if(act==='soltar'&&v<=0.01&&bat>0){ m='El coche se ha <b>parado</b>. Sin giro no se induce nada: la máquina ya no genera. Para volver a moverte, pisa el acelerador.'; }
+    else m='El coche está parado: la máquina no recibe <b>ni electricidad ni giro</b>, así que no hace nada. Pisa el acelerador.';
+  } else {
+    if(act==='bombear'&&lvl>=100) m='El embalse de arriba está <b>lleno</b>: la central para. Cuando falte electricidad, se soltará el agua.';
+    else if(act==='turbinar'&&lvl<=0) m='El embalse de arriba está <b>vacío</b>: ya no queda agua para mover la turbina.';
+    else if(mot){ m='De noche <b>sobra electricidad</b>. La máquina la toma de la red y funciona como <b>MOTOR</b> (2ª ley): mueve la bomba y sube el agua al embalse de arriba. Es como guardar la electricidad para luego.'+perd; st='Motor: electricidad → giro'; cls='ok'; }
+    else if(gen){ m='Cuando <b>falta electricidad</b>, se suelta el agua. El agua mueve la turbina, la turbina hace girar al rótor y la máquina funciona como <b>GENERADOR</b> (3ª ley): manda electricidad a la red. Fíjate en que ahora gira <b>al revés</b> que cuando bombea.'+perd; st='Generador: giro → electricidad'; cls='mid'; }
+    else if(v>0.02) m='La máquina se está parando. Para cambiar de bombear a soltar agua, primero tiene que pararse, porque gira al revés.';
+    else m='Es una <b>central de bombeo</b>: un embalse arriba, otro abajo y <b>una sola máquina</b> para las dos cosas. Elige qué hace.';
+  }
+  $('exp').innerHTML='<h2>Qué pasa</h2><p>'+m+'</p>';
+  $('stt').textContent=st; $('stt').className='state '+cls;
+  $('vMode').textContent=mot?'MOTOR':gen?'GENERADOR':'parada';
+  if(ex==='coche'){ $('lSpd').textContent='Velocidad del coche'; $('vSpd').textContent=fmt(v*100)+' km/h'; $('lSto').textContent='Batería'; $('vSto').textContent=fmt(bat)+' %'; }
+  else { $('lSpd').textContent='Velocidad de la máquina'; $('vSpd').textContent=fmt(v*500)+' rpm'; $('lSto').textContent='Embalse de arriba'; $('vSto').textContent=fmt(lvl)+' %'; }
+  $('vDir').textContent=v>0.02?(dir>0?'↻ horario':'↺ antihorario'):'–';
+  document.querySelectorAll('#leyes li').forEach(li=>li.classList.toggle('on',(li.dataset.k==='m'&&mot)||(li.dataset.k==='g'&&gen)));
+}
+let tx=0;
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;update(dt);draw();tx+=dt;if(tx>0.2){tx=0;texts();}requestAnimationFrame(frame);}
+// ---------- controles
+document.querySelectorAll('#sEx button').forEach(b=>b.onclick=()=>{ex=b.dataset.v;document.querySelectorAll('#sEx button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  act='parar';v=0;P=0;dir=1;buildActs();setAct(ex==='coche'?'':'parar');texts();});
+addEventListener('resize',()=>{pickLayout();});
+$('sv').addEventListener('click',e=>{const h=e.target.closest('[data-hit]'); if(!h) return; const k=h.dataset.hit;
+  if(k==='E') setAct(ex==='coche'?'acel':'bombear');
+  else if(k==='G') setAct(ex==='coche'?'cuesta':'turbinar');
+  else if(k==='M') setAct(ex==='coche'?'soltar':'parar');
+  texts();});
+buildActs(); texts(); requestAnimationFrame(frame);
+// ---------- reto
+const RETO=[
+ ['Un taladro de batería haciendo un agujero','m','La batería le da electricidad y sale giro (la broca).'],
+ ['La dinamo de una bicicleta que enciende la luz','g','La rueda le da giro y sale electricidad (la luz).'],
+ ['Un aerogenerador cuando sopla el viento','g','El viento le da giro y sale electricidad hacia la red.'],
+ ['El ventilador del techo de clase','m','Le da electricidad la red y sale giro (las aspas).'],
+ ['Un coche eléctrico bajando un puerto sin pisar el acelerador','g','La cuesta hace girar las ruedas y la máquina carga la batería.'],
+ ['La bomba que sube agua a un depósito','m','Entra electricidad y sale giro para mover la bomba.'],
+ ['El alternador de un coche de gasolina','g','El motor de gasolina lo hace girar con una correa y él carga la batería.'],
+ ['Un patinete eléctrico subiendo una cuesta','m','La batería da electricidad y la rueda sube la cuesta.']];
+let rq=0, rok=0, rdone=false, rord=RETO.map((_,i)=>i);
+function rShow(){ if(rq>=RETO.length){ $('rQ').textContent=`Has acertado ${rok} de ${RETO.length}.`; $('rCnt').textContent='Reto terminado';
+    $('rFb').textContent=rok===RETO.length?'¡Perfecto! Para saberlo, pregúntate siempre: ¿qué le doy a la máquina, electricidad o giro?':'Para saberlo, pregúntate siempre: ¿qué le doy a la máquina, electricidad o giro?';
+    document.querySelectorAll('.reto .opts button').forEach(b=>{b.disabled=true;b.className='';}); $('rNext').hidden=false; $('rNext').textContent='Empezar otra vez'; return; }
+  const c=RETO[rord[rq]]; $('rCnt').textContent=`Pregunta ${rq+1} de ${RETO.length} · aciertos: ${rok}`; $('rQ').textContent=c[0]; $('rFb').textContent=''; rdone=false;
+  document.querySelectorAll('.reto .opts button').forEach(b=>{b.disabled=false;b.className='';}); $('rNext').hidden=true; }
+document.querySelectorAll('.reto .opts button').forEach(b=>b.onclick=()=>{ if(rdone) return; rdone=true; const c=RETO[rord[rq]], good=b.dataset.a===c[1];
+  if(good) rok++; b.classList.add(good?'ok':'bad'); if(!good) document.querySelector(`.reto .opts button[data-a="${c[1]}"]`).classList.add('ok');
+  $('rFb').innerHTML=(good?'<b>¡Bien!</b> ':'<b>No.</b> Es un <b>'+(c[1]==='m'?'motor':'generador')+'</b>. ')+c[2]; $('rCnt').textContent=`Pregunta ${rq+1} de ${RETO.length} · aciertos: ${rok}`;
+  $('rNext').hidden=false; $('rNext').textContent=rq+1<RETO.length?'Siguiente pregunta →':'Ver el resultado →'; });
+$('rNext').onclick=()=>{ if(rq>=RETO.length){ rq=0; rok=0; rord.sort(()=>Math.random()-.5); } else rq++; rShow(); };
+rShow();
+</script>
+<script>(function(){ // tira del tema: esta animación queda como «vista» y las ya abiertas llevan ✓; Esc y Retroceso vuelven al índice
+  try {
+    var me = location.pathname.split('/').pop(); if (me && !/\.html$/.test(me)) me += '.html';
+    if (me) localStorage.setItem('maq-visto:' + me, '1');
+    document.querySelectorAll('.tnav .steps a').forEach(function(a){
+      if (localStorage.getItem('maq-visto:' + a.getAttribute('href'))) { a.classList.add('seen'); a.title = (a.title ? a.title + ' · ' : '') + 'ya la has visto'; }
+    });
+  } catch(e) {}
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' || e.key === 'Backspace') { var t = e.target.tagName; if (t !== 'INPUT' && t !== 'TEXTAREA' && t !== 'SELECT') { e.preventDefault(); location.href = 'index.html#animaciones'; } } });
+})();
+</script>
+</body>
+</html>

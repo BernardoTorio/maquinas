@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Las partes del motor asíncrono</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<script>try{const t=localStorage.getItem('maq-tema');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<style>
+:root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;--ph1:#D9362E;--ph2:#2E75B6;--ph3:#3F8F2A;--steel:#9aa5b1;--steel2:#c3cbd3;--warn:#C00000;--ok:#3F8F2A;--grid:#e3e8ee;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}}
+:root[data-theme="dark"]{--bg:#15191e;--ink:#eef1f4;--muted:#a9b3bd;--card:#1f252c;--line:#36404b;--acc:#8EC1F0;--field:#6FAEE8;--force:#7BC45A;--ph1:#F06A5F;--ph2:#6FAEE8;--ph3:#7BC45A;--steel:#5d6874;--steel2:#3e4852;--warn:#FF7B72;--ok:#7BC45A;--grid:#2a323b}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:18px;line-height:1.45}
+main{max-width:1180px;margin:0 auto;padding:16px 16px 36px}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.back{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;border:2px solid var(--acc);color:var(--acc);background:var(--card);font-weight:700;font-size:.95rem;text-decoration:none}
+.back:hover,.back:focus-visible{background:var(--acc);color:#fff;outline:none}
+.crumbs{font-size:.88rem;color:var(--muted);flex:1 1 auto}
+.crumbs a{color:var(--muted)} .crumbs b{color:var(--ink)}
+.theme{font:inherit;font-size:.9rem;font-weight:700;padding:7px 12px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.top{border-bottom:4px solid var(--acc);padding-bottom:8px;margin-bottom:16px}
+.top small{color:var(--muted);font-weight:700}
+h1{margin:2px 0 4px;font-size:clamp(1.5rem,3.6vw,2.2rem);line-height:1.15;color:var(--acc)}
+.sub{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.stage,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stage svg{display:block;width:100%;height:auto;touch-action:manipulation;user-select:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem;color:var(--muted);padding:6px 6px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.panel{padding:14px 16px}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ctrl button,.seg button{font:inherit;font-weight:700;padding:11px 12px;border-radius:10px;border:2px solid var(--acc);cursor:pointer;flex:1 1 120px;background:var(--card);color:var(--acc)}
+.ctrl button.main{background:var(--acc);color:#fff}
+.ctrl button.main.on{background:var(--cur);border-color:var(--cur)}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}
+.seg button{flex:1 1 70px;padding:8px 8px;font-size:.92rem;border-width:2px}
+.seg button[aria-pressed="true"],.ctrl button[aria-pressed="true"]:not(.main){background:var(--acc);color:#fff}
+.lab{font-weight:700;font-size:.95rem;margin:2px 0 2px}
+.sl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;font-size:.95rem;margin-bottom:12px}
+.sl label{font-weight:700} .sl output{font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
+.sl input{grid-column:1/3}
+input[type=range]{width:100%;accent-color:var(--acc);height:28px}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #F2B400;outline-offset:2px}
+.read{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
+.read div{border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.read small{display:block;color:var(--muted);font-size:.8rem}
+.read b{font-size:1.25rem;font-variant-numeric:tabular-nums}
+.state{border-radius:10px;padding:8px 12px;font-weight:700;margin-bottom:10px;background:var(--grid)}
+.state.ok{background:rgba(63,143,42,.16);color:var(--ok)} .state.bad{background:rgba(217,54,46,.15);color:var(--warn)} .state.mid{background:rgba(242,180,0,.2)}
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:620px){.boxes{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:14px 16px;font-size:1rem;line-height:1.45;margin:0;background:var(--card);border:1px solid var(--line)}
+.box h2{font-size:1.05rem;margin:0 0 6px;color:var(--acc)}
+.box.blue{background:rgba(46,117,182,.10);border-left:6px solid var(--field)}
+.box.green{background:rgba(63,143,42,.10);border-left:6px solid var(--force)}
+.box ul,.box ol{margin:0;padding-left:20px}.box li{margin-bottom:6px}
+.box p{margin:0 0 8px}
+.box li.on{background:rgba(242,180,0,.25);border-radius:6px}
+.hint{font-size:.88rem;color:var(--muted);margin:6px 4px 0}
+svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif}
+.hit{cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+.inset{border:1px dashed var(--line);border-radius:10px;padding:6px;margin-bottom:6px}
+.inset svg{display:block;width:100%;height:auto}
+.cap{margin:2px 4px 0;font-size:.85rem;color:var(--muted)}
+
+:root{--alu:#d3d9df;--cuh:#C87533;--hl:#F2B400}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--alu:#8f9aa5}}
+:root[data-theme="dark"]{--alu:#8f9aa5}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.chips button{font:inherit;font-size:.88rem;font-weight:700;padding:7px 9px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--hl);border-color:var(--hl);color:#1a1a1a}
+.ctrl button:disabled{opacity:.45;cursor:default}
+.box.taller{background:rgba(112,48,160,.09);border-left:6px solid #7030A0}
+.box.taller h2{color:#7030A0}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .box.taller h2{color:#C9A3EC}}
+:root[data-theme="dark"] .box.taller h2{color:#C9A3EC}
+.reto-on{outline:3px solid var(--hl);outline-offset:2px}
+.state.big{font-size:1.05rem}
+.pick{position:sticky;top:0;z-index:2;display:inline-block;margin:2px 4px 6px;padding:6px 14px;border-radius:999px;background:var(--hl);color:#1a1a1a;font-weight:700;font-size:1.05rem}
+[hidden]{display:none!important}
+
+/* --- tira del tema, «Para qué sirve» y botón Siguiente (como las del Tema 6 de Automatismos) --- */
+.tnav{--tok:#2E8B3E;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tnav a{text-decoration:none;color:var(--ink);border:2px solid var(--line);border-radius:10px;font-weight:700;background:var(--card);min-height:44px;display:flex;align-items:center;justify-content:center;padding:0 12px}
+.tnav a:hover{border-color:var(--acc)}
+.tnav .where{flex:1;text-align:center;font-weight:700;color:var(--muted);font-size:.95rem}
+.tnav .steps{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px}
+.tnav .steps a{flex:1 1 auto;min-width:44px;padding:0 4px;font-size:.95rem;white-space:nowrap}
+.tnav .steps a.cur{background:#1F4E79;border-color:#1F4E79;color:#fff}
+.tnav a.off{visibility:hidden}
+.tnav .steps a.seen::after{content:"✓";margin-left:3px;font-size:.78em;color:var(--tok)}
+.tnav .steps a.cur.seen::after{color:#fff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tnav{--tok:#6fd98a}}
+:root[data-theme="dark"] .tnav{--tok:#6fd98a}
+.nextbig{display:flex;align-items:center;justify-content:center;margin:18px 0 0;padding:16px;border-radius:12px;background:#1F4E79;color:#fff;font-weight:700;font-size:1.1rem;text-decoration:none;text-align:center}
+.nextbig:hover{background:#163a5c}
+.box.pqs{border-left:6px solid var(--acc)}
+.box.pqs p{margin:0}
+.boxes>.pqs.full{grid-column:1 / -1}
+@media (min-width:621px){
+  .boxes.b3{grid-template-rows:auto 1fr}
+  .boxes.b3>:first-child{grid-column:1;grid-row:1}
+  .boxes.b3>.pqs{grid-column:1;grid-row:2}
+  .boxes.b3>.pqs+*{grid-column:2;grid-row:1 / span 2}
+}
+@media (max-width:620px){.crumbs{display:none}.theme,.themebtn{margin-left:auto}
+  .tnav>a{padding:0 9px}.tnav .where{font-size:.86rem}
+  .tnav .steps a.seen{position:relative}.tnav .steps a.seen::after{position:absolute;top:1px;right:3px;margin:0;font-size:.62em}}
+/* --- fin de la tira del tema --- */
+</style>
+</head>
+<body>
+<main>
+  <nav class="bar" aria-label="Navegación">
+    <a class="back" href="index.html#animaciones" aria-label="Volver al índice de animaciones">← Índice</a>
+    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 5 › <b>T5.3 Partes del motor</b></span>
+    <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
+  </nav>
+  <nav class="tnav" aria-label="Animaciones del Tema 5"><a class="tarr" href="motor_generador.html" aria-label="Anterior: Motor o generador: la misma máquina">‹ T5.1</a><span class="where">Tema 5 · 2 de 7</span><a class="tarr" href="campo_giratorio.html" aria-label="Siguiente: Campo magnético giratorio">T5.4 ›</a><div class="steps"><a href="motor_generador.html" title="Motor o generador: la misma máquina">T5.1</a><a href="partes_motor.html" class="cur" aria-current="page" title="Las partes del motor asíncrono">T5.3</a><a href="campo_giratorio.html" title="Campo magnético giratorio">T5.4</a><a href="curva_par.html" title="Par, velocidad y corriente del motor">T5.4.2 a 5.8</a><a href="placa_bornes.html" title="Placa de bornes: estrella o triángulo">T5.6</a><a href="arranques.html" title="Arranques del motor">T5.7</a><a href="averias_motor.html" title="Averías del motor: encuentra la causa">T5.9</a></div></nav>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 5 · Punto 5.3</small><h1>Las partes del motor asíncrono</h1><p class="sub">Desmonta el motor pieza a pieza, como en el taller. Toca cada pieza para saber cómo se llama y para qué sirve.</p></header>
+  <div class="grid">
+    <div class="left">
+      <div class="stage"><div class="pick" id="pick" hidden></div><svg id="sv" viewBox="0 45 680 480" role="img" aria-label="Motor asíncrono visto de lado, con la mitad de arriba cortada para ver por dentro. Se puede desmontar pieza a pieza"><g id="g"></g></svg>
+        <div class="legend"><span>Arriba, cortado para ver por dentro · abajo, por fuera</span><span><b style="color:var(--cu)">■</b> cobre</span><span><b style="color:#9aa5b1">■</b> chapas de acero</span><span><b style="color:#b8c0c8">■</b> aluminio</span></div></div>
+      <div class="boxes b3">
+        <div class="box" id="exp"></div>
+<div class="box pqs"><h2>Para qué sirve</h2><p>Para <b>conocer por dentro el motor</b> que vas a conectar, medir y reparar: qué parte gira, cuál está quieta, dónde va el bobinado y qué piezas se gastan. Se desmonta en el mismo orden que en el taller.</p></div>
+        <div class="box taller"><h2>En el taller</h2><ul>
+          <li>Antes de desmontar: <b>sin tensión</b> (cinco reglas de oro) y <b>marca las tapas</b> con un punzón, para volver a montarlas en su sitio.</li>
+          <li>Se desmonta en este orden: tapa del ventilador, ventilador, tapas y, al final, el rótor. Se monta <b>al revés</b>.</li>
+          <li>Saca el rótor <b>sin que roce</b> el estátor: un golpe en el bobinado lo estropea.</li></ul>
+          <p class="hint">Cómo se usa: pulsa <b>Desmontar un paso</b> y toca las piezas (en el dibujo o en la lista). Con <b>Reto</b>, te pido una pieza y tú la buscas.</p></div>
+      </div>
+    </div>
+    <aside class="panel">
+      <div class="ctrl"><button id="bDes" class="main">Desmontar un paso</button><button id="bMon">Montar un paso</button></div>
+      <div class="state" id="stt">Montado</div>
+      <div class="lab">Tipo de rótor</div>
+      <div class="seg" id="sRot"><button data-v="jaula" aria-pressed="true">Jaula de ardilla</button><button data-v="bob" aria-pressed="false">Rótor bobinado</button></div>
+      <div class="ctrl"><button id="bCage" aria-pressed="false">Ver la jaula sin chapas</button></div>
+      <div class="lab">Las piezas</div>
+      <div class="chips" id="chips"></div>
+      <div class="inset"><svg id="fr" viewBox="0 0 300 300" aria-hidden="true"></svg><p class="cap">El mismo motor cortado de frente, como en el punto 5.4.</p></div>
+      <div class="ctrl"><button id="bReto" aria-pressed="false">Reto: encuentra la pieza</button></div>
+    </aside>
+  </div>
+  <a class="nextbig" href="campo_giratorio.html">Siguiente: T5.4 Campo magnético giratorio →</a>
+</main>
+<script>
+// navegación y tema (común a todas las páginas)
+(function(){const b=document.getElementById('themeBtn'),r=document.documentElement;
+ const cur=()=>r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+ const lab=()=>{b.textContent=cur()==='dark'?'☀ Modo claro':'☾ Modo oscuro';};
+ b.onclick=()=>{const n=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('maq-tema',n);}catch(e){}lab();};lab();})();
+const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmt=(x,d=0)=>x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+function el(t,a,txt){let s='<'+t;for(const k in a)s+=` ${k}="${a[k]}"`;return s+(txt!==undefined?'>'+txt+'</'+t+'>':'/>');}
+function arrowSvg(x1,y1,x2,y2,c,w,op){const a=Math.atan2(y2-y1,x2-x1),h=w*2.4;const bx=x2-h*Math.cos(a),by=y2-h*Math.sin(a);
+  return `<g opacity="${op===undefined?1:op}"><line x1="${x1}" y1="${y1}" x2="${bx}" y2="${by}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/><path d="M${x2} ${y2}L${bx-h*.6*Math.sin(a)} ${by+h*.6*Math.cos(a)}L${bx+h*.6*Math.sin(a)} ${by-h*.6*Math.cos(a)}Z" fill="${c}"/></g>`;}
+// ---------- piezas
+const PARTS={
+ carcasa:['Carcasa y aletas','Es la «caja» de hierro o aluminio que lo protege todo. Sus <b>aletas</b> sacan el calor: por encima de ellas pasa el aire del ventilador.'],
+ patas:['Patas','Sirven para atornillar el motor a la bancada. Otros motores llevan <b>brida</b> (un aro con agujeros) en lugar de patas.'],
+ caja:['Caja de bornes','Aquí llegan los <b>seis extremos</b> de las tres bobinas del estátor (U1-U2, V1-V2, W1-W2). Con las chapas se conecta en estrella o en triángulo (punto 5.6). Borne = <b>tornillo</b>.'],
+ placa:['Placa de características','Dice la potencia, las tensiones, las corrientes y la velocidad del motor (punto 5.6). <b>Léela siempre</b> antes de conectar.'],
+ estator:['Estátor (chapas)','La <b>parte fija</b>. Es un cilindro hueco hecho con <b>chapas magnéticas</b> de acero al silicio, aisladas entre sí para que no haya corrientes de Foucault (punto 1.11). Mira las rayitas: cada una es una chapa. Por dentro tiene <b>ranuras</b>.'],
+ bobinado:['Bobinado del estátor','Tres bobinas de hilo de <b>cobre esmaltado</b>, una por fase, metidas en las ranuras y repartidas a 120°. Lo que asoma por los lados son las <b>cabezas de bobina</b>. El estátor es el que <b>crea el campo magnético</b> (punto 5.4).'],
+ entre:['Entrehierro','El <b>hueco de aire</b> entre el estátor y el rótor. Es muy pequeño, de <b>décimas de milímetro</b> (aquí está dibujado mucho más grande), para que el campo pase bien del estátor al rótor.'],
+ rotor:['Rótor','La <b>parte que gira</b>. Es otro cilindro de chapas, montado sobre el eje. Gira dentro del estátor sin tocarlo.'],
+ jaula:['Jaula de ardilla','<b>Barras de aluminio</b> metidas en las ranuras del rótor y unidas en los dos extremos por <b>anillos</b>. No está conectada a nada: la corriente le llega por <b>inducción</b>, como al secundario de un transformador. Es el 95 % de los motores asíncronos.'],
+ rotbob:['Bobinado del rótor','En el rótor bobinado, en vez de barras hay <b>bobinas de hilo</b>, como en el estátor. Sus tres extremos salen por los anillos rozantes.'],
+ anillos:['Anillos y escobillas (K, L, M)','Tres <b>anillos</b> que giran con el eje y unas <b>escobillas</b> de carbón que rozan en ellos y llevan el bobinado del rótor a los bornes K, L y M. Se usaba para arrancar con resistencias. Hoy está <b>obsoleto</b>: es caro y las escobillas se gastan.'],
+ eje:['Eje','La barra de acero que sale por delante y <b>mueve la máquina</b>. Lleva una <b>chaveta</b> para que la polea o el acoplamiento no resbalen.'],
+ rodam:['Rodamientos','Hay dos, uno en cada tapa. Dejan girar el eje con muy poco rozamiento. Es <b>casi lo único que se gasta</b> en un motor de jaula: si hacen ruido, se cambian.'],
+ tapas:['Tapas (escudos)','Cierran la carcasa por los dos lados y <b>sujetan los rodamientos</b>. Así el rótor queda centrado y no roza con el estátor.'],
+ vent:['Ventilador','Va en el eje, detrás. Al girar el motor, <b>sopla aire</b> por encima de las aletas y lo refrigera.'],
+ capo:['Tapa del ventilador','Protege el ventilador (para que nadie meta los dedos) y lleva el aire hacia las aletas.']};
+const STEPS=[
+ ['Montado','El motor está <b>montado</b>. La mitad de arriba está cortada para que veas lo que hay dentro. Pulsa <b>Desmontar un paso</b> o toca una pieza.'],
+ ['Paso 1 de 4','<b>Paso 1</b>: quitamos la <b>tapa del ventilador</b>. Ya se ve el ventilador, sujeto al eje.'],
+ ['Paso 2 de 4','<b>Paso 2</b>: sacamos el <b>ventilador</b> del eje.'],
+ ['Paso 3 de 4','<b>Paso 3</b>: quitamos las dos <b>tapas</b>. Los <b>rodamientos</b> se quedan puestos en el eje.'],
+ ['Paso 4 de 4 · desmontado','<b>Paso 4</b>: sacamos el <b>rótor con su eje</b>. Dentro de la carcasa queda el estátor con su bobinado: lo que no gira.']];
+const TGT=[{},{capo:[-56,0]},{capo:[-56,0],vent:[-62,215]},{capo:[-56,0],vent:[-62,215],tapaT:[-34,0],tapaD:[58,0]},{capo:[-56,0],vent:[-62,215],tapaT:[-34,0],tapaD:[58,0],rot:[44,215]}];
+let step=0, sel=null, rtype='jaula', cage=false, off={capo:[0,0],vent:[0,0],tapaT:[0,0],tapaD:[0,0],rot:[0,0]}, last=performance.now(), spin=0;
+let reto=null; // {ask, n, ok}
+const AX=215;
+function avail(){ return Object.keys(PARTS).filter(k=> rtype==='jaula' ? (k!=='rotbob'&&k!=='anillos') : k!=='jaula'); }
+// ---------- dibujo
+function draw(){
+  const ink=css('--ink'),card=css('--card'),st=css('--steel'),st2=css('--steel2'),cu=css('--cu'),alu=css('--alu'),mut=css('--muted'),hl=css('--hl');
+  const showSel = sel && !reto;
+  const K=id=>showSel&&sel===id; // ¿pieza señalada?
+  const SK=(id,w)=>`stroke="${K(id)?hl:ink}" stroke-width="${K(id)?Math.max(4,w+2):w}"`;
+  const G=(id,inner,o)=>`<g class="hit" data-p="${id}"${o?` transform="translate(${o[0]} ${o[1]})"`:''}>${inner}</g>`;
+  let s=`<defs><pattern id="lam" width="5" height="10" patternUnits="userSpaceOnUse"><rect width="5" height="10" fill="${st}"/><line x1="0.5" y1="0" x2="0.5" y2="10" stroke="${ink}" stroke-width=".7" opacity=".55"/></pattern>
+    <pattern id="hat" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="${st2}"/><line x1="0" y1="0" x2="0" y2="8" stroke="${ink}" stroke-width="1" opacity=".5"/></pattern></defs>`;
+  // ===== 1. rótor con su eje, rodamientos y (si es bobinado) anillos
+  const ro=off.rot, out=ro[1]>110;
+  let r='';
+  // eje
+  r+=G('eje',`<rect x="78" y="${AX-12}" width="${600-78}" height="24" rx="3" fill="#7d868f" ${SK('eje',1.5)}/><rect x="548" y="${AX-16}" width="44" height="6" fill="${ink}"/>`);
+  // cuerpo del rótor (chapas)
+  const rx0=196, rx1=436, rh=58;
+  r+=G('rotor',`<rect x="${rx0}" y="${AX-rh}" width="${rx1-rx0}" height="${2*rh}" fill="url(#lam)" fill-opacity="${cage&&rtype==='jaula'?0.18:1}" ${SK('rotor',1.5)}/>`);
+  if(rtype==='jaula'){
+    // barras (inclinadas un poco) y anillos de cortocircuito
+    let b=''; const NB=7;
+    for(let k=0;k<NB;k++){ const ph=-1.25+2.5*k/(NB-1), y=AX+rh*0.86*Math.sin(ph+0.12*Math.sin(spin));
+      b+=`<line x1="${rx0}" y1="${y-5}" x2="${rx1}" y2="${y+5}" stroke="${alu}" stroke-width="7" opacity="${cage?1:0.0}"/>`+(cage?`<line x1="${rx0}" y1="${y-5}" x2="${rx1}" y2="${y+5}" stroke="${ink}" stroke-width="1" opacity=".5"/>`:''); }
+    b+=`<rect x="${rx0-8}" y="${AX-rh+4}" width="8" height="${2*rh-8}" rx="2" fill="${alu}" ${SK('jaula',1.2)}/><rect x="${rx1}" y="${AX-rh+4}" width="8" height="${2*rh-8}" rx="2" fill="${alu}" ${SK('jaula',1.2)}/>`;
+    if(K('jaula')) b+=`<rect x="${rx0-10}" y="${AX-rh}" width="${rx1-rx0+20}" height="${2*rh}" fill="none" stroke="${hl}" stroke-width="4" stroke-dasharray="8 5"/>`;
+    r+=G('jaula',b);
+  } else {
+    let b=`<path d="M${rx0} ${AX-rh+6}q-14 0 -14 16v${2*rh-44}q0 16 14 16Z" fill="${cu}" ${SK('rotbob',1.2)}/><path d="M${rx1} ${AX-rh+6}q14 0 14 16v${2*rh-44}q0 16 -14 16Z" fill="${cu}" ${SK('rotbob',1.2)}/>`;
+    for(let k=0;k<5;k++){ const y=AX-rh+14+k*((2*rh-28)/4); b+=`<line x1="${rx0}" y1="${y}" x2="${rx1}" y2="${y}" stroke="${cu}" stroke-width="5" opacity=".75"/>`; }
+    r+=G('rotbob',b);
+    let a=''; for(let k=0;k<3;k++){ const x=150+k*11; a+=`<rect x="${x}" y="${AX-22}" width="7" height="44" rx="2" fill="#b07a3a" ${SK('anillos',1.2)}/>`; }
+    a+=`<text x="161" y="${AX+40}" text-anchor="middle" font-size="12" font-weight="700" fill="${ink}">K L M</text>`;
+    r+=G('anillos',a);
+  }
+  // rodamientos (en el eje)
+  const brg=x=>`<rect x="${x}" y="${AX-28}" width="14" height="56" rx="3" fill="${st2}" ${SK('rodam',1.5)}/><circle cx="${x+7}" cy="${AX-20}" r="4.5" fill="${ink}"/><circle cx="${x+7}" cy="${AX+20}" r="4.5" fill="${ink}"/>`;
+  r+=G('rodam',brg(128)+brg(490));
+  s+=`<g transform="translate(${ro[0]} ${ro[1]})">${r}</g>`;
+  if(out) s+=el('text',{x:330+ro[0],y:AX+ro[1]+rh+20,'text-anchor':'middle','font-size':15,'font-weight':700,fill:mut},'el rótor, fuera');
+  // ===== 2. ventilador
+  let v=''; v+=`<rect x="94" y="${AX-82}" width="12" height="164" rx="4" fill="${st2}" ${SK('vent',1.5)}/>`;
+  for(let k=0;k<6;k++){ const y=AX-70+k*28; v+=`<line x1="94" y1="${y}" x2="106" y2="${y+10}" stroke="${ink}" stroke-width="1.2"/>`; }
+  v+=`<rect x="92" y="${AX-16}" width="16" height="32" rx="3" fill="#6b737b" stroke="${ink}"/>`;
+  s+=G('vent',v,off.vent);
+  // ===== 3. carcasa por fuera (mitad de abajo), que tapa lo de dentro
+  let c=`<path d="M146 ${AX}L486 ${AX}L486 ${AX+104}Q486 ${AX+110} 480 ${AX+110}L152 ${AX+110}Q146 ${AX+110} 146 ${AX+104}Z" fill="${st2}" ${SK('carcasa',2)}/>`;
+  for(let k=1;k<=5;k++){ const y=AX+k*18; c+=`<rect x="150" y="${y-3}" width="332" height="6" rx="3" fill="${st}" stroke="${ink}" stroke-width=".8"/>`; }
+  // mitad de arriba cortada: pared de la carcasa
+  c+=`<rect x="146" y="${AX-112}" width="340" height="14" fill="url(#hat)" ${SK('carcasa',2)}/>`;
+  s+=G('carcasa',c);
+  // patas
+  let p=''; for(const x of [176,388]){ p+=`<path d="M${x+10} ${AX+108}L${x} ${AX+132}L${x+70} ${AX+132}L${x+60} ${AX+108}Z" fill="${st2}" ${SK('patas',1.5)}/><circle cx="${x+35}" cy="${AX+124}" r="4" fill="${card}" stroke="${ink}"/>`; }
+  s+=G('patas',p);
+  s+=`<line x1="120" y1="${AX+133}" x2="560" y2="${AX+133}" stroke="${mut}" stroke-width="2" stroke-dasharray="6 5"/>`;
+  // placa de características
+  let pl=`<rect x="290" y="${AX+22}" width="72" height="44" rx="3" fill="#e9ecef" ${SK('placa',1.5)}/>`;
+  for(let k=0;k<4;k++) pl+=`<line x1="298" y1="${AX+32+k*9}" x2="${352-(k%2)*14}" y2="${AX+32+k*9}" stroke="#555" stroke-width="2"/>`;
+  s+=G('placa',pl);
+  // estátor (corte): chapas
+  s+=G('estator',`<rect x="186" y="${AX-98}" width="260" height="36" fill="url(#lam)" ${SK('estator',1.5)}/>`);
+  // bobinado del estátor: lados en las ranuras y cabezas de bobina
+  let bo=`<rect x="186" y="${AX-80}" width="260" height="11" fill="${cu}" opacity=".9"/>`;
+  bo+=`<path d="M186 ${AX-94}q-26 0 -26 14v6q0 12 26 12Z" fill="${cu}" ${SK('bobinado',1.2)}/><path d="M446 ${AX-94}q26 0 26 14v6q0 12 -26 12Z" fill="${cu}" ${SK('bobinado',1.2)}/>`;
+  bo+=`<path d="M170 ${AX-92}C172 ${AX-120} 230 ${AX-112} 262 ${AX-128}M176 ${AX-93}C180 ${AX-118} 240 ${AX-110} 284 ${AX-128}M182 ${AX-94}C188 ${AX-116} 250 ${AX-108} 306 ${AX-128}" stroke="${cu}" stroke-width="3" fill="none"/>`;
+  if(K('bobinado')) bo+=`<rect x="186" y="${AX-81}" width="260" height="13" fill="none" stroke="${hl}" stroke-width="3"/>`;
+  s+=G('bobinado',bo);
+  // entrehierro
+  s+=G('entre',`<rect x="196" y="${AX-66}" width="240" height="14" fill="transparent"/><line x1="196" y1="${AX-60}" x2="436" y2="${AX-60}" stroke="${K('entre')?hl:mut}" stroke-width="${K('entre')?4:1.5}" stroke-dasharray="${K('entre')?'':'4 4'}"/>`);
+  // ===== 4. tapas (escudos) con el hueco del rodamiento
+  const tapa=(x,id)=>`<path d="M${x} ${AX-104}L${x+18} ${AX-104}L${x+18} ${AX-34}L${x} ${AX-34}ZM${x} ${AX+34}L${x+18} ${AX+34}L${x+18} ${AX+104}L${x} ${AX+104}Z" fill="${st2}" ${SK('tapas',1.5)}/><rect x="${x-4}" y="${AX-36}" width="26" height="6" fill="${st}" stroke="${ink}"/><rect x="${x-4}" y="${AX+30}" width="26" height="6" fill="${st}" stroke="${ink}"/>`;
+  s+=G('tapas',tapa(128,'T'),off.tapaT)+G('tapas',tapa(486,'D'),off.tapaD);
+  // ===== 5. tapa del ventilador (rejilla)
+  let cp=`<path d="M124 ${AX-96}L80 ${AX-96}Q64 ${AX-96} 64 ${AX-80}L64 ${AX+80}Q64 ${AX+96} 80 ${AX+96}L124 ${AX+96}" fill="none" ${SK('capo',3)}/>`;
+  for(let k=0;k<9;k++){ const y=AX-64+k*16; cp+=`<line x1="64" y1="${y}" x2="64" y2="${y+9}" stroke="${card}" stroke-width="4"/>`; }
+  cp+=`<rect x="60" y="${AX-96}" width="66" height="192" fill="transparent"/>`;
+  s+=G('capo',cp,off.capo);
+  // ===== 6. caja de bornes
+  let cj=`<rect x="250" y="${AX-150}" width="92" height="38" rx="3" fill="${st2}" ${SK('caja',1.5)}/><rect x="244" y="${AX-158}" width="104" height="9" rx="2" fill="${st}" ${SK('caja',1.5)}/>`;
+  for(let k=0;k<3;k++) cj+=`<circle cx="${270+k*26}" cy="${AX-131}" r="5" fill="#d9b44a" stroke="${ink}"/>`;
+  cj+=`<circle cx="356" cy="${AX-131}" r="7" fill="${st}" stroke="${ink}"/>`;
+  s+=G('caja',cj);
+  // ===== 7. chincheta en la pieza señalada (el nombre va encima del dibujo)
+  if(showSel){ const a=anchor(sel); if(a){ s+=`<circle cx="${a[0]}" cy="${a[1]}" r="11" fill="${hl}" stroke="${ink}" stroke-width="2"/><circle cx="${a[0]}" cy="${a[1]}" r="4" fill="${ink}"/>`; } }
+  $('g').innerHTML=s;
+  drawFront();
+}
+function anchor(id){ const ro=off.rot;
+  const A={carcasa:[460,AX+60],patas:[211,AX+128],caja:[296,AX-150],placa:[326,AX+44],estator:[400,AX-90],bobinado:[166,AX-84],entre:[400,AX-60],
+    rotor:[300+ro[0],AX-30+ro[1]],jaula:[192+ro[0],AX-40+ro[1]],rotbob:[188+ro[0],AX-30+ro[1]],anillos:[161+ro[0],AX-22+ro[1]],eje:[580+ro[0],AX+ro[1]],rodam:[497+ro[0],AX-28+ro[1]],
+    tapas:[495+off.tapaD[0],AX-80],vent:[100+off.vent[0],AX-60+off.vent[1]],capo:[70+off.capo[0],AX-60]};
+  return A[id]; }
+// ---------- corte de frente (pequeño)
+function drawFront(){
+  const ink=css('--ink'),card=css('--card'),st=css('--steel'),st2=css('--steel2'),cu=css('--cu'),alu=css('--alu'),hl=css('--hl');
+  const C=150, on=id=>sel===id&&!reto, sk=id=>on(id)?`stroke="${hl}" stroke-width="5"`:`stroke="${ink}" stroke-width="1.2"`;
+  let s='';
+  for(let k=0;k<24;k++){const a=k*Math.PI/12; s+=`<line x1="${C+128*Math.cos(a)}" y1="${C+128*Math.sin(a)}" x2="${C+142*Math.cos(a)}" y2="${C+142*Math.sin(a)}" stroke="${ink}" stroke-width="5" stroke-linecap="round" opacity=".55"/>`;}
+  s+=`<circle cx="${C}" cy="${C}" r="130" fill="${st2}" ${sk('carcasa')}/>`;
+  s+=`<circle cx="${C}" cy="${C}" r="118" fill="${st}" ${sk('estator')}/>`;
+  for(let k=0;k<24;k++){const a=k*Math.PI/12; s+=`<circle cx="${C+96*Math.cos(a)}" cy="${C+96*Math.sin(a)}" r="8" fill="${cu}" ${on('bobinado')?`stroke="${hl}" stroke-width="3"`:`stroke="${ink}" stroke-width=".8"`}/>`;}
+  s+=`<circle cx="${C}" cy="${C}" r="84" fill="${card}" stroke="${on('entre')?hl:ink}" stroke-width="${on('entre')?5:1}"/>`;
+  const rr=on('rotor')||on('jaula')||on('rotbob');
+  s+=`<circle cx="${C}" cy="${C}" r="80" fill="${st}" ${sk(on('rotor')?'rotor':'x')}/>`;
+  for(let k=0;k<18;k++){const a=k*Math.PI/9+spin*0.2; s+=`<circle cx="${C+68*Math.cos(a)}" cy="${C+68*Math.sin(a)}" r="${rtype==='jaula'?6.5:6}" fill="${rtype==='jaula'?alu:cu}" ${(on('jaula')||on('rotbob'))?`stroke="${hl}" stroke-width="3"`:`stroke="${ink}" stroke-width=".8"`}/>`;}
+  s+=`<circle cx="${C}" cy="${C}" r="20" fill="#7d868f" ${sk('eje')}/>`;
+  s+=`<text x="${C}" y="${C+4}" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">eje</text>`;
+  $('fr').innerHTML=s;
+}
+// ---------- textos y controles
+function texts(){
+  let m;
+  if(reto){ m=reto.msg||`<b>Reto ${reto.n} de 8</b> (aciertos: ${reto.ok}). Toca en el dibujo: <b>${PARTS[reto.ask][0].toLowerCase()}</b>.`; }
+  else if(sel) m=`<b>${PARTS[sel][0]}</b>. ${PARTS[sel][1]}`;
+  else m=STEPS[step][1];
+  if(!reto && sel==='jaula' && !cage) m+=' Pulsa <b>Ver la jaula sin chapas</b> para verla entera.';
+  $('exp').innerHTML='<h2>Qué pasa</h2><p>'+m+'</p>';
+  $('stt').textContent=STEPS[step][0];
+  const pk=$('pick'); if(sel&&!reto){ pk.hidden=false; pk.textContent='👉 '+PARTS[sel][0]; } else pk.hidden=true;
+  $('bDes').disabled=step>=4; $('bMon').disabled=step<=0;
+  $('bCage').disabled=rtype!=='jaula'; $('bCage').setAttribute('aria-pressed',cage&&rtype==='jaula');
+  $('chips').innerHTML=avail().map(k=>`<button data-p="${k}" aria-pressed="${sel===k&&!reto}">${PARTS[k][0]}</button>`).join('');
+  document.querySelectorAll('#chips button').forEach(b=>b.onclick=()=>pick(b.dataset.p));
+  $('bReto').textContent=reto?'Terminar el reto':'Reto: encuentra la pieza'; $('bReto').setAttribute('aria-pressed',!!reto);
+}
+function pick(id){
+  if(reto){ if(reto.wait) return; const good=id===reto.ask; if(good) reto.ok++;
+    reto.msg=(good?'<b>¡Bien!</b> ':`<b>No</b>, eso es: ${PARTS[id][0].toLowerCase()}. `)+`<b>${PARTS[reto.ask][0]}</b>: ${PARTS[reto.ask][1]}`;
+    sel=reto.ask; reto.wait=true; const keep=reto; draw(); const showAns=()=>{};
+    setTimeout(()=>{ if(reto!==keep) return; reto.wait=false; if(reto.n>=8){ reto.msg=`<b>Reto terminado</b>: has acertado ${reto.ok} de 8. Pulsa <b>Terminar el reto</b> o vuelve a empezar.`; reto.done=true; reto.n=8; }
+      else { reto.n++; reto.ask=nextAsk(); reto.msg=null; } texts(); }, 2600);
+    // durante la pausa se ve la pieza buena señalada
+    const r0=reto; reto=null; draw(); reto=r0; texts(); return; }
+  sel=(sel===id)?null:id; texts(); }
+function nextAsk(){ const a=avail().filter(k=>k!==(reto&&reto.ask)); return a[Math.floor(Math.random()*a.length)]; }
+$('sv').addEventListener('click',e=>{const h=e.target.closest('[data-p]'); if(h) pick(h.dataset.p); else if(!reto){ sel=null; texts(); }});
+$('bDes').onclick=()=>{ if(step<4){ step++; sel=null; texts(); } };
+$('bMon').onclick=()=>{ if(step>0){ step--; sel=null; texts(); } };
+document.querySelectorAll('#sRot button').forEach(b=>b.onclick=()=>{ rtype=b.dataset.v; document.querySelectorAll('#sRot button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  if(rtype==='bob'){ cage=false; if(sel==='jaula') sel='rotbob'; } else if(sel==='rotbob'||sel==='anillos') sel='jaula'; texts(); });
+$('bCage').onclick=()=>{ cage=!cage; if(cage) sel='jaula'; texts(); };
+$('bReto').onclick=()=>{ if(reto){ reto=null; sel=null; } else { reto={n:1,ok:0,ask:null,msg:null}; reto.ask=nextAsk(); sel=null; } texts(); };
+function frame(now){ const dt=Math.min(.05,(now-last)/1000); last=now; spin+=dt;
+  const T=TGT[step]; for(const k in off){ const tg=T[k]||[0,0]; for(let i=0;i<2;i++){ const d=tg[i]-off[k][i]; off[k][i]+=Math.abs(d)<0.5?d:d*Math.min(1,dt*4); } }
+  draw(); requestAnimationFrame(frame); }
+texts(); requestAnimationFrame(frame);
+</script>
+<script>(function(){ // tira del tema: esta animación queda como «vista» y las ya abiertas llevan ✓; Esc y Retroceso vuelven al índice
+  try {
+    var me = location.pathname.split('/').pop(); if (me && !/\.html$/.test(me)) me += '.html';
+    if (me) localStorage.setItem('maq-visto:' + me, '1');
+    document.querySelectorAll('.tnav .steps a').forEach(function(a){
+      if (localStorage.getItem('maq-visto:' + a.getAttribute('href'))) { a.classList.add('seen'); a.title = (a.title ? a.title + ' · ' : '') + 'ya la has visto'; }
+    });
+  } catch(e) {}
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' || e.key === 'Backspace') { var t = e.target.tagName; if (t !== 'INPUT' && t !== 'TEXTAREA' && t !== 'SELECT') { e.preventDefault(); location.href = 'index.html#animaciones'; } } });
+})();
+</script>
+</body>
+</html>

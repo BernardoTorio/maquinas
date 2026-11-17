@@ -168,7 +168,7 @@ details.grp summary{color:var(--ink)}
     </a>
     <a class="pdf" href="temas/T5_Motores_electricos_Maquinas.pdf" download>
       <div class="ico">PDF</div>
-      <div>Tema 5 · Motores eléctricos<small>Campo giratorio, par y deslizamiento, curvas, placa de bornes, arranques y regulación de velocidad</small></div>
+      <div>Tema 5 · Motores eléctricos<small>Motor o generador, partes del motor, campo giratorio, par y curvas, placa de bornes, arranques, regulación de velocidad y averías</small></div>
     </a>
     <a class="pdf" href="temas/T6_Variadores_Maquinas.pdf" download>
       <div class="ico">PDF</div>
@@ -251,7 +251,7 @@ details.grp summary{color:var(--ink)}
   var HOY = [1, 3];
   // Temas cuyas animaciones todavía NO se enlazan desde la web (las páginas siguen en su sitio, pero aquí no hay acceso).
   // Para volver a enseñarlas, quita su número de la lista: var SIN_ANIM = [];
-  var SIN_ANIM = [5, 6];
+  var SIN_ANIM = [6];
 
   // Los temas del curso. pdf: los apuntes; prac: la práctica que va con el tema; chips: otros accesos
   var PDF13 = 'temas/T1_T3_Electromagnetismo_Transformadores_Maquinas.pdf';
@@ -296,12 +296,15 @@ details.grp summary{color:var(--ink)}
     '4.16':'Concéntrico de 2 polos',
     '4.17':'¿Se puede hacer este devanado?',
     '4.18':'Cómo se dibuja en la plantilla',
+    '5.1':'Máquinas rotativas: conversión de energía y reversibilidad',
+    '5.3':'Constitución del motor asíncrono',
     '5.4':'Campo magnético giratorio',
     '5.4.2':'Deslizamiento y par motor',
     '5.5':'Curvas de par e intensidad',
     '5.6':'Placa de características y de bornes',
     '5.7':'Arranques',
     '5.8':'Regulación de velocidad',
+    '5.9':'Resolución de averías en motores',
     '6.1':'El variador: partes y conexionado',
     '6.2':'Tipos de control',
     '6.3':'Tipos de cargas'
@@ -331,10 +334,13 @@ details.grp summary{color:var(--ink)}
     {f:'dev_imb2_uniones.html',   t:'Imbricado de doble capa (2): uniones y caja de bornes', d:'Uniones, caja de bornes, flechas y polos. V y W simplificadas (solo sus lados, como en la práctica) o enteras para comparar.', p:['4.13','4.18']},
     {f:'dev_conc_grupos.html',    t:'Concéntrico (1): amplitud y grupos', d:'La bobina pequeña con su amplitud, las demás alrededor y los otros grupos de la fase, con 2 polos y con más de 2.', p:['4.14','4.15','4.16']},
     {f:'dev_conc_uniones.html',   t:'Concéntrico (2): uniones y caja de bornes', d:'Por polos (2 polos) o por polos consecuentes (más de 2): uniones, caja de bornes, flechas y los S que salen solos entre los grupos.', p:['4.15','4.16']},
+    {f:'motor_generador.html',    t:'Motor o generador: la misma máquina', d:'Un coche eléctrico y una central de bombeo: si le das electricidad, da giro; si le das giro, da electricidad. Y un reto: ¿motor o generador?', p:['5.1']},
+    {f:'partes_motor.html',       t:'Las partes del motor asíncrono', d:'Desmonta el motor paso a paso y toca cada pieza: carcasa, estátor, bobinado, rótor de jaula o bobinado, rodamientos… Y un reto para encontrarlas.', p:['5.3']},
     {f:'campo_giratorio.html',    t:'Campo magnético giratorio', d:'Tres bobinas quietas y un campo que gira. Cambia los polos y la frecuencia, pon carga e intercambia dos fases.', p:['5.4']},
     {f:'curva_par.html',          t:'Par, velocidad y corriente del motor', d:'Arranca el motor y ponle carga: los 6 puntos de las curvas, el deslizamiento, el térmico y qué pasa al cambiar la tensión o la frecuencia.', p:['5.4.2','5.5','5.8']},
     {f:'placa_bornes.html',       t:'Placa de bornes: estrella o triángulo', d:'Pon tú las chapas, elige motor y red, y comprueba si va bien, va flojo o se quema.', p:['5.6']},
     {f:'arranques.html',          t:'Arranques del motor', d:'Directo, estrella-triángulo, arrancador suave y variador: el pico de corriente frente al límite del REBT.', p:['5.7']},
+    {f:'averias_motor.html',      t:'Averías del motor: encuentra la causa', d:'Un motor con una avería al azar: arráncalo, mide con el polímetro, el megóhmetro y la pinza, y descubre qué le pasa.', p:['5.9']},
     {f:'variador.html',           t:'Así funciona un variador', d:'Rectificador, bus de continua e inversor. Marcha, sentido, potenciómetro, rampas y la curva V/f.', p:['6.1','6.2']},
     {f:'cargas.html',             t:'Tipos de carga', d:'Cinta, ventilador y bobinadora: el par que piden frente al que da el motor, y la sobrevelocidad.', p:['6.3']},
     {f:'campo_corriente.html',    t:'La corriente crea un campo magnético', d:'Cable, espira y bobina. Brújulas, líneas de campo y regla de la mano derecha.', p:['1.6']}
