@@ -756,16 +756,19 @@ function pasosCalc(D) {
   return s;
 }
 
-function iniciaCalc() {
+function iniciaCalc(ini) {
+  // ini (opcional): {K, polos, tipo, nombres: {'imb1-24-2': 'D1', …}}
+  if (ini) Object.assign(CALC, ini);
   const sv = $('sv'), nav = $('navPasos');
   const pon = () => {
     const D = calcula(CALC.K, CALC.polos, CALC.tipo), ps = pasosCalc(D);
+    const nom = CALC.nombres && CALC.nombres[`${CALC.tipo}-${CALC.K}-${CALC.polos}`];
     if (CALC.paso > ps.length) CALC.paso = ps.length;
     const P = ps[CALC.paso - 1], {svg, H} = tiraSVG(D, CALC.paso);
     sv.setAttribute('viewBox', `0 0 1000 ${H}`); sv.innerHTML = svg;
     sv.style.minWidth = Math.max(560, CALC.K * 22) + 'px';
     sv.setAttribute('aria-label', `Estator de ${D.K} ranuras y ${D.polos} polos. Paso ${CALC.paso}: ${P.t}`);
-    $('exp').innerHTML = `<h2>Paso ${CALC.paso} · ${P.t}</h2><p>${P.h}</p>` + (P.mal ? '<p class="veredicto mal">✗ No se puede hacer</p>' : CALC.paso === 5 ? '<p class="veredicto bien">✓ Se puede hacer</p>' : '');
+    $('exp').innerHTML = `<h2>Paso ${CALC.paso} · ${P.t}</h2><p>${P.h}</p>` + (P.mal ? '<p class="veredicto mal">✗ No se puede hacer</p>' : CALC.paso === 5 ? `<p class="veredicto bien">✓ Se puede hacer${nom ? ': es el ' + nom + ' de la práctica' : ''}</p>` : '');
     $('cuentas').innerHTML = cuentasHTML(D, CALC.paso) + (CALC.paso >= 5 && D.ok ? '<div class="lab" style="margin-top:10px">Tabla de principios</div>' + tablaPrHTML(D) : '');
     pintaNav(nav, ps.map(x => x.t), CALC.paso, TIT_CALC.length, n => { CALC.paso = n; pon(); });
     avisoDesliza();

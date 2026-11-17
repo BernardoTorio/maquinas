@@ -662,7 +662,7 @@ function avisoDesliza() {
 addEventListener('resize', avisoDesliza);
 
 // ------------------------------------------------------------------ animaciones paso a paso de un devanado
-// CFG = {tipo: 'imb1'|'imb2'|'conc', parte: 'A'|'B', ejemplos: [[K, polos], ...], completas: bool (doble capa: casilla «Ver V y W enteras»)}
+// CFG = {tipo: 'imb1'|'imb2'|'conc', parte: 'A' (bobinas) | 'B' (uniones y caja) | 'AB' (todo seguido), ejemplos: [[K, polos, nombre?], ...], clave?}
 const EST = {ej: 0, paso: 1, completo: false};
 const cache = {};
 function aConjuntos(v) {
@@ -671,25 +671,31 @@ function aConjuntos(v) {
   return V;
 }
 function iniciaPagina(CFG) {
-  const sv = $('sv'), nav = $('navPasos'), clave = 'maq-dev:' + CFG.tipo;
+  const sv = $('sv'), nav = $('navPasos'), clave = CFG.clave || 'maq-dev:' + CFG.tipo;
   try { const g = +sessionStorage.getItem(clave); if (g >= 0 && g < CFG.ejemplos.length) EST.ej = g; } catch (e) {}
   const datos = i => {
-    if (!cache[i]) { const [K, P] = CFG.ejemplos[i], D = calcula(K, P, CFG.tipo); cache[i] = {D, G: geometria(D)}; }
+    if (!cache[i]) { const [K, P, nom] = CFG.ejemplos[i], D = calcula(K, P, CFG.tipo); D.nombre = nom || ''; cache[i] = {D, G: geometria(D)}; }
     return cache[i];
   };
-  const pasos = () => { const {D} = datos(EST.ej); return PASOS[CFG.tipo + CFG.parte](D, EST.completo); };
+  const pasos = () => {
+    const {D} = datos(EST.ej);
+    if (CFG.parte !== 'AB') return PASOS[CFG.tipo + CFG.parte](D, EST.completo);
+    // todo seguido: las bobinas y, sin repetir «La fase U con sus grupos», las uniones y la caja
+    const A = PASOS[CFG.tipo + 'A'](D).map(s => Object.assign({}, s, {h: s.h.replace(/En la animación siguiente se unen( los grupos)?\./, 'Ahora se unen$1.')}));
+    return A.concat(PASOS[CFG.tipo + 'B'](D, EST.completo).slice(1));
+  };
   const pon = () => {
     const {D, G} = datos(EST.ej), ps = pasos();
     if (EST.paso > ps.length) EST.paso = ps.length;
     const P = ps[EST.paso - 1];
-    const V = aConjuntos(P.v), conCaja = CFG.parte === 'B';
+    const V = aConjuntos(P.v), conCaja = CFG.parte !== 'A';
     V.caja = conCaja;
     sv.setAttribute('viewBox', `0 0 ${ANCHO} ${(conCaja ? G.H : G.HA).toFixed(0)}`);
     sv.innerHTML = svgDevanado(D, G, V);
     sv.style.minWidth = Math.max(600, D.K * 22) + 'px';
     sv.setAttribute('aria-label', `${TIPOS[D.tipo]} de ${D.K} ranuras y ${D.polos} polos. Paso ${EST.paso}: ${P.t}`);
     $('exp').innerHTML = `<h2>Paso ${EST.paso} · ${P.t}</h2><p>${P.h}</p>`;
-    $('cuentas').innerHTML = `<p class="hint" style="margin:0 0 6px">${TIPOS[D.tipo][0].toUpperCase() + TIPOS[D.tipo].slice(1)} · ${tituloEj(D)}</p>` + cuentasHTML(D) +
+    $('cuentas').innerHTML = `<p class="hint" style="margin:0 0 6px">${D.nombre ? '<b>' + D.nombre + '</b> · ' : ''}${TIPOS[D.tipo][0].toUpperCase() + TIPOS[D.tipo].slice(1)} · ${tituloEj(D)}</p>` + cuentasHTML(D) +
       '<div class="lab" style="margin-top:10px">Tabla de principios</div>' + tablaPrHTML(D);
     pintaNav(nav, ps.map(x => x.t), EST.paso, ps.length, n => { EST.paso = n; pon(); });
     avisoDesliza();
