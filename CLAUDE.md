@@ -107,7 +107,7 @@ Las del Tema 4 ya se enseñan (desde el 17/11/2026, también en Prácticas con l
 
 ### Las del Tema 4 (devanados)
 - Las siete salen de un mismo motor (cálculo y dibujo como los esquemas del tema), guardado en un solo archivo en el proyecto «Materiales para instituto»: `claude/maquinas/T4_animaciones.py` (el JavaScript va dentro, en `FUENTES`). Para cambiarlas se toca allí y se regeneran con `python3 T4_animaciones.py <carpeta>`; después, `python3 tira_tema.py <carpeta>`. No editar a mano los `dev_*.html`.
-- **Ningún ejemplo es de la práctica** (24 y 36 ranuras): los hacen los alumnos. Ejemplos: una capa 48·2 y 48·8; doble capa 12·2, 18·2 y 18·6; concéntrico 12·2, 48·2, 12·4 y 48·8. En las cuentas, 12, 18, 30 y 48 ranuras.
+- **Ningún ejemplo es de la práctica** (24 y 36 ranuras): los hacen los alumnos. Las soluciones animadas de la práctica (D1 a D14 y las cuentas de los 18 casos) están en la web provisional (`BernardoTorio/provisional`, `m2_*.html`, sección `#m2`) y salen del mismo archivo con `--soluciones`: **nunca se copian aquí**. Ejemplos: una capa 48·2 y 48·8; doble capa 12·2, 18·2 y 18·6; concéntrico 12·2, 48·2, 12·4 y 48·8. En las cuentas, 12, 18, 30 y 48 ranuras.
 - Mismos criterios que los dibujos del tema: U rojo, V azul, W verde; cabezas arriba; saltos, uniones y cables abajo; doble capa continua arriba y discontinua abajo; cables a la caja siempre en vertical; flechas solo en U; S grises en los polos consecuentes.
 
 ### Al añadir, quitar o reordenar una animación
