@@ -132,6 +132,7 @@ details.grp summary{color:var(--ink)}
 .ahora .acts a.missing small:after,.tema .chips a.missing:after{content:" · próximamente"}
 .tema .chips a.missing:after{font-weight:400;margin-left:.3em}
 .sec.mas{margin-top:22px}
+.pblk+.pblk{margin-top:34px}
 </style>
 </head>
 <body>
@@ -177,6 +178,7 @@ details.grp summary{color:var(--ink)}
   </section>
 
   <section id="sec-practicas">
+    <div class="pblk" data-t="3">
     <h2 class="sec">Práctica 1 · Cálculo y construcción de un trafo</h2>
     <a class="pdf" href="practicas/P1_Maquinas.pdf" download>
       <div class="ico">PDF</div>
@@ -198,7 +200,9 @@ details.grp summary{color:var(--ink)}
     <div id="prt"></div>
     <h2 class="sec" style="margin-top:26px">Práctica 1 · herramientas del taller</h2>
     <div id="herr"></div>
-    <h2 class="sec" style="margin-top:26px">Práctica 2 · Cálculo y construcción de un motor</h2>
+    </div>
+    <div class="pblk" data-t="4">
+    <h2 class="sec">Práctica 2 · Cálculo y construcción de un motor</h2>
     <a class="pdf" href="practicas/P2_Maquinas.pdf" download>
       <div class="ico">PDF</div>
       <div>Enunciado<small>Los devanados de 24 y 36 ranuras (los que se pueden hacer y los que no), ajuste final, informe, ensayos y preguntas finales</small></div>
@@ -212,6 +216,7 @@ details.grp summary{color:var(--ink)}
       <div>Plantilla de 36 ranuras<small>Para dibujar los devanados del estator de 36 ranuras, con la caja de bornes</small></div>
     </a>
     <div id="prt2"></div>
+    </div>
   </section>
 
   <section id="sec-animaciones">
@@ -248,7 +253,7 @@ details.grp summary{color:var(--ink)}
 (function(){
   // ====== LO ÚNICO QUE HAY QUE CAMBIAR AL PASAR DE TEMA: el tema que se está dando ======
   // Un número (por ejemplo 5) o, si se dan varios temas a la vez, sus números entre corchetes (por ejemplo [1, 3]).
-  var HOY = [1, 3];
+  var HOY = 4;
   // Temas cuyas animaciones todavía NO se enlazan desde la web (las páginas siguen en su sitio, pero aquí no hay acceso).
   // Para volver a enseñarlas, quita su número de la lista: var SIN_ANIM = [];
   var SIN_ANIM = [6];
@@ -363,6 +368,12 @@ details.grp summary{color:var(--ink)}
   if (!HOYS.length) HOYS = [T[T.length-1].n];
   var ULT = HOYS[HOYS.length-1];
   function esHoy(n){ return HOYS.indexOf(n) >= 0; }
+  // orden de «Por temas» y de las prácticas: el de ahora, el siguiente y después los anteriores (el último arriba); los demás, en «Más adelante»
+  var hoyT = T.filter(function(x){ return esHoy(x.n); }).reverse(),
+      antes = T.filter(function(x){ return x.n < ULT && !esHoy(x.n); }).reverse(),
+      luego = T.filter(function(x){ return x.n > ULT; }), sig = luego.slice(0, 1), mas = luego.slice(1);
+  var ORDN = hoyT.concat(sig, antes, mas).map(function(x){ return x.n; });
+  function esSig(n){ return sig.length && sig[0].n === n; }
   function lista(a){ return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' y ' + a[a.length-1]; }
 
   // ---- pestaña Animaciones: un desplegable por tema; abierto el que se está dando ----
@@ -393,11 +404,14 @@ details.grp summary{color:var(--ink)}
   function link(c){ var f = /\.pdf$/.test(c[1]); return '<a href="'+c[1]+'"'+(f?' download':'')+'>'+c[0]+'</a>'; }
   function tema(x){
     var k = delTema(x.n).length;
-    return '<div class="tema'+(esHoy(x.n)?' hoy':'')+'"><div class="tn"><small>TEMA</small>'+x.n+'</div><h3>'+x.t+(esHoy(x.n)?' · <span style="color:var(--green)">ahora</span>':'')+'</h3><div class="chips"><a href="'+x.pdf+'" download>'+(x.pdfn||'Apuntes')+'</a>'+
+    return '<div class="tema'+(esHoy(x.n)?' hoy':'')+'"><div class="tn"><small>TEMA</small>'+x.n+'</div><h3>'+x.t+(esHoy(x.n)?' · <span style="color:var(--green)">ahora</span>':esSig(x.n)?' · <span style="color:var(--muted)">lo siguiente</span>':'')+'</h3><div class="chips"><a href="'+x.pdf+'" download>'+(x.pdfn||'Apuntes')+'</a>'+
       (x.prac?'<a href="#practicas">'+x.prac.t+'</a>':'')+(k?'<a href="#animaciones">'+nAnim(k)+'</a>':'')+x.chips.map(link).join('')+'</div></div>';
   }
-  var dados = T.filter(function(x){ return x.n <= ULT; }).reverse(), luego = T.filter(function(x){ return x.n > ULT; });
-  document.getElementById('temasList').innerHTML = dados.map(tema).join('') + (luego.length ? '<h2 class="sec mas">Más adelante</h2>' + luego.map(tema).join('') : '');
+  document.getElementById('temasList').innerHTML = hoyT.concat(sig, antes).map(tema).join('') + (mas.length ? '<h2 class="sec mas">Más adelante</h2>' + mas.map(tema).join('') : '');
+  // ---- pestaña Prácticas: en el mismo orden (cada práctica va en un .pblk con data-t = su tema)
+  var sp = document.getElementById('sec-practicas');
+  Array.prototype.slice.call(sp.querySelectorAll('.pblk')).sort(function(a, b){ return ORDN.indexOf(+a.dataset.t) - ORDN.indexOf(+b.dataset.t); })
+    .forEach(function(b){ sp.appendChild(b); });
 
   // ---- bloque «Ahora en clase»: apuntes, práctica y animaciones del tema (o de los temas), en orden ----
   var hs = T.filter(function(x){ return esHoy(x.n); }), varios = hs.length > 1;
