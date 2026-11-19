@@ -401,12 +401,16 @@ function svgDevanado(D, G, V) {
   })));
   // colas: el principio de cada grupo, más largo que el final (para saber cuál es cuál al unir)
   const pf = [];   // rótulos P y F: se ponen después, encima de saltos y números
+  // un extremo ya unido (con otro grupo o con la caja) no lleva cola: el cable sigue por la unión
+  const unido = new Set(), clave = s => D.r(s.k) + s.c;
+  FASES.forEach(f => D.uniones[f].forEach(u => { if (V.uniones && V.uniones.has(u.id)) { unido.add(f + clave(u.s1)); unido.add(f + clave(u.s2)); } }));
+  if (V.caja !== false && V.term) V.term.forEach(t => unido.add(t[0] + clave(D.term[t])));
   FASES.forEach(f => D.grupos[f].forEach(Gr => {
     if (V.lados && V.lados.has(f)) return;
     const c0 = Gr.bobinas[0], cU = Gr.bobinas[Gr.bobinas.length - 1], nu = V.nuevo && V.nuevo.has('cola' + f + Gr.n);
     const cola = (s, y) => { const x = G.xv(s.k, s.c); o.push(`<polyline points="${pl([[x, G.yBB - 1], [x, y]])}" ${st(f, nu, s.c === 'b')}/>`); return x; };
-    const xi = V.coils && V.coils.has(c0.id) ? cola(Gr.ini, G.yColaP) : null;
-    const xf = V.coils && V.coils.has(cU.id) ? cola(Gr.fin, G.yColaF) : null;
+    const xi = V.coils && V.coils.has(c0.id) && !unido.has(f + clave(Gr.ini)) ? cola(Gr.ini, G.yColaP) : null;
+    const xf = V.coils && V.coils.has(cU.id) && !unido.has(f + clave(Gr.fin)) ? cola(Gr.fin, G.yColaF) : null;
     if (V.etqPF && f === 'U') {
       const et = (x, y, t) => `<text x="${x}" y="${y}" font-size="15" font-weight="700" text-anchor="middle" paint-order="stroke" style="fill:var(--cota);stroke:var(--card);stroke-width:5px">${t}</text>`;
       if (xi !== null) pf.push(et(xi, G.yColaP + 15, 'P'));
