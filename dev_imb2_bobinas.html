@@ -316,7 +316,9 @@ function geometria(D) {
   C.yf1 = C.y0 + 7.5 * MM; C.yl1 = C.y0 + 14 * MM; C.yl2 = C.y0 + 22 * MM; C.yf2 = C.y0 + 28.5 * MM;
   C.pos = {U1: [C.xs[0], C.yf1], V1: [C.xs[1], C.yf1], W1: [C.xs[2], C.yf1], W2: [C.xs[0], C.yf2], U2: [C.xs[1], C.yf2], V2: [C.xs[2], C.yf2]};
   G.H = C.y1 + 9 * MM + 6;
-  G.yCota = G.yNum + G.fsN * 0.9 + 8;                       // raya de las cotas («5 saltos», «+1»), con dos líneas de texto debajo
+  // colas de los grupos: el final asoma un poco por debajo del número y el principio, 5 mm más (así se distinguen al unir)
+  G.yColaF = G.yNum + G.fsN * 0.5 + 3 * MM; G.yColaP = G.yColaF + 5 * MM;
+  G.yCota = G.yColaP + 10;                                  // raya de las cotas («Y_k = 5 saltos», «+1»), con dos líneas de texto debajo
   // rutas de los terminales (el orden de niveles que menos cruces da)
   const media = x => { const k = Math.round((x - G.x0) / G.p - 0.5); return G.x0 + (k + 0.5) * G.p; };
   let lW = media(C.x0 - 0.7 * G.p); if (lW > C.x0 - 6) lW -= G.p;
@@ -397,6 +399,20 @@ function svgDevanado(D, G, V) {
              o.push(envuelta([[xm, G.yH0], [xb, G.yHB], [xb, G.yBB]], st(f, nu, true))); }
     }
   })));
+  // colas: el principio de cada grupo, más largo que el final (para saber cuál es cuál al unir)
+  const pf = [];   // rótulos P y F: se ponen después, encima de saltos y números
+  FASES.forEach(f => D.grupos[f].forEach(Gr => {
+    if (V.lados && V.lados.has(f)) return;
+    const c0 = Gr.bobinas[0], cU = Gr.bobinas[Gr.bobinas.length - 1], nu = V.nuevo && V.nuevo.has('cola' + f + Gr.n);
+    const cola = (s, y) => { const x = G.xv(s.k, s.c); o.push(`<polyline points="${pl([[x, G.yBB - 1], [x, y]])}" ${st(f, nu, s.c === 'b')}/>`); return x; };
+    const xi = V.coils && V.coils.has(c0.id) ? cola(Gr.ini, G.yColaP) : null;
+    const xf = V.coils && V.coils.has(cU.id) ? cola(Gr.fin, G.yColaF) : null;
+    if (V.etqPF && f === 'U') {
+      const et = (x, y, t) => `<text x="${x}" y="${y}" font-size="15" font-weight="700" text-anchor="middle" paint-order="stroke" style="fill:var(--cota);stroke:var(--card);stroke-width:5px">${t}</text>`;
+      if (xi !== null) pf.push(et(xi, G.yColaP + 15, 'P'));
+      if (xf !== null) pf.push(et(xf, G.yColaF + 15, 'F'));
+    }
+  }));
   // saltos entre bobinas del grupo
   FASES.forEach(f => D.grupos[f].forEach(Gr => Gr.saltos.forEach(s => {
     if (!V.saltos || !V.saltos.has(s.id)) return;
@@ -432,6 +448,7 @@ function svgDevanado(D, G, V) {
     const x = G.xl(k, 's');
     o.push(`<text x="${x}" y="${G.yNum}" font-size="${G.fsN}" text-anchor="middle" dominant-baseline="central" paint-order="stroke" style="fill:var(--ink);stroke:var(--card);stroke-width:${G.fsN * 0.35}px">${k}</text>`);
   }
+  o.push(...pf);
   // caja de bornes (encima de los cables que la rodean; los que entran en ella se dibujan después)
   if (conCaja) o.push(`<rect x="${C.x0}" y="${C.y0}" width="${C.w}" height="${C.h}" rx="14" style="fill:var(--card);stroke:var(--ink);stroke-width:2.4"/>`);
   o.push(...entra);
@@ -512,6 +529,17 @@ function pasoTabla(D, extra) {
     v: {marca: D.tabla.flatMap(f => f.map((k, j) => k === null ? null : {k, c: FASES[j]})).filter(Boolean), lineasTabla: true}};
 }
 
+// el último paso de las animaciones (1): principio largo, final corto
+function pasoColas(D) {
+  const G0 = D.grupos.U, ini = G0.map(G => G.ini.k), fin = G0.map(G => D.r(G.fin.k));
+  const colas = D.grupos.U.map(G => 'colaU' + G.n);
+  return {t: 'Principio largo, final corto',
+    h: `Cada grupo tiene dos cables sueltos: el <b>principio</b>, por donde empieza (en U: ${lista(ini)}), y el <b>final</b>, por donde acaba (${lista(fin)}). ` +
+       `Deja el principio <b>un poco más largo</b> que el final: 1 o 2 cm más en la plantilla. Cuando haya muchos grupos dibujados, así sabrás de un vistazo cuál es cada uno al unirlos. ` +
+       `En el dibujo, <b>P</b> = principio (el largo) y <b>F</b> = final (el corto). En la animación siguiente se unen los grupos.`,
+    v: {coils: bobinasDe(D, 'U'), saltos: saltosDe(D, ['U']), nuevo: colas, etqPF: true}};
+}
+
 const PASOS = {
   // --------------------------------------------- imbricado de una capa (1): las bobinas de la fase U
   imb1A(D) {
@@ -535,10 +563,11 @@ const PASOS = {
     s.push({t: 'Los grupos pares', h: `Empiezan en la <b>ranura de al lado</b> de donde llega la primera bobina del grupo impar: ${c0.b} + 1 = <b>${D.r(c0.b + 1)}</b>. Mismo paso, ${Yk}.` +
         (U > 1 ? ` Fíjate: el grupo par sale de los huecos que quedaban entre las llegadas del impar (${lista(g1.bobinas.map(c => D.r(c.a)))})` + (D.Gf === 2 ? ` y llega a los huecos de su salida (${lista(g1.bobinas.map(c => D.r(c.b)))}).` : '.') : ''),
       v: {coils: [...todImp, ...todPar], nuevo: todPar, cota: {a: c0.b, b: c0.b + 1, txt: '+1'}}});
-    if (U > 1) s.push({t: 'Los saltos entre bobinas', h: `Las ${U} bobinas de un grupo se hacen seguidas en el molde, sin cortar el hilo. Abajo se dibuja el <b>salto</b>: del final de una bobina al principio de la siguiente. En la animación siguiente se unen los grupos.`,
+    if (U > 1) s.push({t: 'Los saltos entre bobinas', h: `Las ${U} bobinas de un grupo se hacen seguidas en el molde, sin cortar el hilo. Abajo se dibuja el <b>salto</b>: del final de una bobina al principio de la siguiente.`,
       v: {coils: bobinasDe(D, 'U'), saltos: saltosDe(D, ['U']), nuevo: saltosDe(D, ['U']).map(x => 's' + x)}});
-    else s.push({t: 'Comprueba', h: `La fase U ya tiene sus <b>${D.Gf} grupos</b> (G<sub>f</sub> = 2p = ${D.Gf}). Todas las bobinas salen de una ranura impar y llegan a una par. En la animación siguiente se unen los grupos.`,
+    else s.push({t: 'Comprueba', h: `La fase U ya tiene sus <b>${D.Gf} grupos</b> (G<sub>f</sub> = 2p = ${D.Gf}). Todas las bobinas salen de una ranura impar y llegan a una par.`,
       v: {coils: bobinasDe(D, 'U')}});
+    s.push(pasoColas(D));
     return s;
   },
   // --------------------------------------------- imbricado de doble capa (1)
@@ -552,9 +581,10 @@ const PASOS = {
       v: {marca, coils: todImp, nuevo: todImp, cota: {a: c0.a, b: c0.b, txt: `Y_k = ${Yk} saltos`, txt2: `Y_k = Y_p = ${D.K} / ${D.polos} (no se acorta)`}}});
     s.push({t: 'Los grupos pares, en la misma ranura', h: `Empiezan <b>en la misma ranura</b> a la que llega la primera bobina del grupo impar: la <b>${D.r(c0.b)}</b>. Allí ya hay un lado abajo (discontinua) y el grupo nuevo pone otro arriba (continua): cada ranura acaba con <b>dos lados</b>.`,
       v: {marca: [{k: D.r(c0.b), c: 'U'}], coils: [...todImp, ...todPar], nuevo: todPar}});
-    if (U > 1) s.push({t: 'Los saltos entre bobinas', h: `Las ${U} bobinas de un grupo se hacen seguidas, sin cortar el hilo: abajo, el <b>salto</b> del final de una al principio de la siguiente. En la animación siguiente se unen los grupos.`,
+    if (U > 1) s.push({t: 'Los saltos entre bobinas', h: `Las ${U} bobinas de un grupo se hacen seguidas, sin cortar el hilo: abajo, el <b>salto</b> del final de una al principio de la siguiente.`,
       v: {coils: bobinasDe(D, 'U'), saltos: saltosDe(D, ['U']), nuevo: saltosDe(D, ['U']).map(x => 's' + x)}});
-    else s.push({t: 'Comprueba', h: `La fase U ya tiene sus <b>${D.Gf} grupos</b> (G<sub>f</sub> = 2p = ${D.Gf}). En la animación siguiente se unen los grupos.`, v: {coils: bobinasDe(D, 'U')}});
+    else s.push({t: 'Comprueba', h: `La fase U ya tiene sus <b>${D.Gf} grupos</b> (G<sub>f</sub> = 2p = ${D.Gf}).`, v: {coils: bobinasDe(D, 'U')}});
+    s.push(pasoColas(D));
     return s;
   },
   // --------------------------------------------- concéntrico (1): amplitud y grupos
@@ -578,9 +608,10 @@ const PASOS = {
         ? `Con 2 polos hacen falta <b>2 grupos</b> por fase, pero la tabla solo tiene una fila. El segundo empieza <b>un paso polar más allá</b>: 1 + ${D.Yp} = <b>${ini[1]}</b>.`
         : `Hay G<sub>f</sub> = p = <b>${D.p}</b> grupos por fase. Cada uno empieza en su casilla de la columna U: ${lista(cu)}. Entre grupo y grupo queda sitio libre: ahí saldrán los polos S.`,
       v: {marca: ini.map(k => ({k, c: 'U'})), coils: bobinasDe(D, 'U'), nuevo: restoG}});
-    if (U > 1) s.push({t: 'Los saltos dentro del grupo', h: `Se bobina de la grande a la pequeña, sin cortar el hilo: abajo, el salto del final de una bobina al principio de la siguiente. El grupo empieza en la grande (${G0.ini.k}) y acaba en la pequeña (${D.r(G0.fin.k)}). En la animación siguiente se unen los grupos.`,
+    if (U > 1) s.push({t: 'Los saltos dentro del grupo', h: `Se bobina de la grande a la pequeña, sin cortar el hilo: abajo, el salto del final de una bobina al principio de la siguiente. El grupo empieza en la grande (${G0.ini.k}) y acaba en la pequeña (${D.r(G0.fin.k)}).`,
       v: {coils: bobinasDe(D, 'U'), saltos: saltosDe(D, ['U']), nuevo: saltosDe(D, ['U']).map(x => 's' + x)}});
-    else s.push({t: 'Comprueba', h: `La fase U ya tiene sus ${D.Gf} grupos. En la animación siguiente se unen.`, v: {coils: bobinasDe(D, 'U')}});
+    else s.push({t: 'Comprueba', h: `La fase U ya tiene sus ${D.Gf} grupos.`, v: {coils: bobinasDe(D, 'U')}});
+    s.push(pasoColas(D));
     return s;
   },
   // --------------------------------------------- uniones y caja (las tres «(2)»)
@@ -591,7 +622,8 @@ const PASOS = {
       r.flechas = extra.flechas || v.flechas; r.polos = extra.polos || v.polos; r.lados = extra.lados || v.lados; r.nuevo = extra.nuevo || []; r.marca = extra.marca; return r; };
     const s = [];
     const ini = D.grupos.U.map(G => G.ini.k);
-    s.push({t: 'La fase U con sus grupos', h: `La fase U tiene <b>${D.Gf} grupos</b>, que empiezan en ${lista(ini)}. Hay que unirlos en serie para que salga un solo devanado, de U1 a U2.`, v: mas(base, {})});
+    const v0 = mas(base, {}); v0.etqPF = true;
+    s.push({t: 'La fase U con sus grupos', h: `La fase U tiene <b>${D.Gf} grupos</b>, que empiezan en ${lista(ini)}. Hay que unirlos en serie para que salga un solo devanado, de U1 a U2. Recuerda: en cada grupo el cable <b>largo es el principio (P)</b> y el <b>corto, el final (F)</b>.`, v: v0});
     let v = mas(base, {});
     if (D.conexion === 'polos') {
       const ff = D.uniones.U.filter(u => u.tipo === 'ff'), pp = D.uniones.U.filter(u => u.tipo === 'pp');
