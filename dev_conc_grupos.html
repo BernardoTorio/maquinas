@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Concéntrico: amplitud y grupos</title>
+<title>Concéntrico</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
@@ -143,24 +143,24 @@ table.tpr{border-collapse:collapse;margin-top:4px}
 <main>
   <nav class="bar" aria-label="Navegación">
     <a class="back" href="index.html#animaciones" aria-label="Volver al índice de animaciones">← Índice</a>
-    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 4 › <b>T4.14 a 4.16 Concéntrico: amplitud y grupos</b></span>
+    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 4 › <b>T4.14 a 4.16 Concéntrico</b></span>
     <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
   </nav>
-  <nav class="tnav" aria-label="Animaciones del Tema 4"><a class="tarr" href="dev_imb2_uniones.html" aria-label="Anterior: Imbricado de doble capa (2): uniones y caja de bornes">‹ T4.13 y 4.18</a><span class="where">Tema 4 · 6 de 7</span><a class="tarr" href="dev_conc_uniones.html" aria-label="Siguiente: Concéntrico (2): uniones y caja de bornes">T4.15 y 4.16 ›</a><div class="steps"><a href="dev_calculos.html" title="Las cuentas del devanado">T4.4 a 4.17</a><a href="dev_imb1_bobinas.html" title="Imbricado de una capa (1): las bobinas">T4.11 y 4.12</a><a href="dev_imb1_uniones.html" title="Imbricado de una capa (2): uniones y caja de bornes">T4.12 y 4.18</a><a href="dev_imb2_bobinas.html" title="Imbricado de doble capa (1): las bobinas">T4.13</a><a href="dev_imb2_uniones.html" title="Imbricado de doble capa (2): uniones y caja de bornes">T4.13 y 4.18</a><a href="dev_conc_grupos.html" class="cur" aria-current="page" title="Concéntrico (1): amplitud y grupos">T4.14 a 4.16</a><a href="dev_conc_uniones.html" title="Concéntrico (2): uniones y caja de bornes">T4.15 y 4.16</a></div></nav>
-  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 4 · Puntos 4.14 a 4.16</small><h1>Concéntrico (1): amplitud y grupos</h1><p class="sub">Elige un ejemplo y avanza con «Paso siguiente» (o con las flechas ← →). Lo nuevo de cada paso sale más gordo.</p></header>
+  <nav class="tnav" aria-label="Animaciones del Tema 4"><a class="tarr" href="dev_imb2_bobinas.html" aria-label="Anterior: Imbricado de doble capa">‹ T4.13</a><span class="where">Tema 4 · 4 de 4</span><a class="tarr" href="index.html#animaciones" aria-label="Volver a las animaciones">Fin ›</a><div class="steps"><a href="dev_calculos.html" title="Las cuentas del devanado">T4.4 a 4.17</a><a href="dev_imb1_bobinas.html" title="Imbricado de una capa">T4.11 y 4.12</a><a href="dev_imb2_bobinas.html" title="Imbricado de doble capa">T4.13</a><a href="dev_conc_grupos.html" class="cur" aria-current="page" title="Concéntrico">T4.14 a 4.16</a></div></nav>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 4 · Puntos 4.14 a 4.16 y 4.18</small><h1>Concéntrico: de la tabla a la caja de bornes</h1><p class="sub">Elige un ejemplo y avanza con «Paso siguiente» (o con las flechas ← →): primero las bobinas de la fase U y después las uniones y la caja de bornes. Lo nuevo de cada paso sale más gordo.</p></header>
   <div class="toolbar"><div class="fila"><span class="lab">Ejemplo</span><div class="seg" id="sEj"><button type="button" data-v="0" aria-pressed="true">12 ranuras · 2 polos</button><button type="button" data-v="1" aria-pressed="false">48 ranuras · 2 polos</button><button type="button" data-v="2" aria-pressed="false">12 ranuras · 4 polos</button><button type="button" data-v="3" aria-pressed="false">48 ranuras · 8 polos</button></div></div><p class="hint">Son ejemplos que no salen en la práctica: los de 24 y 36 ranuras los haces tú.</p></div>
   <div class="stage">
     <p class="hint" id="desliza" hidden>↔ El dibujo no cabe entero: deslízalo hacia los lados.</p>
     <div class="scroll"><svg id="sv" viewBox="0 0 1000 400" role="img" aria-label="Dibujo del devanado"></svg></div>
-    <div class="legend"><span><b style="color:var(--ph1)">━</b> fase U</span><span><b style="color:var(--ph2)">━</b> fase V</span><span><b style="color:var(--ph3)">━</b> fase W</span><span><b style="color:var(--cota)">▭</b> amplitud: ranuras libres dentro de la bobina pequeña</span></div>
+    <div class="legend"><span><b style="color:var(--ph1)">━</b> fase U</span><span><b style="color:var(--ph2)">━</b> fase V</span><span><b style="color:var(--ph3)">━</b> fase W</span><span>Caja de bornes: borne = <b>tornillo</b></span><span><b style="color:var(--cota)">▭</b> amplitud: ranuras libres dentro de la bobina pequeña</span></div>
     <div class="pasos" id="navPasos"><button class="ant" type="button">‹ Paso anterior</button><span class="donde"></span><button class="sig main" type="button">Paso siguiente ›</button><ol class="lpasos" aria-label="Los pasos"></ol></div>
   </div>
   <div class="boxes b3">
     <div class="box" id="exp" aria-live="polite"></div>
-<div class="box pqs"><h2>Para qué sirve</h2><p>Para <b>dibujar un grupo concéntrico</b>: se empieza por la bobina pequeña, dejando dentro las ranuras de la amplitud, y las demás van alrededor. Con 2 polos el segundo grupo va un paso polar más allá; con más polos, donde diga la tabla.</p></div>
+<div class="box pqs"><h2>Para qué sirve</h2><p>Para <b>dibujar entero un devanado concéntrico</b>: la bobina pequeña con su amplitud, las demás alrededor y los otros grupos; después, las uniones (por polos con 2 polos; por polos consecuentes con más, y los S salen solos) y la caja de bornes.</p></div>
     <div class="box blue"><h2>Las cuentas</h2><div id="cuentas"></div></div>
   </div>
-  <a class="nextbig" href="dev_conc_uniones.html">Siguiente: T4.15 y 4.16 Concéntrico (2): uniones y caja de bornes →</a>
+  <a class="nextbig" href="index.html#animaciones">Has llegado al final del Tema 4 · Volver a las animaciones →</a>
 </main>
 <script>
 // navegación y tema (común a todas las páginas)
@@ -780,6 +780,8 @@ function iniciaPagina(CFG) {
     pintaNav(nav, ps.map(x => x.t), EST.paso, ps.length, n => { EST.paso = n; pon(); });
     avisoDesliza();
   };
+  // #uniones: empieza en el primer paso de las uniones (las antiguas páginas «(2)» mandan aquí)
+  if (CFG.parte === 'AB' && location.hash === '#uniones') EST.paso = PASOS[CFG.tipo + 'A'](datos(EST.ej).D).length + 1;
   marcaSeg('sEj', EST.ej);
   segmento('sEj', v => { EST.ej = +v; EST.paso = 1; try { sessionStorage.setItem(clave, v); } catch (e) {} pon(); });
   const cc = $('cCompletas');
@@ -788,7 +790,7 @@ function iniciaPagina(CFG) {
   pon();
 }
 
-iniciaPagina({"tipo": "conc", "parte": "A", "ejemplos": [[12, 2], [48, 2], [12, 4], [48, 8]]});
+iniciaPagina({"tipo": "conc", "parte": "AB", "ejemplos": [[12, 2], [48, 2], [12, 4], [48, 8]]});
 </script>
 <script>(function(){ // tira del tema: esta animación queda como «vista» y las ya abiertas llevan ✓; Esc y Retroceso vuelven al índice
   try {

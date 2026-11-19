@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Imbricado de una capa: las bobinas</title>
+<title>Imbricado de una capa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
@@ -143,24 +143,24 @@ table.tpr{border-collapse:collapse;margin-top:4px}
 <main>
   <nav class="bar" aria-label="Navegación">
     <a class="back" href="index.html#animaciones" aria-label="Volver al índice de animaciones">← Índice</a>
-    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 4 › <b>T4.11 y 4.12 Imbricado de una capa: bobinas</b></span>
+    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 4 › <b>T4.11 y 4.12 Imbricado de una capa</b></span>
     <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
   </nav>
-  <nav class="tnav" aria-label="Animaciones del Tema 4"><a class="tarr" href="dev_calculos.html" aria-label="Anterior: Las cuentas del devanado">‹ T4.4 a 4.17</a><span class="where">Tema 4 · 2 de 7</span><a class="tarr" href="dev_imb1_uniones.html" aria-label="Siguiente: Imbricado de una capa (2): uniones y caja de bornes">T4.12 y 4.18 ›</a><div class="steps"><a href="dev_calculos.html" title="Las cuentas del devanado">T4.4 a 4.17</a><a href="dev_imb1_bobinas.html" class="cur" aria-current="page" title="Imbricado de una capa (1): las bobinas">T4.11 y 4.12</a><a href="dev_imb1_uniones.html" title="Imbricado de una capa (2): uniones y caja de bornes">T4.12 y 4.18</a><a href="dev_imb2_bobinas.html" title="Imbricado de doble capa (1): las bobinas">T4.13</a><a href="dev_imb2_uniones.html" title="Imbricado de doble capa (2): uniones y caja de bornes">T4.13 y 4.18</a><a href="dev_conc_grupos.html" title="Concéntrico (1): amplitud y grupos">T4.14 a 4.16</a><a href="dev_conc_uniones.html" title="Concéntrico (2): uniones y caja de bornes">T4.15 y 4.16</a></div></nav>
-  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 4 · Puntos 4.11 y 4.12</small><h1>Imbricado de una capa (1): las bobinas</h1><p class="sub">Elige un ejemplo y avanza con «Paso siguiente» (o con las flechas ← →). Lo nuevo de cada paso sale más gordo.</p></header>
+  <nav class="tnav" aria-label="Animaciones del Tema 4"><a class="tarr" href="dev_calculos.html" aria-label="Anterior: Las cuentas del devanado">‹ T4.4 a 4.17</a><span class="where">Tema 4 · 2 de 4</span><a class="tarr" href="dev_imb2_bobinas.html" aria-label="Siguiente: Imbricado de doble capa">T4.13 ›</a><div class="steps"><a href="dev_calculos.html" title="Las cuentas del devanado">T4.4 a 4.17</a><a href="dev_imb1_bobinas.html" class="cur" aria-current="page" title="Imbricado de una capa">T4.11 y 4.12</a><a href="dev_imb2_bobinas.html" title="Imbricado de doble capa">T4.13</a><a href="dev_conc_grupos.html" title="Concéntrico">T4.14 a 4.16</a></div></nav>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 4 · Puntos 4.11, 4.12 y 4.18</small><h1>Imbricado de una capa: de la tabla a la caja de bornes</h1><p class="sub">Elige un ejemplo y avanza con «Paso siguiente» (o con las flechas ← →): primero las bobinas de la fase U y después las uniones y la caja de bornes. Lo nuevo de cada paso sale más gordo.</p></header>
   <div class="toolbar"><div class="fila"><span class="lab">Ejemplo</span><div class="seg" id="sEj"><button type="button" data-v="0" aria-pressed="true">48 ranuras · 2 polos</button><button type="button" data-v="1" aria-pressed="false">48 ranuras · 8 polos</button></div></div><p class="hint">Son ejemplos que no salen en la práctica: los de 24 y 36 ranuras los haces tú.</p></div>
   <div class="stage">
     <p class="hint" id="desliza" hidden>↔ El dibujo no cabe entero: deslízalo hacia los lados.</p>
     <div class="scroll"><svg id="sv" viewBox="0 0 1000 400" role="img" aria-label="Dibujo del devanado"></svg></div>
-    <div class="legend"><span><b style="color:var(--ph1)">━</b> fase U</span><span><b style="color:var(--ph2)">━</b> fase V</span><span><b style="color:var(--ph3)">━</b> fase W</span></div>
+    <div class="legend"><span><b style="color:var(--ph1)">━</b> fase U</span><span><b style="color:var(--ph2)">━</b> fase V</span><span><b style="color:var(--ph3)">━</b> fase W</span><span>Caja de bornes: borne = <b>tornillo</b></span></div>
     <div class="pasos" id="navPasos"><button class="ant" type="button">‹ Paso anterior</button><span class="donde"></span><button class="sig main" type="button">Paso siguiente ›</button><ol class="lpasos" aria-label="Los pasos"></ol></div>
   </div>
   <div class="boxes b3">
     <div class="box" id="exp" aria-live="polite"></div>
-<div class="box pqs"><h2>Para qué sirve</h2><p>Para <b>colocar las bobinas de una fase</b> en la plantilla sin perderte: primero los grupos impares, desde la tabla de principios, y después los pares, en la ranura de al lado. Es lo que harás con cada devanado de una capa de la práctica.</p></div>
+<div class="box pqs"><h2>Para qué sirve</h2><p>Para <b>dibujar entero un devanado imbricado de una capa</b> en la plantilla sin perderte: primero colocas las bobinas de la fase U (grupos impares y pares) y después unes los grupos y llevas los extremos a la caja de bornes. Al final, las flechas y los polos dicen si está bien.</p></div>
     <div class="box blue"><h2>Las cuentas</h2><div id="cuentas"></div></div>
   </div>
-  <a class="nextbig" href="dev_imb1_uniones.html">Siguiente: T4.12 y 4.18 Imbricado de una capa (2): uniones y caja de bornes →</a>
+  <a class="nextbig" href="dev_imb2_bobinas.html">Siguiente: T4.13 Imbricado de doble capa →</a>
 </main>
 <script>
 // navegación y tema (común a todas las páginas)
@@ -780,6 +780,8 @@ function iniciaPagina(CFG) {
     pintaNav(nav, ps.map(x => x.t), EST.paso, ps.length, n => { EST.paso = n; pon(); });
     avisoDesliza();
   };
+  // #uniones: empieza en el primer paso de las uniones (las antiguas páginas «(2)» mandan aquí)
+  if (CFG.parte === 'AB' && location.hash === '#uniones') EST.paso = PASOS[CFG.tipo + 'A'](datos(EST.ej).D).length + 1;
   marcaSeg('sEj', EST.ej);
   segmento('sEj', v => { EST.ej = +v; EST.paso = 1; try { sessionStorage.setItem(clave, v); } catch (e) {} pon(); });
   const cc = $('cCompletas');
@@ -788,7 +790,7 @@ function iniciaPagina(CFG) {
   pon();
 }
 
-iniciaPagina({"tipo": "imb1", "parte": "A", "ejemplos": [[48, 2], [48, 8]]});
+iniciaPagina({"tipo": "imb1", "parte": "AB", "ejemplos": [[48, 2], [48, 8]]});
 </script>
 <script>(function(){ // tira del tema: esta animación queda como «vista» y las ya abiertas llevan ✓; Esc y Retroceso vuelven al índice
   try {
