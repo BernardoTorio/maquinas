@@ -696,7 +696,7 @@ function tablaPrHTML(D, n) {
     D.tabla.map(r => '<tr>' + r.map(x => { i++; return `<td>${x === null || (n !== undefined && i > n) ? '' : x}</td>`; }).join('') + '</tr>').join('') + '</tbody></table>';
 }
 
-// ------------------------------------------------------------------ piezas de la página (comunes a las 7)
+// ------------------------------------------------------------------ piezas de la página (comunes a todas)
 const $ = id => document.getElementById(id);
 function segmento(id, fn) {
   const el = $(id);
