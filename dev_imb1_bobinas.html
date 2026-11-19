@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Imbricado de una capa</title>
+<title>Devanados imbricados de simple capa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
@@ -136,6 +136,10 @@ table.tpr{border-collapse:collapse;margin-top:4px}
 @media (max-width:620px){.crumbs{display:none}.theme,.themebtn{margin-left:auto}
   .tnav>a{padding:0 9px}.tnav .where{font-size:.86rem}
   .tnav .steps a.seen{position:relative}.tnav .steps a.seen::after{position:absolute;top:1px;right:3px;margin:0;font-size:.62em}}
+.tnav .steps a.connom{flex:1 1 0;flex-direction:column;gap:1px;padding:6px 8px;white-space:normal;text-align:center;line-height:1.15;position:relative}
+.tnav .steps a.connom .nom{font-weight:400;font-size:.86rem}
+.tnav .steps a.connom.seen::after{position:absolute;top:3px;right:6px;margin:0}
+@media (max-width:620px){.tnav .steps a.connom{flex:1 1 40%}}
 /* --- fin de la tira del tema --- */
 </style>
 </head>
@@ -143,11 +147,11 @@ table.tpr{border-collapse:collapse;margin-top:4px}
 <main>
   <nav class="bar" aria-label="Navegación">
     <a class="back" href="index.html#animaciones" aria-label="Volver al índice de animaciones">← Índice</a>
-    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 4 › <b>T4.11 y 4.12 Imbricado de una capa</b></span>
+    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 4 › <b>T4.11 y 4.12 Devanados imbricados de simple capa</b></span>
     <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
   </nav>
-  <nav class="tnav" aria-label="Animaciones del Tema 4"><a class="tarr" href="dev_calculos.html" aria-label="Anterior: Las cuentas del devanado">‹ T4.4 a 4.17</a><span class="where">Tema 4 · 2 de 4</span><a class="tarr" href="dev_imb2_bobinas.html" aria-label="Siguiente: Imbricado de doble capa">T4.13 ›</a><div class="steps"><a href="dev_calculos.html" title="Las cuentas del devanado">T4.4 a 4.17</a><a href="dev_imb1_bobinas.html" class="cur" aria-current="page" title="Imbricado de una capa">T4.11 y 4.12</a><a href="dev_imb2_bobinas.html" title="Imbricado de doble capa">T4.13</a><a href="dev_conc_grupos.html" title="Concéntrico">T4.14 a 4.16</a></div></nav>
-  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 4 · Puntos 4.11, 4.12 y 4.18</small><h1>Imbricado de una capa: de la tabla a la caja de bornes</h1><p class="sub">Elige un ejemplo y avanza con «Paso siguiente» (o con las flechas ← →): primero las bobinas de la fase U y después las uniones y la caja de bornes. Lo nuevo de cada paso sale más gordo.</p></header>
+  <nav class="tnav" aria-label="Animaciones del Tema 4"><a class="tarr" href="dev_calculos.html" aria-label="Anterior: Las cuentas del devanado">‹ T4.4 a 4.17</a><span class="where">Tema 4 · 2 de 4</span><a class="tarr" href="dev_imb2_bobinas.html" aria-label="Siguiente: Devanados imbricados de doble capa">T4.13 ›</a><div class="steps"><a href="dev_calculos.html" class="connom" title="Las cuentas del devanado"><span>T4.4 a 4.17</span><span class="nom">Las cuentas del devanado</span></a><a href="dev_imb1_bobinas.html" class="connom cur" aria-current="page" title="Devanados imbricados de simple capa"><span>T4.11 y 4.12</span><span class="nom">Devanados imbricados de simple capa</span></a><a href="dev_imb2_bobinas.html" class="connom" title="Devanados imbricados de doble capa"><span>T4.13</span><span class="nom">Devanados imbricados de doble capa</span></a><a href="dev_conc_grupos.html" class="connom" title="Devanados concéntricos"><span>T4.14 a 4.16</span><span class="nom">Devanados concéntricos</span></a></div></nav>
+  <header class="top"><small>Máquinas Eléctricas 2MB · Tema 4 · Puntos 4.11, 4.12 y 4.18</small><h1>Devanados imbricados de simple capa</h1><p class="sub">Elige un ejemplo y avanza con «Paso siguiente» (o con las flechas ← →): primero las bobinas de la fase U y después las uniones y la caja de bornes. Lo nuevo de cada paso sale más gordo.</p></header>
   <div class="toolbar"><div class="fila"><span class="lab">Ejemplo</span><div class="seg" id="sEj"><button type="button" data-v="0" aria-pressed="true">48 ranuras · 2 polos</button><button type="button" data-v="1" aria-pressed="false">48 ranuras · 8 polos</button></div></div><p class="hint">Son ejemplos que no salen en la práctica: los de 24 y 36 ranuras los haces tú.</p></div>
   <div class="stage">
     <p class="hint" id="desliza" hidden>↔ El dibujo no cabe entero: deslízalo hacia los lados.</p>
@@ -160,7 +164,7 @@ table.tpr{border-collapse:collapse;margin-top:4px}
 <div class="box pqs"><h2>Para qué sirve</h2><p>Para <b>dibujar entero un devanado imbricado de una capa</b> en la plantilla sin perderte: primero colocas las bobinas de la fase U (grupos impares y pares) y después unes los grupos y llevas los extremos a la caja de bornes. Al final, las flechas y los polos dicen si está bien.</p></div>
     <div class="box blue"><h2>Las cuentas</h2><div id="cuentas"></div></div>
   </div>
-  <a class="nextbig" href="dev_imb2_bobinas.html">Siguiente: T4.13 Imbricado de doble capa →</a>
+  <a class="nextbig" href="dev_imb2_bobinas.html">Siguiente: T4.13 Devanados imbricados de doble capa →</a>
 </main>
 <script>
 // navegación y tema (común a todas las páginas)

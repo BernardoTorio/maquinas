@@ -136,6 +136,10 @@ table.tpr{border-collapse:collapse;margin-top:4px}
 @media (max-width:620px){.crumbs{display:none}.theme,.themebtn{margin-left:auto}
   .tnav>a{padding:0 9px}.tnav .where{font-size:.86rem}
   .tnav .steps a.seen{position:relative}.tnav .steps a.seen::after{position:absolute;top:1px;right:3px;margin:0;font-size:.62em}}
+.tnav .steps a.connom{flex:1 1 0;flex-direction:column;gap:1px;padding:6px 8px;white-space:normal;text-align:center;line-height:1.15;position:relative}
+.tnav .steps a.connom .nom{font-weight:400;font-size:.86rem}
+.tnav .steps a.connom.seen::after{position:absolute;top:3px;right:6px;margin:0}
+@media (max-width:620px){.tnav .steps a.connom{flex:1 1 40%}}
 /* --- fin de la tira del tema --- */
 </style>
 </head>
@@ -146,7 +150,7 @@ table.tpr{border-collapse:collapse;margin-top:4px}
     <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 4 › <b>T4.4 a 4.17 Las cuentas del devanado</b></span>
     <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
   </nav>
-  <nav class="tnav" aria-label="Animaciones del Tema 4"><a class="tarr off" aria-hidden="true" tabindex="-1">‹ T4.4 a 4.17</a><span class="where">Tema 4 · 1 de 4</span><a class="tarr" href="dev_imb1_bobinas.html" aria-label="Siguiente: Imbricado de una capa">T4.11 y 4.12 ›</a><div class="steps"><a href="dev_calculos.html" class="cur" aria-current="page" title="Las cuentas del devanado">T4.4 a 4.17</a><a href="dev_imb1_bobinas.html" title="Imbricado de una capa">T4.11 y 4.12</a><a href="dev_imb2_bobinas.html" title="Imbricado de doble capa">T4.13</a><a href="dev_conc_grupos.html" title="Concéntrico">T4.14 a 4.16</a></div></nav>
+  <nav class="tnav" aria-label="Animaciones del Tema 4"><a class="tarr off" aria-hidden="true" tabindex="-1">‹ T4.4 a 4.17</a><span class="where">Tema 4 · 1 de 4</span><a class="tarr" href="dev_imb1_bobinas.html" aria-label="Siguiente: Devanados imbricados de simple capa">T4.11 y 4.12 ›</a><div class="steps"><a href="dev_calculos.html" class="connom cur" aria-current="page" title="Las cuentas del devanado"><span>T4.4 a 4.17</span><span class="nom">Las cuentas del devanado</span></a><a href="dev_imb1_bobinas.html" class="connom" title="Devanados imbricados de simple capa"><span>T4.11 y 4.12</span><span class="nom">Devanados imbricados de simple capa</span></a><a href="dev_imb2_bobinas.html" class="connom" title="Devanados imbricados de doble capa"><span>T4.13</span><span class="nom">Devanados imbricados de doble capa</span></a><a href="dev_conc_grupos.html" class="connom" title="Devanados concéntricos"><span>T4.14 a 4.16</span><span class="nom">Devanados concéntricos</span></a></div></nav>
   <header class="top"><small>Máquinas Eléctricas 2MB · Tema 4 · Puntos 4.4, 4.8 y 4.17</small><h1>Las cuentas del devanado: ¿se puede hacer?</h1><p class="sub">Elige el tipo, las ranuras y los polos, y haz las cuentas paso a paso. Si una cuenta no sale entera, ese devanado no se puede hacer.</p></header>
   <div class="toolbar"><div class="fila"><span class="lab">Tipo</span><div class="seg" id="sTipo"><button type="button" data-v="imb1" aria-pressed="true">Imbricado de una capa</button><button type="button" data-v="imb2" aria-pressed="false">Imbricado de doble capa</button><button type="button" data-v="conc" aria-pressed="false">Concéntrico</button></div></div><div class="fila"><span class="lab">Ranuras</span><div class="seg" id="sK"><button type="button" data-v="12" aria-pressed="true">12</button><button type="button" data-v="18" aria-pressed="false">18</button><button type="button" data-v="30" aria-pressed="false">30</button><button type="button" data-v="48" aria-pressed="false">48</button></div></div><div class="fila"><span class="lab">Polos</span><div class="seg" id="sP"><button type="button" data-v="2" aria-pressed="true">2</button><button type="button" data-v="4" aria-pressed="false">4</button><button type="button" data-v="6" aria-pressed="false">6</button><button type="button" data-v="8" aria-pressed="false">8</button></div></div><p class="hint">Los estatores del taller (24 y 36 ranuras) los calculas tú en la Práctica 2.</p></div>
   <div class="stage">
@@ -160,7 +164,7 @@ table.tpr{border-collapse:collapse;margin-top:4px}
 <div class="box pqs"><h2>Para qué sirve</h2><p>Para saber <b>si un devanado se puede hacer</b> antes de ponerte a dibujar, y sacar los datos que vas a necesitar: bobinas por grupo, paso (o amplitud) y dónde empieza cada fase. Si alguna cuenta no sale entera, ese devanado no se puede hacer.</p></div>
     <div class="box blue"><h2>Las cuentas</h2><div id="cuentas"></div></div>
   </div>
-  <a class="nextbig" href="dev_imb1_bobinas.html">Siguiente: T4.11 y 4.12 Imbricado de una capa →</a>
+  <a class="nextbig" href="dev_imb1_bobinas.html">Siguiente: T4.11 y 4.12 Devanados imbricados de simple capa →</a>
 </main>
 <script>
 // navegación y tema (común a todas las páginas)
