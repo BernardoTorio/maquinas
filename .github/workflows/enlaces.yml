@@ -1,0 +1,25 @@
+name: Enlaces
+
+# Al subir, GitHub revisa que los enlaces de las páginas apunten a archivos que existen (lychee).
+# Los PDF enlazados que todavía no están subidos («próximamente») se apuntan en .lycheeignore.
+# No ve los enlaces que se crean con JavaScript: esos los mira comprobar_web.py (ver CLAUDE.md).
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  enlaces:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - name: Revisar los enlaces de las páginas
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --offline --no-progress './*.html'
+          fail: true

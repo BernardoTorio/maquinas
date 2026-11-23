@@ -21,6 +21,7 @@ test_intermedio_2.html     Test intermedio 2 (100 preguntas sobre lo que explica
 temas/                     apuntes en PDF (T1_T3_Electromagnetismo_Transformadores_Maquinas.pdf, T4_Devanados_Maquinas.pdf, T5_Motores_electricos_Maquinas.pdf, T6_Variadores_Maquinas.pdf)
 practicas/                 enunciados y hojas de las prácticas en PDF (P1_Maquinas.pdf, P1_Hoja_ensayos_Maquinas.pdf, P1_Resultados_4_trafos.pdf,
                            P2_Maquinas.pdf, P2_Plantilla_24_ranuras_Maquinas.pdf, P2_Plantilla_36_ranuras_Maquinas.pdf)
+.github/, .lycheeignore    revisión de enlaces al subir (ver «Comprobaciones automáticas»)
 subir.bat                  publica todo con doble clic
 .gitignore                 *.zip y *.docx (no se suben nunca)
 ```
@@ -121,6 +122,11 @@ Las de los Temas 4 y 5 ya se enseñan (las dos desde el 17/11/2026; las del 4, t
 1. `index.html`: una línea en `ANIM` (o en `HERR`, si es una herramienta de la práctica).
 2. La tira hay que actualizarla **en todas las animaciones del grupo**. Se hace con el guion `tira_tema.py` (guardado en el proyecto «Materiales para instituto» de claude.ai, en `claude/herramientas/`): se añade la animación a `GRUPOS` y su texto a `PQS`, y se pasa con `python3 tira_tema.py <carpeta>`. Regenera la tira y el botón «Siguiente» de todas, y pone lo demás solo donde falte. La página nueva tiene que tener la barra de arriba (o el botón «← Índice» justo después de `<main>`) y un cajón con `id="exp"` dentro de un `<div class="boxes">`.
 3. Añadir su fila a la tabla de arriba.
+
+## Comprobaciones automáticas (desde el 23/11/2026)
+- **Antes de publicar**, Claude pasa `comprobar_web.py` (proyecto «Materiales para instituto», `claude/herramientas/`; skill «comprobar-web-de-clase»): abre todas las páginas con Chrome en escritorio y en móvil (400 px), en claro y en oscuro, y da **errores** (fallos de JavaScript, enlaces rotos —también los que la portada crea con JavaScript—, páginas que se salen por la derecha, la tira mal, un archivo que estaba y ya no está) y **avisos** (falta el botón de volver, la miga, el modo claro/oscuro o Esc). Con `--antes-git origin/main` dice además **qué páginas se ven distintas** que las publicadas: tienen que ser solo las que se han tocado.
+- **Al subir** (`.github/workflows/enlaces.yml`), GitHub revisa con lychee los enlaces de los `.html` de la raíz. Si alguno apunta a un archivo que no existe, el commit sale con una ✗ roja en GitHub y llega un correo; la web se publica igual. Un PDF enlazado que todavía no está subido («próximamente») se apunta en `.lycheeignore` (una línea) y se quita al subirlo.
+- **Cada noche**, el repositorio privado `BernardoTorio/comprobaciones` repite la comprobación completa de las tres webs y abre allí una incidencia si hay errores o páginas que han cambiado de aspecto desde la noche anterior.
 
 ## Los Word originales: `C:\dev\originales`
 Los PDF de esta web salen de un Word. Los Word no se suben a GitHub, pero **no se pierden**: están en `C:\dev\originales` (en el PC del profesor, fuera de git), con todas sus versiones. Es la misma carpeta para las tres webs (automatismos, domotica, maquinas).

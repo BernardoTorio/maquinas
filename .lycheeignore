@@ -1,0 +1,4 @@
+# PDF que la portada enlaza pero todavía no están subidos (salen como «próximamente»).
+# Una línea por PDF, con la barra invertida delante del punto; al subir el PDF, se quita su línea.
+# Ejemplo:  temas/T9_Ejemplo\.pdf$
+temas/T6_Variadores_Maquinas\.pdf$
