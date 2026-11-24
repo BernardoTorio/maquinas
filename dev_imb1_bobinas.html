@@ -495,11 +495,13 @@ function svgDevanado(D, G, V) {
       if (k !== null) o.push(`<text x="${x + T.cw / 2}" y="${y + T.ch / 2}" font-size="${Math.min(18, T.ch * 0.7)}" font-weight="700" text-anchor="middle" dominant-baseline="central" style="fill:${V.lineasTabla ? COL[FASES[j]] : 'var(--ink)'}">${k}</text>`); }));
   }
   // flechas de la fase U y polos
-  if (V.flechas) {
+  // flechas: en todos los grupos de U (flechas) o solo en los que ya ha recorrido la corriente (flechasG: lista de grupos)
+  if (V.flechas || (V.flechasG && V.flechasG.length)) {
     const ym = (G.yHB + G.yBT) / 2 + 1, h = 11, w = 4.5;
-    D.grupos.U.forEach(Gr => Gr.bobinas.forEach(c => [[c.a, c.ca, Gr.sentido], [c.b, c.cb, -Gr.sentido]].forEach(([k, cp, s]) => {
+    D.grupos.U.forEach(Gr => { if (!V.flechas && !V.flechasG.includes(Gr.n)) return;
+      Gr.bobinas.forEach(c => [[c.a, c.ca, Gr.sentido], [c.b, c.cb, -Gr.sentido]].forEach(([k, cp, s]) => {
       const x = G.xv(k, cp), pts = s > 0 ? [[x, ym - h / 2], [x - w, ym + h / 2], [x + w, ym + h / 2]] : [[x, ym + h / 2], [x - w, ym - h / 2], [x + w, ym - h / 2]];
-      o.push(`<polygon points="${pl(pts)}" style="fill:var(--ph1);stroke:var(--card);stroke-width:1"/>`); })));
+      o.push(`<polygon points="${pl(pts)}" style="fill:var(--ph1);stroke:var(--card);stroke-width:1"/>`); })); });
   }
   if (V.polos) {
     const et = [], cen = [];
@@ -641,44 +643,62 @@ const PASOS = {
     s.push(pasoColas(D));
     return s;
   },
-  // --------------------------------------------- uniones y caja (las tres «(2)»)
+  // --------------------------------------------- uniones y caja
+  // (25/11/2026, lo pidió el profesor) las uniones se hacen siguiendo la corriente, grupo a grupo y con un paso para cada
+  // cosa: desde U1 por el grupo 1 hasta su F; la pregunta «¿por polos o por polos consecuentes?» y la unión al P o al F del
+  // grupo 2; la corriente por el grupo 2; la unión al 3… Lo que queda libre al final es U2.
   uniones(D, simple) {
-    const U = bobinasDe(D, 'U'), sU = saltosDe(D, ['U']);
-    const base = {coils: U, saltos: sU};
-    const mas = (v, extra) => { const r = {}; for (const k of ['coils', 'saltos', 'uniones', 'term']) r[k] = [...(v[k] || []), ...(extra[k] || [])];
-      r.flechas = extra.flechas || v.flechas; r.polos = extra.polos || v.polos; r.lados = extra.lados || v.lados; r.nuevo = extra.nuevo || []; r.marca = extra.marca; return r; };
-    const s = [];
-    const ini = D.grupos.U.map(G => G.ini.k);
-    const v0 = mas(base, {}); v0.etqPF = true;
-    s.push({t: 'La fase U con sus grupos', h: `La fase U tiene <b>${D.Gf} grupos</b>, que empiezan en ${lista(ini)}. Hay que unirlos en serie para que salga un solo devanado, de U1 a U2. Recuerda: en cada grupo el cable <b>largo es el principio (P)</b> y el <b>corto, el final (F)</b>.`, v: v0});
-    let v = mas(base, {});
-    if (D.conexion === 'polos') {
-      const ff = D.uniones.U.filter(u => u.tipo === 'ff'), pp = D.uniones.U.filter(u => u.tipo === 'pp');
-      v = mas(v, {uniones: ff.map(u => u.id), nuevo: ff.map(u => 'u' + u.id)});
-      v.etqUn = ff.map(u => ({id: u.id, l1: 'unión por polos', l2: 'final con final'}));
-      s.push({t: 'Final con final', h: `${D.tipo === 'conc' ? 'Con 2 polos, el concéntrico' : 'Los imbricados'} se unen <b>por polos</b>. Primero, el <b>final</b> de un grupo con el <b>final</b> del siguiente: ${parTxt(D, ff)}. Así la corriente recorre el grupo siguiente al revés y su polo sale contrario.`, v});
-      if (pp.length) { v = mas(v, {uniones: pp.map(u => u.id), nuevo: pp.map(u => 'u' + u.id)});
-        v.etqUn = pp.map(u => ({id: u.id, l1: 'unión por polos', l2: 'principio con principio'}));
-        s.push({t: 'Principio con principio', h: `Después, el <b>principio</b> de un grupo con el <b>principio</b> del siguiente: ${parTxt(D, pp)}. Se van alternando: final con final, principio con principio…`, v}); }
-    } else {
-      const fp = D.uniones.U;
-      v = mas(v, {uniones: fp.map(u => u.id), nuevo: fp.map(u => 'u' + u.id)});
-      v.etqUn = fp.map(u => ({id: u.id, l1: 'polos consecuentes', l2: 'final con principio'}));
-      s.push({t: 'Final con principio', h: `Con más de 2 polos, el concéntrico se une <b>por polos consecuentes</b>: el <b>final</b> de un grupo con el <b>principio</b> del siguiente: ${parTxt(D, fp)}. Todos los grupos se recorren en el mismo sentido.`, v});
+    const gs = D.grupos.U, n = gs.length, t = D.term, R = k => D.r(k);
+    const coils = bobinasDe(D, 'U'), saltos = saltosDe(D, ['U']);
+    const uni = [], fg = [], s = [];
+    const vista = x => Object.assign({coils, saltos, uniones: uni.slice(), flechasG: fg.slice(), etqPF: true, nuevo: []}, x);
+    const ini = gs.map(G => G.ini.k);
+    s.push({t: 'La fase U con sus grupos', h: `La fase U tiene <b>${D.Gf} grupos</b>, que empiezan en ${lista(ini)}. Hay que unirlos en serie para que salga un solo devanado, de U1 a U2. Recuerda: en cada grupo el cable <b>largo es el principio (P)</b> y el <b>corto, el final (F)</b>.`, v: vista({})});
+    const polos = D.conexion === 'polos';
+    const entra = G => G.sentido === 1 ? G.ini : G.fin, sale = G => G.sentido === 1 ? G.fin : G.ini;
+    const letra = (G, e) => e === G.ini ? 'P' : 'F', nombre = (G, e) => e === G.ini ? 'principio' : 'final';
+    const bobs = G => G.bobinas.length > 1 ? `sus ${G.bobinas.length} bobinas (pasando por los saltos de abajo)` : 'su bobina';
+    const G0 = gs[0];
+    fg.push(0);
+    s.push({t: 'Empezamos en U1: la corriente por el grupo 1', h: `Los grupos se unen <b>siguiendo la corriente</b>. Empezamos por el principio del grupo 1, en la ranura <b>${R(G0.ini.k)}</b>: será <b>U1</b>. ` +
+        `La corriente entra por ahí, recorre ${bobs(G0)} y llega al <b>final (F) del grupo 1</b>, en la ranura <b>${R(G0.fin.k)}</b>. Fíjate en las flechas: sube por la izquierda y baja por la derecha.`,
+      v: vista({marca: [{k: R(G0.ini.k), c: 'U'}, {k: R(G0.fin.k), c: 'U'}]})});
+    for (let i = 0; i < n - 1; i++) {
+      const A = gs[i], B = gs[i + 1], u = D.uniones.U[i], de = sale(A), a = entra(B);
+      const tipo = `${nombre(A, de)} con ${nombre(B, a)}`;
+      uni.push(u.id);
+      const h = i === 0
+        ? `Hemos llegado al F del grupo 1. Antes de seguir hay que preguntarse: <b>¿unión por polos o por polos consecuentes?</b> ` + (polos
+          ? (D.tipo === 'conc' ? `Este concéntrico tiene 2 polos y un grupo por polo (G<sub>f</sub> = 2p = 2)` : `En los imbricados hay un grupo por polo (G<sub>f</sub> = 2p = ${D.Gf})`) +
+            `: unión <b>por polos</b>. Cada grupo tiene que dar el polo contrario que el anterior, así que la corriente tiene que recorrer el grupo 2 <b>al revés</b>: entra por su F. ` +
+            `Vamos del <b>F</b> del grupo 1 al <b>F</b> del grupo 2 (${R(de.k)} con ${R(a.k)}): <b>final con final</b>.`
+          : `Con ${D.polos} polos, el concéntrico tiene solo G<sub>f</sub> = p = ${D.Gf} grupos por fase, la mitad que polos: unión <b>por polos consecuentes</b>. Todos los grupos dan el mismo polo, así que la corriente recorre el grupo 2 <b>igual</b> que el 1: entra por su P. ` +
+            `Vamos del <b>F</b> del grupo 1 al <b>P</b> del grupo 2 (${R(de.k)} con ${R(a.k)}): <b>final con principio</b>.`)
+        : `Hemos llegado al <b>${letra(A, de)}</b> del grupo ${i + 1} (ranura ${R(de.k)}). Seguimos ${polos ? '<b>por polos</b>: el grupo siguiente, al revés que este' : 'por <b>polos consecuentes</b>: el grupo siguiente, igual que este'}. ` +
+          `Vamos al <b>${letra(B, a)}</b> del grupo ${i + 2} (ranura ${R(a.k)}): <b>${tipo}</b>.`;
+      s.push({t: i === 0 ? '¿Por polos o por polos consecuentes?' : `Del grupo ${i + 1} al grupo ${i + 2}`, h,
+        v: vista({nuevo: ['u' + u.id], marca: [{k: R(a.k), c: 'U'}], etqUn: [{id: u.id, l1: polos ? 'unión por polos' : 'polos consecuentes', l2: tipo}]})});
+      fg.push(i + 1);
+      const ida = B.sentido === A.sentido;
+      s.push({t: `La corriente por el grupo ${i + 2}`, h: `La corriente entra en el grupo ${i + 2} por su <b>${letra(B, a)}</b> (ranura ${R(a.k)}), recorre ${bobs(B)} ` +
+          `<b>${ida ? 'en el mismo sentido' : 'al revés'}</b> que el grupo ${i + 1} y llega a su <b>${nombre(B, sale(B))} (${letra(B, sale(B))})</b>, en la ranura <b>${R(sale(B).k)}</b>. ` +
+          (ida ? 'Las flechas van igual que en el anterior.' : `Mira las flechas: aquí ${B.sentido === 1 ? 'sube por la izquierda y baja por la derecha' : 'baja por la izquierda y sube por la derecha'}, al revés que en el anterior.`) +
+          (i === n - 2 ? ` Ya no quedan grupos: esta ranura será <b>U2</b>.` : ''),
+        v: vista({marca: [{k: R(sale(B).k), c: 'U'}]})});
     }
-    const t = D.term;
-    v = mas(v, {term: ['U1', 'U2'], nuevo: ['tU1', 'tU2']});
-    s.push({t: 'U1 y U2 a la caja de bornes', h: `El principio del primer grupo es <b>U1</b> (ranura ${D.r(t.U1.k)}). Lo que queda libre al final es <b>U2</b> (ranura ${D.r(t.U2.k)}: ${D.conexion === 'polos' ? 'el principio del último grupo' : 'el final del último grupo'}). Los cables entran en los tornillos <b>en vertical</b>: U1 por arriba y U2 rodeando la caja, por debajo.`, v});
-    v = mas(v, {flechas: true, polos: true});
-    s.push({t: 'Flechas y polos', h: `La corriente entra por U1 hacia arriba. Sigue el hilo: en cada grupo sube por un lado y baja por el otro. ${D.conexion === 'consec' ? 'Todos los grupos dan <b>N</b>, y los <b>S salen solos</b> en los huecos de en medio (en gris): son los polos consecuentes. ' : 'Los grupos dan N y S, uno sí y otro no. '}Salen <b>${D.polos} polos</b>, alternando N y S: la fase U está bien.`, v});
+    const tU = ['U1', 'U2'];
+    s.push({t: 'U1 y U2 a la caja de bornes', h: `El principio del primer grupo es <b>U1</b> (ranura ${R(t.U1.k)}). Lo que queda libre al final es <b>U2</b> (ranura ${R(t.U2.k)}: ${polos ? 'el principio del último grupo' : 'el final del último grupo'}). Los cables entran en los tornillos <b>en vertical</b>: U1 por arriba y U2 rodeando la caja, por debajo.`,
+      v: vista({term: tU, nuevo: ['tU1', 'tU2']})});
+    s.push({t: 'Los polos', h: `Con las flechas de todos los grupos ya se ven los polos. ${polos ? 'Los grupos dan N y S, uno sí y otro no. ' : 'Todos los grupos dan <b>N</b>, y los <b>S salen solos</b> en los huecos de en medio (en gris): son los polos consecuentes. '}Salen <b>${D.polos} polos</b>, alternando N y S: la fase U está bien.`,
+      v: vista({term: tU, flechas: true, polos: true})});
     const vw = [...bobinasDe(D, 'V'), ...bobinasDe(D, 'W')];
-    if (simple) v = mas(v, {lados: new Set(['V', 'W']), nuevo: []});
-    else v = mas(v, {coils: vw, saltos: saltosDe(D, ['V', 'W']), uniones: [...unionesDe(D, ['V']), ...unionesDe(D, ['W'])], nuevo: vw});
     s.push({t: 'Las fases V y W', h: simple
-        ? `V empieza en la ${D.r(t.V1.k)} y W en la ${D.r(t.W1.k)} (primera fila de la tabla), y se hacen igual que U. En doble capa salen tantas líneas que no se entiende nada: por eso de V y W solo se dibujan sus <b>lados en las ranuras</b> (y luego los cables a la caja). Marca «Ver V y W enteras» para ver el dibujo completo.`
-        : `V empieza en la ${D.r(t.V1.k)} y W en la ${D.r(t.W1.k)} (primera fila de la tabla). Se dibujan igual que U: mismas bobinas, saltos y uniones, pero corridas ${D.Y120} y ${2 * D.Y120} ranuras.`, v});
-    v = mas(v, {term: ['V1', 'V2', 'W1', 'W2'], nuevo: ['tV1', 'tV2', 'tW1', 'tW2']});
-    s.push({t: 'La caja de bornes completa', h: `Arriba, los principios: <b>U1, V1 y W1</b>. Abajo, los finales cambiados de sitio: <b>W2, U2 y V2</b>. Última comprobación: cada ranura tiene ${D.tipo === 'imb2' ? '<b>dos lados</b>' : '<b>un solo lado</b>'} y ninguna se repite.`, v});
+        ? `V empieza en la ${R(t.V1.k)} y W en la ${R(t.W1.k)} (primera fila de la tabla), y se hacen igual que U. En doble capa salen tantas líneas que a veces el esquema es confuso: por eso de V y W solo se dibujan sus <b>lados en las ranuras</b> (y luego los cables a la caja). Marca «Ver V y W enteras» para ver el dibujo completo.`
+        : `V empieza en la ${R(t.V1.k)} y W en la ${R(t.W1.k)} (primera fila de la tabla). Se dibujan igual que U: mismas bobinas, saltos y uniones, pero corridas ${D.Y120} y ${2 * D.Y120} ranuras.`,
+      v: simple ? vista({term: tU, flechas: true, polos: true, lados: new Set(['V', 'W'])})
+                : vista({coils: coils.concat(vw), saltos: saltos.concat(saltosDe(D, ['V', 'W'])), uniones: uni.concat(unionesDe(D, ['V']), unionesDe(D, ['W'])), term: tU, flechas: true, polos: true, nuevo: vw})});
+    const vUlt = Object.assign({}, s[s.length - 1].v, {term: ['U1', 'U2', 'V1', 'V2', 'W1', 'W2'], nuevo: ['tV1', 'tV2', 'tW1', 'tW2']});
+    s.push({t: 'La caja de bornes completa', h: `Arriba, los principios: <b>U1, V1 y W1</b>. Abajo, los finales cambiados de sitio: <b>W2, U2 y V2</b>. Última comprobación: cada ranura tiene ${D.tipo === 'imb2' ? '<b>dos lados</b>' : '<b>un solo lado</b>'} y ninguna se repite.`, v: vUlt});
     return s;
   },
 };
