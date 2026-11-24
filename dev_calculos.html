@@ -309,7 +309,10 @@ function geometria(D) {
   const nvu = new Niveles(1.4 * MM); G.lvUn = {};
   un.slice().sort((A, B) => Math.abs(G.xv(A.s1.k, A.s1.c) - G.xv(A.s2.k, A.s2.c)) - Math.abs(G.xv(B.s1.k, B.s1.c) - G.xv(B.s2.k, B.s2.c)))
     .forEach(u => { const a = G.xv(u.s1.k, u.s1.c), b = G.xv(u.s2.k, u.s2.c); G.lvUn[u.id] = nvu.pon([[Math.min(a, b), Math.max(a, b)]]); });
-  G.dy = 2.5 * MM; G.yU0 = G.yJ1 + 3.5 * MM; G.nUn = nvu.niv.length;
+  // colas de los grupos: el principio, 5 mm más largo que el final (así se distinguen al unir). Las dos quedan por debajo
+  // del salto más bajo (para que se vean bien) y, después, las uniones entre grupos, más abajo que el principio
+  G.yColaF = Math.max(G.yNum + G.fsN * 0.5, G.yJ1) + 3 * MM; G.yColaP = G.yColaF + 5 * MM;
+  G.dy = 2.5 * MM; G.yU0 = G.yColaP + 6 * MM; G.nUn = nvu.niv.length;
   const yT0 = G.yU0 + nvu.niv.length * G.dy + 1.0 * MM;
   G.yT = [0, 1, 2, 3, 4, 5].map(i => yT0 + i * G.dy);
   // caja de bornes: tornillos en medias ranuras
@@ -320,8 +323,6 @@ function geometria(D) {
   C.yf1 = C.y0 + 7.5 * MM; C.yl1 = C.y0 + 14 * MM; C.yl2 = C.y0 + 22 * MM; C.yf2 = C.y0 + 28.5 * MM;
   C.pos = {U1: [C.xs[0], C.yf1], V1: [C.xs[1], C.yf1], W1: [C.xs[2], C.yf1], W2: [C.xs[0], C.yf2], U2: [C.xs[1], C.yf2], V2: [C.xs[2], C.yf2]};
   G.H = C.y1 + 9 * MM + 6;
-  // colas de los grupos: el final asoma un poco por debajo del número y el principio, 5 mm más (así se distinguen al unir)
-  G.yColaF = G.yNum + G.fsN * 0.5 + 3 * MM; G.yColaP = G.yColaF + 5 * MM;
   G.yCota = G.yColaP + 10;                                  // raya de las cotas («Y_k = 5 saltos», «+1»), con dos líneas de texto debajo
   // rutas de los terminales (el orden de niveles que menos cruces da)
   const media = x => { const k = Math.round((x - G.x0) / G.p - 0.5); return G.x0 + (k + 0.5) * G.p; };
@@ -543,7 +544,7 @@ function pasoColas(D) {
   const colas = D.grupos.U.map(G => 'colaU' + G.n);
   return {t: 'Principio largo, final corto',
     h: `Cada grupo tiene dos cables sueltos: el <b>principio</b>, por donde empieza (en U: ${lista(ini)}), y el <b>final</b>, por donde acaba (${lista(fin)}). ` +
-       `Deja el principio <b>un poco más largo</b> que el final: 1 o 2 cm más en la plantilla. Cuando haya muchos grupos dibujados, así sabrás de un vistazo cuál es cada uno al unirlos. ` +
+       `Deja el principio <b>un poco más largo</b> que el final: 1 o 2 cm más en la plantilla. Y los dos, <b>por debajo del salto más bajo</b>, para que se vean bien. Cuando haya muchos grupos dibujados, así sabrás de un vistazo cuál es cada uno al unirlos. ` +
        `En el dibujo, <b>P</b> = principio (el largo) y <b>F</b> = final (el corto). En la animación siguiente se unen los grupos.`,
     v: {coils: bobinasDe(D, 'U'), saltos: saltosDe(D, ['U']), nuevo: colas, etqPF: true}};
 }

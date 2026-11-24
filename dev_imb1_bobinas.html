@@ -152,7 +152,7 @@ table.tpr{border-collapse:collapse;margin-top:4px}
   </nav>
   <nav class="tnav" aria-label="Animaciones del Tema 4"><a class="tarr" href="dev_calculos.html" aria-label="Anterior: Las cuentas del devanado">‹ T4.4 a 4.17</a><span class="where">Tema 4 · 2 de 4</span><a class="tarr" href="dev_imb2_bobinas.html" aria-label="Siguiente: Devanados imbricados de doble capa">T4.13 ›</a><div class="steps"><a href="dev_calculos.html" class="connom" title="Las cuentas del devanado"><span>T4.4 a 4.17</span><span class="nom">Las cuentas del devanado</span></a><a href="dev_imb1_bobinas.html" class="connom cur" aria-current="page" title="Devanados imbricados de simple capa"><span>T4.11 y 4.12</span><span class="nom">Devanados imbricados de simple capa</span></a><a href="dev_imb2_bobinas.html" class="connom" title="Devanados imbricados de doble capa"><span>T4.13</span><span class="nom">Devanados imbricados de doble capa</span></a><a href="dev_conc_grupos.html" class="connom" title="Devanados concéntricos"><span>T4.14 a 4.16</span><span class="nom">Devanados concéntricos</span></a></div></nav>
   <header class="top"><small>Máquinas Eléctricas 2MB · Tema 4 · Puntos 4.11, 4.12 y 4.18</small><h1>Devanados imbricados de simple capa</h1><p class="sub">Elige un ejemplo y avanza con «Paso siguiente» (o con las flechas ← →): primero las bobinas de la fase U y después las uniones y la caja de bornes. Lo nuevo de cada paso sale más gordo.</p></header>
-  <div class="toolbar"><div class="fila"><span class="lab">Ejemplo</span><div class="seg" id="sEj"><button type="button" data-v="0" aria-pressed="true">48 ranuras · 2 polos</button><button type="button" data-v="1" aria-pressed="false">48 ranuras · 8 polos</button></div></div><p class="hint">Son ejemplos que no salen en la práctica: los de 24 y 36 ranuras los haces tú.</p></div>
+  <div class="toolbar"><div class="fila"><span class="lab">Ejemplo</span><div class="seg" id="sEj"><button type="button" data-v="0" aria-pressed="true">48 ranuras · 2 polos</button><button type="button" data-v="1" aria-pressed="false">48 ranuras · 4 polos</button><button type="button" data-v="2" aria-pressed="false">48 ranuras · 6 polos</button><button type="button" data-v="3" aria-pressed="false">48 ranuras · 8 polos</button></div></div><p class="hint">Son ejemplos que no salen en la práctica: los de 24 y 36 ranuras los haces tú.</p></div>
   <div class="stage">
     <p class="hint" id="desliza" hidden>↔ El dibujo no cabe entero: deslízalo hacia los lados.</p>
     <div class="scroll"><svg id="sv" viewBox="0 0 1000 400" role="img" aria-label="Dibujo del devanado"></svg></div>
@@ -309,7 +309,10 @@ function geometria(D) {
   const nvu = new Niveles(1.4 * MM); G.lvUn = {};
   un.slice().sort((A, B) => Math.abs(G.xv(A.s1.k, A.s1.c) - G.xv(A.s2.k, A.s2.c)) - Math.abs(G.xv(B.s1.k, B.s1.c) - G.xv(B.s2.k, B.s2.c)))
     .forEach(u => { const a = G.xv(u.s1.k, u.s1.c), b = G.xv(u.s2.k, u.s2.c); G.lvUn[u.id] = nvu.pon([[Math.min(a, b), Math.max(a, b)]]); });
-  G.dy = 2.5 * MM; G.yU0 = G.yJ1 + 3.5 * MM; G.nUn = nvu.niv.length;
+  // colas de los grupos: el principio, 5 mm más largo que el final (así se distinguen al unir). Las dos quedan por debajo
+  // del salto más bajo (para que se vean bien) y, después, las uniones entre grupos, más abajo que el principio
+  G.yColaF = Math.max(G.yNum + G.fsN * 0.5, G.yJ1) + 3 * MM; G.yColaP = G.yColaF + 5 * MM;
+  G.dy = 2.5 * MM; G.yU0 = G.yColaP + 6 * MM; G.nUn = nvu.niv.length;
   const yT0 = G.yU0 + nvu.niv.length * G.dy + 1.0 * MM;
   G.yT = [0, 1, 2, 3, 4, 5].map(i => yT0 + i * G.dy);
   // caja de bornes: tornillos en medias ranuras
@@ -320,8 +323,6 @@ function geometria(D) {
   C.yf1 = C.y0 + 7.5 * MM; C.yl1 = C.y0 + 14 * MM; C.yl2 = C.y0 + 22 * MM; C.yf2 = C.y0 + 28.5 * MM;
   C.pos = {U1: [C.xs[0], C.yf1], V1: [C.xs[1], C.yf1], W1: [C.xs[2], C.yf1], W2: [C.xs[0], C.yf2], U2: [C.xs[1], C.yf2], V2: [C.xs[2], C.yf2]};
   G.H = C.y1 + 9 * MM + 6;
-  // colas de los grupos: el final asoma un poco por debajo del número y el principio, 5 mm más (así se distinguen al unir)
-  G.yColaF = G.yNum + G.fsN * 0.5 + 3 * MM; G.yColaP = G.yColaF + 5 * MM;
   G.yCota = G.yColaP + 10;                                  // raya de las cotas («Y_k = 5 saltos», «+1»), con dos líneas de texto debajo
   // rutas de los terminales (el orden de niveles que menos cruces da)
   const media = x => { const k = Math.round((x - G.x0) / G.p - 0.5); return G.x0 + (k + 0.5) * G.p; };
@@ -543,7 +544,7 @@ function pasoColas(D) {
   const colas = D.grupos.U.map(G => 'colaU' + G.n);
   return {t: 'Principio largo, final corto',
     h: `Cada grupo tiene dos cables sueltos: el <b>principio</b>, por donde empieza (en U: ${lista(ini)}), y el <b>final</b>, por donde acaba (${lista(fin)}). ` +
-       `Deja el principio <b>un poco más largo</b> que el final: 1 o 2 cm más en la plantilla. Cuando haya muchos grupos dibujados, así sabrás de un vistazo cuál es cada uno al unirlos. ` +
+       `Deja el principio <b>un poco más largo</b> que el final: 1 o 2 cm más en la plantilla. Y los dos, <b>por debajo del salto más bajo</b>, para que se vean bien. Cuando haya muchos grupos dibujados, así sabrás de un vistazo cuál es cada uno al unirlos. ` +
        `En el dibujo, <b>P</b> = principio (el largo) y <b>F</b> = final (el corto). En la animación siguiente se unen los grupos.`,
     v: {coils: bobinasDe(D, 'U'), saltos: saltosDe(D, ['U']), nuevo: colas, etqPF: true}};
 }
@@ -745,6 +746,124 @@ function avisoDesliza() {
 }
 addEventListener('resize', avisoDesliza);
 
+// ------------------------------------------------------------------ animación de las cuentas (T4.4 a 4.17)
+// Una tira con las ranuras del estator: polos arriba, ranuras en medio y, abajo, el reparto entre las fases.
+const CALC = {tipo: 'imb1', K: 12, polos: 2, paso: 1};
+const TIT_CALC = ['Los datos', 'Ranuras por polo y fase', 'Bobinas por grupo', 'Paso de ranura', 'Principios de fase'];
+
+function tiraSVG(D, paso) {
+  const K = D.K, x0 = 40, W = 920, pw = W / K, o = [];
+  const xs = k => x0 + (k - 0.5) * pw;              // centro de la ranura k
+  const yP0 = 8, yP1 = 50, yC0 = 66, yS0 = 128, yS1 = 196, yN = 216, yB0 = 236, yB1 = 276, yA = 300;
+  const H = paso >= 4 ? 372 : 290;
+  o.push(`<defs><marker id="fa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:context-stroke"/></marker>` +
+    `<pattern id="raya" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" style="fill:var(--card)"/><line x1="0" y1="0" x2="0" y2="8" style="stroke:var(--warn);stroke-width:5"/></pattern></defs>`);
+  // polos
+  const yp = K / D.polos;
+  for (let i = 0; i < D.polos; i++) {
+    const a = x0 + i * yp * pw, b = a + yp * pw, n = i % 2 === 0;
+    o.push(`<rect x="${a + 1.5}" y="${yP0}" width="${b - a - 3}" height="${yP1 - yP0}" rx="8" style="fill:${n ? 'var(--polN)' : 'var(--polS)'};stroke:var(--line);stroke-width:1.5"/>`);
+    o.push(`<text x="${(a + b) / 2}" y="${(yP0 + yP1) / 2 + 1}" text-anchor="middle" dominant-baseline="central" style="font-size:${Math.min(22, (b - a) * 0.4)}px;font-weight:700;fill:var(--ink)">${n ? 'N' : 'S'}</text>`);
+  }
+  // reparto entre fases (desde el paso 2)
+  const rotas = new Set();
+  if (paso >= 2) {
+    const ord = ['U', 'W', 'V'];
+    let i = 0;
+    for (let x = 0; x < K - 1e-9; x += D.Kpq, i++) {
+      const f = ord[i % 3], a = x0 + x * pw, b = x0 + Math.min(K, x + D.Kpq) * pw;
+      o.push(`<rect x="${a + 1}" y="${yB0}" width="${Math.max(1, b - a - 2)}" height="${yB1 - yB0}" rx="6" style="fill:${COL[f]};opacity:.85"/>`);
+      if (b - a > 16) o.push(`<text x="${(a + b) / 2}" y="${(yB0 + yB1) / 2 + 1}" text-anchor="middle" dominant-baseline="central" style="font-size:${Math.min(20, (b - a) * 0.5)}px;font-weight:700;fill:#fff">${f}</text>`);
+      if (x > 0 && !esEnt(x)) rotas.add(Math.floor(x) + 1);
+    }
+  }
+  // ranuras y números
+  const bw = Math.max(5, Math.min(12, pw * 0.3)), fsn = Math.max(12, Math.min(22, pw * 0.5));
+  for (let k = 1; k <= K; k++) {
+    const x = xs(k), mal = rotas.has(k);
+    o.push(`<rect x="${x - bw / 2}" y="${yS0}" width="${bw}" height="${yS1 - yS0}" rx="${bw / 2}" style="fill:${mal ? 'url(#raya)' : 'var(--slot)'}${mal ? ';stroke:var(--warn);stroke-width:2' : ''}"/>`);
+    o.push(`<text x="${x}" y="${yN}" text-anchor="middle" dominant-baseline="central" style="font-size:${fsn}px;fill:${mal ? 'var(--warn)' : 'var(--ink)'};font-weight:${mal ? 700 : 400}">${k}</text>`);
+  }
+  // paso de ranura o amplitud: una bobina de ejemplo desde la ranura 1
+  const lw = 3.2;
+  if (paso >= 4 && D.ok) {
+    if (D.tipo !== 'conc') {
+      const a = xs(1), b = xs(1 + D.Yk), m = (a + b) / 2;
+      o.push(`<polyline points="${a},${yS1} ${a},${yS0} ${m},${yC0} ${b},${yS0} ${b},${yS1}" style="fill:none;stroke:var(--ph1);stroke-width:${lw}" stroke-linejoin="round"/>`);
+      if (D.tipo === 'imb2') o.push(`<polyline points="${m},${yC0} ${b},${yS0} ${b},${yS1}" style="fill:none;stroke:var(--card);stroke-width:${lw + 0.5}" stroke-dasharray="0 12 6 0"/>`);
+      if (paso === 4) {
+        const yy = yA - 2, c = xs(1 + D.Yp);
+        o.push(`<line x1="${a}" y1="${yy}" x2="${b}" y2="${yy}" style="stroke:var(--cota);stroke-width:2.5" marker-end="url(#fa)"/><text x="${a - 6}" y="${yy + 24}" text-anchor="start" style="font-size:19px;font-weight:700;fill:var(--cota)">Y<tspan style="font-size:13px" dy="4">k</tspan><tspan dy="-4"> = ${D.Yk} saltos: de la 1 a la ${1 + D.Yk}</tspan></text>`);
+        if (D.Yk !== D.Yp) o.push(`<line x1="${xs(1 + D.Yk)}" y1="${yS0 - 6}" x2="${c}" y2="${yS0 - 6}" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:4 4"/><circle cx="${c}" cy="${yS0 - 6}" r="5" style="fill:var(--muted)"/>`);
+      }
+    } else {
+      const bs = [];
+      for (let j = 0; j < D.U; j++) bs.push([1 + j, 1 + 2 * D.U - 1 + D.m - j]);
+      const pa = xs(bs[D.U - 1][0] + 1) - pw * 0.42, pb = xs(bs[D.U - 1][1] - 1) + pw * 0.42;
+      if (paso === 4) o.push(`<rect x="${pa}" y="${yS0 - 6}" width="${pb - pa}" height="${yS1 - yS0 + 12}" rx="8" style="fill:var(--mark);stroke:var(--cota);stroke-width:2"/>`);
+      bs.forEach(([a, b], j) => { const xa = xs(a), xb = xs(b), y = yC0 + (D.U - 1 - j) * Math.min(14, 50 / D.U) + 6;
+        o.push(`<polyline points="${xa},${yS1} ${xa},${y} ${xb},${y} ${xb},${yS1}" style="fill:none;stroke:var(--ph1);stroke-width:${lw}" stroke-linejoin="round"/>`); });
+      if (paso === 4) o.push(`<text x="${xs(1) - 6}" y="${yA + 20}" text-anchor="start" style="font-size:19px;font-weight:700;fill:var(--cota)">m = ${D.m} ranuras libres dentro</text>`);
+    }
+  }
+  // principios de fase
+  if (paso >= 5 && D.ok) {
+    const pr = [1, 1 + D.Y120, 1 + 2 * D.Y120];
+    pr.forEach((k, i) => { const x = xs(k);
+      o.push(`<circle cx="${x}" cy="${yN}" r="${fsn * 0.85}" style="fill:none;stroke:${COL[FASES[i]]};stroke-width:3"/>`);
+      o.push(`<text x="${x}" y="${yA + 40}" text-anchor="middle" style="font-size:20px;font-weight:700;fill:${COL[FASES[i]]}">${FASES[i]}1</text>`);
+      if (i < 2) { const xb = xs(pr[i + 1]), ym = yA + 10;
+        o.push(`<path d="M${x + 6},${yA} Q${(x + xb) / 2},${ym + 32} ${xb - 8},${yA}" style="fill:none;stroke:${COL[FASES[i + 1]]};stroke-width:2.5" marker-end="url(#fa)"/>`);
+        o.push(`<text x="${(x + xb) / 2}" y="${ym + 42}" text-anchor="middle" style="font-size:17px;font-weight:700;fill:var(--ink)">+${D.Y120}</text>`); }
+    });
+  }
+  return {svg: o.join(''), H};
+}
+
+function pasosCalc(D) {
+  const p = D.p, s = [];
+  s.push({t: TIT_CALC[0], h: `El estator tiene <b>K = ${D.K} ranuras</b> y queremos <b>${D.polos} polos</b> (2p = ${D.polos}, así que p = ${p} par${p > 1 ? 'es' : ''} de polos). El motor es trifásico: <b>q = 3 fases</b> (U, V y W). Arriba ves los ${D.polos} polos: cada uno ocupa ${fN(D.K / D.polos)} ranuras.`});
+  if (esEnt(D.Kpq)) s.push({t: TIT_CALC[1], h: `Cada polo se reparte entre las 3 fases: K<sub>pq</sub> = K / (2p · q) = ${D.K} / (2 · ${p} · 3) = <b>${fN(D.Kpq)}</b> ranura${D.Kpq > 1 ? 's' : ''} de cada fase en cada polo (las franjas de colores). Sale entero: seguimos.`});
+  else s.push({t: TIT_CALC[1], mal: true, h: `K<sub>pq</sub> = ${D.K} / (2 · ${p} · 3) = <b>${fN(D.Kpq)}</b>: <b>no sale entero</b>. Mira las franjas: alguna ranura (en rojo) tendría que ser de dos fases a la vez. <b>Este devanado no se puede hacer.</b> Prueba con otros polos o con otras ranuras.`});
+  if (s[1].mal) return s;
+  const okU = esEnt(D.U);
+  let h3 = D.tipo === 'imb1' ? `En una capa cada bobina ocupa 2 ranuras (la de ida y la de vuelta): <b>B = K / 2 = ${fN(D.B)} bobinas</b>. Se reparten entre los grupos: U = B / (2p · q) = ${fN(D.B)} / ${2 * p * 3} = <b>${fN(D.U)}</b>.`
+    : D.tipo === 'imb2' ? `En doble capa cada ranura lleva 2 lados, así que hay tantas bobinas como ranuras: <b>B = K = ${D.K}</b>. Se reparten entre los grupos: U = B / (2p · q) = ${D.K} / ${2 * p * 3} = <b>${fN(D.U)}</b>.`
+    : p === 1 ? `Concéntrico de 2 polos: U = K / (4p · q) = ${D.K} / 12 = <b>${fN(D.U)}</b>.` : `Concéntrico de más de 2 polos: U = K / (2p · q) = ${D.K} / ${6 * p} = <b>${fN(D.U)}</b>.`;
+  if (okU) s.push({t: TIT_CALC[2], h: h3 + ` Cada grupo lleva ${fN(D.U)} bobina${D.U > 1 ? 's' : ''}, y cada fase tiene <b>G<sub>f</sub> = ${D.Gf}</b> grupos${D.tipo === 'conc' && p > 1 ? ' (G<sub>f</sub> = p: los S saldrán solos entre los grupos)' : ' (G<sub>f</sub> = 2p)'}.`});
+  else { s.push({t: TIT_CALC[2], mal: true, h: h3 + ` <b>No sale entero</b>: no se puede hacer media bobina. <b>Este ${TIPOS[D.tipo]} no se puede hacer</b>, aunque K<sub>pq</sub> sí sale entero.`}); return s; }
+  if (D.tipo !== 'conc') s.push({t: 'Paso de ranura', h: `El paso polar es Y<sub>p</sub> = K / 2p = ${D.K} / ${D.polos} = <b>${D.Yp}</b>. ` + (D.tipo === 'imb1'
+      ? (D.Yp % 2 ? `Es impar: <b>Y<sub>k</sub> = ${D.Yk}</b>.` : `Es par, y en una capa el paso tiene que ser impar (salir de impar y llegar a par): se acorta uno, <b>Y<sub>k</sub> = ${D.Yk}</b> (el punto gris marca dónde llegaría sin acortar).`)
+      : `En doble capa el paso no se acorta: <b>Y<sub>k</sub> = Y<sub>p</sub> = ${D.Yk}</b>.`) + ` Una bobina que sale de la 1 llega a la ${1 + D.Yk}.`});
+  else s.push({t: 'Amplitud', h: `En el concéntrico no hay paso: se calcula la <b>amplitud</b>, las ranuras libres dentro de la bobina pequeña. ` + (p === 1 ? `m = (q − 1) · 2U = 2 · 2 · ${D.U} = <b>${D.m}</b>.` : `m = (q − 1) · U = 2 · ${D.U} = <b>${D.m}</b>.`) +
+      ` El primer grupo: ${Array.from({length: D.U}, (_, j) => (1 + j) + '→' + (1 + 2 * D.U - 1 + D.m - j)).reverse().join(', ')}.`});
+  s.push({t: TIT_CALC[4], h: `Las fases empiezan separadas Y<sub>120</sub> = K / 3p = ${D.K} / ${3 * p} = <b>${fN(D.Y120)}</b> ranuras: U en la 1, V en la ${1 + D.Y120} y W en la ${1 + 2 * D.Y120}. Sumando ${D.Y120} sale la tabla de principios${D.tabla.length > 1 ? ` (${D.tabla.length} filas, una por cada par de polos)` : ' (una sola fila, porque p = 1)'}. <b>Este devanado se puede hacer.</b>`});
+  return s;
+}
+
+function iniciaCalc(ini) {
+  // ini (opcional): {K, polos, tipo, nombres: {'imb1-24-2': 'D1', …}}
+  if (ini) Object.assign(CALC, ini);
+  const sv = $('sv'), nav = $('navPasos');
+  const pon = () => {
+    const D = calcula(CALC.K, CALC.polos, CALC.tipo), ps = pasosCalc(D);
+    const nom = CALC.nombres && CALC.nombres[`${CALC.tipo}-${CALC.K}-${CALC.polos}`];
+    if (CALC.paso > ps.length) CALC.paso = ps.length;
+    const P = ps[CALC.paso - 1], {svg, H} = tiraSVG(D, CALC.paso);
+    sv.setAttribute('viewBox', `0 0 1000 ${H}`); sv.innerHTML = svg;
+    sv.style.minWidth = Math.max(560, CALC.K * 22) + 'px';
+    sv.setAttribute('aria-label', `Estator de ${D.K} ranuras y ${D.polos} polos. Paso ${CALC.paso}: ${P.t}`);
+    $('exp').innerHTML = `<h2>Paso ${CALC.paso} · ${P.t}</h2><p>${P.h}</p>` + (P.mal ? '<p class="veredicto mal">✗ No se puede hacer</p>' : CALC.paso === 5 ? `<p class="veredicto bien">✓ Se puede hacer${nom ? ': es el ' + nom + ' de la práctica' : ''}</p>` : '');
+    $('cuentas').innerHTML = cuentasHTML(D, CALC.paso) + (CALC.paso >= 5 && D.ok ? '<div class="lab" style="margin-top:10px">Tabla de principios</div>' + tablaPrHTML(D) : '');
+    pintaNav(nav, ps.map(x => x.t), CALC.paso, TIT_CALC.length, n => { CALC.paso = n; pon(); });
+    avisoDesliza();
+  };
+  segmento('sTipo', v => { CALC.tipo = v; pon(); });
+  segmento('sK', v => { CALC.K = +v; pon(); });
+  segmento('sP', v => { CALC.polos = +v; pon(); });
+  teclasPasos(() => CALC.paso, n => { CALC.paso = n; pon(); }, () => pasosCalc(calcula(CALC.K, CALC.polos, CALC.tipo)).length);
+  pon();
+}
 // ------------------------------------------------------------------ animaciones paso a paso de un devanado
 // CFG = {tipo: 'imb1'|'imb2'|'conc', parte: 'A' (bobinas) | 'B' (uniones y caja) | 'AB' (todo seguido), ejemplos: [[K, polos, nombre?], ...], clave?}
 const EST = {ej: 0, paso: 1, completo: false};
@@ -754,21 +873,43 @@ function aConjuntos(v) {
   ['coils', 'nuevo', 'saltos', 'uniones', 'term'].forEach(k => V[k] = new Set(v[k] || []));
   return V;
 }
+// un ejemplo que no se puede hacer (por ejemplo, 48 ranuras y 6 polos): un solo paso que dice qué cuenta no sale entera
+function pasoNoSePuede(D) {
+  const r = filas(D).find(x => !x.ok);
+  return {t: 'No se puede hacer', h: `${D.K} ranuras y ${D.polos} polos: ${r.n.toLowerCase()}, ${r.fo} = ${r.c} = <b>${r.r}</b>. <b>No sale entero.</b> ` +
+    (D.falla === 'Kpq' ? `Mira las franjas de colores: alguna ranura (en rojo) tendría que ser de dos fases a la vez. Este devanado <b>no se puede hacer</b>, sea del tipo que sea.`
+                       : `No se puede hacer media bobina: este ${TIPOS[D.tipo]} <b>no se puede hacer</b>.`) +
+    ` Elige otro ejemplo, o mira las cuentas en la animación «Las cuentas del devanado» (T4.4 a 4.17).`};
+}
+function ponNoSePuede(D, ps) {
+  const sv = $('sv'), {svg, H} = tiraSVG(D, 3);
+  sv.setAttribute('viewBox', `0 0 1000 ${H}`); sv.innerHTML = svg;
+  sv.style.minWidth = Math.max(560, D.K * 22) + 'px';
+  sv.setAttribute('aria-label', `Estator de ${D.K} ranuras y ${D.polos} polos: no se puede hacer`);
+  $('exp').innerHTML = `<h2>Paso 1 · ${ps[0].t}</h2><p>${ps[0].h}</p><p class="veredicto mal">✗ No se puede hacer</p>`;
+  const tipo = TIPOS[D.tipo];
+  $('cuentas').innerHTML = `<p class="hint" style="margin:0 0 6px">${tipo[0].toUpperCase() + tipo.slice(1)} · ${tituloEj(D)}</p>` + cuentasHTML(D);
+  pintaNav($('navPasos'), ps.map(x => x.t), 1, 1, () => {});
+  $('navPasos').querySelector('.sig').textContent = 'No se puede seguir';
+  avisoDesliza();
+}
 function iniciaPagina(CFG) {
   const sv = $('sv'), nav = $('navPasos'), clave = CFG.clave || 'maq-dev:' + CFG.tipo;
   try { const g = +sessionStorage.getItem(clave); if (g >= 0 && g < CFG.ejemplos.length) EST.ej = g; } catch (e) {}
   const datos = i => {
-    if (!cache[i]) { const [K, P, nom] = CFG.ejemplos[i], D = calcula(K, P, CFG.tipo); D.nombre = nom || ''; cache[i] = {D, G: geometria(D)}; }
+    if (!cache[i]) { const [K, P, nom] = CFG.ejemplos[i], D = calcula(K, P, CFG.tipo); D.nombre = nom || ''; cache[i] = {D, G: D.ok ? geometria(D) : null}; }
     return cache[i];
   };
   const pasos = () => {
     const {D} = datos(EST.ej);
+    if (!D.ok) return [pasoNoSePuede(D)];
     if (CFG.parte !== 'AB') return PASOS[CFG.tipo + CFG.parte](D, EST.completo);
     // todo seguido: las bobinas y, sin repetir «La fase U con sus grupos», las uniones y la caja
     const A = PASOS[CFG.tipo + 'A'](D).map(s => Object.assign({}, s, {h: s.h.replace(/En la animación siguiente se unen( los grupos)?\./, 'Ahora se unen$1.')}));
     return A.concat(PASOS[CFG.tipo + 'B'](D, EST.completo).slice(1));
   };
   const pon = () => {
+    if (!datos(EST.ej).D.ok) return ponNoSePuede(datos(EST.ej).D, pasos());
     const {D, G} = datos(EST.ej), ps = pasos();
     if (EST.paso > ps.length) EST.paso = ps.length;
     const P = ps[EST.paso - 1];
@@ -785,7 +926,7 @@ function iniciaPagina(CFG) {
     avisoDesliza();
   };
   // #uniones: empieza en el primer paso de las uniones (las antiguas páginas «(2)» mandan aquí)
-  if (CFG.parte === 'AB' && location.hash === '#uniones') EST.paso = PASOS[CFG.tipo + 'A'](datos(EST.ej).D).length + 1;
+  if (CFG.parte === 'AB' && location.hash === '#uniones') EST.paso = datos(EST.ej).D.ok ? PASOS[CFG.tipo + 'A'](datos(EST.ej).D).length + 1 : 1;
   marcaSeg('sEj', EST.ej);
   segmento('sEj', v => { EST.ej = +v; EST.paso = 1; try { sessionStorage.setItem(clave, v); } catch (e) {} pon(); });
   const cc = $('cCompletas');
@@ -794,7 +935,7 @@ function iniciaPagina(CFG) {
   pon();
 }
 
-iniciaPagina({"tipo": "imb1", "parte": "AB", "ejemplos": [[48, 2], [48, 8]]});
+iniciaPagina({"tipo": "imb1", "parte": "AB", "ejemplos": [[48, 2], [48, 4], [48, 6], [48, 8]]});
 </script>
 <script>(function(){ // tira del tema: esta animación queda como «vista» y las ya abiertas llevan ✓; Esc y Retroceso vuelven al índice
   try {
