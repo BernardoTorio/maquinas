@@ -550,75 +550,81 @@ function pasoColas(D) {
 }
 
 const PASOS = {
-  // Orden de los pasos (lo pidió el profesor, 24/11/2026): se cierran los primeros grupos (bobinas y saltos) antes de
-  // empezar los siguientes; después, los demás grupos de golpe, igual que los primeros.
+  // Orden de los pasos (lo explicó el profesor, 24/11/2026): primero los grupos que salen de la tabla de principios
+  // (los impares: 1.º, 3.º…), y se cierran con sus saltos; después los otros (los pares: 2.º, 4.º…), que empiezan en la
+  // ranura siguiente a la que llega el primer haz del grupo de antes, y se cierran; por último, las uniones.
   // --------------------------------------------- imbricado de una capa (1): las bobinas de la fase U
   imb1A(D) {
-    const U = D.U, Yk = D.Yk, cu = colU(D), gs = D.grupos.U, G0 = gs[0], G1 = gs[1], resto = gs.slice(2);
-    const ids = G => G.bobinas.map(c => c.id), sal = G => G.saltos.map(x => x.id), c0 = G0.bobinas[0];
-    const s = [pasoTabla(D, `La <b>columna U</b> dice dónde empiezan los grupos impares de la fase U: ranura${cu.length > 1 ? 's' : ''} <b>${lista(cu)}</b>. Se empieza por el primero.`)];
+    const U = D.U, Yk = D.Yk, cu = colU(D);
+    const imp = D.grupos.U.filter(G => G.n % 2 === 0), par = D.grupos.U.filter(G => G.n % 2 === 1);
+    const ids = gs => gs.flatMap(G => G.bobinas.map(c => c.id)), sal = gs => gs.flatMap(G => G.saltos.map(x => x.id));
+    const prim = imp.map(G => G.bobinas[0].id), c0 = imp[0].bobinas[0];
+    const s = [pasoTabla(D)];
     const acorta = D.Yp % 2 === 0;
-    s.push({t: 'La primera bobina', h: `El paso polar es Y<sub>p</sub> = K / 2p = ${D.K} / ${D.polos} = ${D.Yp}. ` + (acorta
+    s.push({t: 'La primera bobina de cada grupo impar', h: `El paso polar es Y<sub>p</sub> = K / 2p = ${D.K} / ${D.polos} = ${D.Yp}. ` + (acorta
         ? `Es par, y en una capa el paso de ranura tiene que ser impar (salir de impar y llegar a par): se acorta uno, <b>Y<sub>k</sub> = Y<sub>p</sub> − 1 = ${D.Yp} − 1 = ${Yk}</b>. Sin acortar llegaría a la ${c0.a + D.Yp} (el punto gris).`
         : `Es impar: <b>Y<sub>k</sub> = Y<sub>p</sub> = ${Yk}</b>.`) +
-        ` La bobina sale de la ${c0.a} y avanza ${Yk} saltos: llega a la <b>${c0.b}</b>.`,
-      v: {marca: [{k: c0.a, c: 'U'}], coils: [c0.id], nuevo: [c0.id], cota: {a: c0.a, b: c0.b, txt: `Y_k = ${Yk} saltos`,
+        ` La bobina sale de la ${c0.a} y avanza ${Yk} saltos: llega a la <b>${c0.b}</b>.${cu.length > 1 ? ` Lo mismo desde ${lista(cu.slice(1))}.` : ''}`,
+      v: {marca: cu.map(k => ({k, c: 'U'})), coils: prim, nuevo: prim, cota: {a: c0.a, b: c0.b, txt: `Y_k = ${Yk} saltos`,
         txt2: acorta ? `Y_k = Y_p − 1 = ${D.Yp} − 1` : `Y_k = Y_p = ${D.Yp}`, sin: acorta ? c0.a + D.Yp : null}}});
-    if (U > 1) s.push({t: 'Las demás bobinas del primer grupo', h: `Cada grupo lleva U = <b>${U}</b> bobinas iguales. En una capa van <b>de dos en dos ranuras</b>: salen de impares (${lista(G0.bobinas.map(c => c.a))}) y llegan a pares (${lista(G0.bobinas.map(c => D.r(c.b)))}). Entre ellas queda un <b>hueco</b> (${lista(G0.bobinas.slice(0, -1).map(c => c.a + 1))}): no se queda vacío, ahí llegará una bobina del otro grupo de U.`,
-      v: {coils: ids(G0), nuevo: G0.bobinas.slice(1).map(c => c.id)}});
-    else s.push({t: 'Un grupo, una bobina', h: `Aquí U = <b>1</b>: cada grupo es una sola bobina. El primer grupo ya está.`, v: {coils: ids(G0)}});
-    s.push({t: 'El segundo grupo, en la ranura de al lado', h: `Empieza en la <b>ranura de al lado</b> de donde llega la primera bobina del primer grupo: ${c0.b} + 1 = <b>${D.r(c0.b + 1)}</b>. Mismo paso, ${Yk}.` +
-        (U > 1 ? ` Fíjate: sale de los huecos que quedaban entre las llegadas del primero (${lista(G1.bobinas.map(c => D.r(c.a)))})` + (D.Gf === 2 ? ` y llega a los huecos de su salida (${lista(G1.bobinas.map(c => D.r(c.b)))}).` : '.') : ''),
-      v: {coils: [...ids(G0), ...ids(G1)], nuevo: ids(G1), cota: {a: c0.b, b: c0.b + 1, txt: '+1'}}});
-    if (U > 1) s.push({t: 'Los saltos: los dos primeros grupos, cerrados', h: `Las ${U} bobinas de un grupo se hacen seguidas en el molde, sin cortar el hilo. Abajo se dibuja el <b>salto</b>: del final de una bobina al principio de la siguiente. Con sus saltos, los dos primeros grupos quedan <b>cerrados</b>.` +
-        (resto.length ? ` Ciérralos antes de empezar los siguientes: así no se lía el dibujo.` : ''),
-      v: {coils: [...ids(G0), ...ids(G1)], saltos: [...sal(G0), ...sal(G1)], nuevo: [...sal(G0), ...sal(G1)].map(x => 's' + x)}});
-    if (resto.length) s.push({t: 'Los demás grupos, igual', h: `La columna U de la tabla dice dónde empiezan los otros grupos impares: <b>${lista(cu.slice(1))}</b>. Cada uno se hace igual que el primero, con el par en la ranura de al lado${U > 1 ? ' y sus saltos' : ''}. Así hasta tener los <b>${D.Gf} grupos</b> de la fase U (G<sub>f</sub> = 2p = ${D.Gf}).`,
-      v: {marca: cu.slice(1).map(k => ({k, c: 'U'})), coils: bobinasDe(D, 'U'), saltos: saltosDe(D, ['U']), nuevo: [...resto.flatMap(ids), ...resto.flatMap(sal).map(x => 's' + x)]}});
+    if (U > 1) s.push({t: 'Las demás bobinas de los grupos impares', h: `Cada grupo lleva U = <b>${U}</b> bobinas iguales. En una capa van <b>de dos en dos ranuras</b>: salen de impares (${lista(imp[0].bobinas.map(c => c.a))}) y llegan a pares (${lista(imp[0].bobinas.map(c => D.r(c.b)))}). Entre ellas queda un <b>hueco</b> (${lista(imp[0].bobinas.slice(0, -1).map(c => c.a + 1))}): no se queda vacío, ahí llegará una bobina de un grupo par.`,
+      v: {coils: ids(imp), nuevo: imp.flatMap(G => G.bobinas.slice(1).map(c => c.id))}});
+    else s.push({t: 'Un grupo, una bobina', h: `Aquí U = <b>1</b>: cada grupo es una sola bobina. Los grupos impares ya están.`, v: {coils: ids(imp)}});
+    if (U > 1) s.push({t: 'Los saltos: los grupos impares, cerrados', h: `Las ${U} bobinas de un grupo se hacen seguidas en el molde, sin cortar el hilo. Abajo se dibuja el <b>salto</b>: del final de una bobina al principio de la siguiente. Con sus saltos, los grupos impares quedan <b>cerrados</b>. Ciérralos antes de empezar los pares: así no se lía el dibujo.`,
+      v: {coils: ids(imp), saltos: sal(imp), nuevo: sal(imp).map(x => 's' + x)}});
+    const g1 = par[0];
+    s.push({t: 'Los grupos pares, en la ranura de al lado', h: `Cada grupo par empieza en la <b>ranura siguiente a la que llega el primer haz</b> del grupo impar de antes: ${c0.b} + 1 = <b>${D.r(c0.b + 1)}</b>${par.length > 1 ? ` (y ${lista(par.slice(1).map(G => D.r(G.ini.k)))})` : ''}. Mismo paso, ${Yk}.` +
+        (U > 1 ? ` Fíjate: sale de los huecos que quedaban entre las llegadas del impar (${lista(g1.bobinas.map(c => D.r(c.a)))})` + (D.Gf === 2 ? ` y llega a los huecos de su salida (${lista(g1.bobinas.map(c => D.r(c.b)))}).` : '.') : ''),
+      v: {coils: [...ids(imp), ...ids(par)], saltos: sal(imp), marca: par.map(G => ({k: D.r(G.ini.k), c: 'U'})), nuevo: ids(par), cota: {a: c0.b, b: c0.b + 1, txt: '+1'}}});
+    if (U > 1) s.push({t: 'Los saltos: los grupos pares, cerrados', h: `Igual que antes: abajo, el salto del final de cada bobina al principio de la siguiente. Ya están <b>todos los grupos cerrados</b>: la fase U tiene sus ${D.Gf} grupos (G<sub>f</sub> = 2p = ${D.Gf}).`,
+      v: {coils: bobinasDe(D, 'U'), saltos: saltosDe(D, ['U']), nuevo: sal(par).map(x => 's' + x)}});
     s.push(pasoColas(D));
     return s;
   },
   // --------------------------------------------- imbricado de doble capa (1)
   imb2A(D) {
-    const U = D.U, Yk = D.Yk, cu = colU(D), gs = D.grupos.U, G0 = gs[0], G1 = gs[1], resto = gs.slice(2);
-    const ids = G => G.bobinas.map(c => c.id), sal = G => G.saltos.map(x => x.id), c0 = G0.bobinas[0];
-    const s = [pasoTabla(D, `La <b>columna U</b> dice dónde empiezan los grupos impares de la fase U: ranura${cu.length > 1 ? 's' : ''} <b>${lista(cu)}</b>. Se empieza por el primero.`)];
-    s.push({t: 'El primer grupo', h: `En doble capa el paso <b>no se acorta</b>: Y<sub>k</sub> = Y<sub>p</sub> = ${D.K} / ${D.polos} = <b>${Yk}</b>. El grupo lleva U = <b>${U}</b> bobina${U > 1 ? 's seguidas' : ''}: ${G0.bobinas.map(c => c.a + '→' + D.r(c.b)).join(', ')}. La línea <b>continua</b> es el lado de la capa de arriba (el que sale) y la <b>discontinua</b>, el de la capa de abajo (el que llega).`,
-      v: {marca: [{k: c0.a, c: 'U'}], coils: ids(G0), nuevo: ids(G0), cota: {a: c0.a, b: c0.b, txt: `Y_k = ${Yk} saltos`, txt2: `Y_k = Y_p = ${D.K} / ${D.polos} (no se acorta)`}}});
-    s.push({t: 'El segundo grupo, en la misma ranura', h: `Empieza <b>en la misma ranura</b> a la que llega la primera bobina del primer grupo: la <b>${D.r(c0.b)}</b>. Allí ya hay un lado abajo (discontinua) y el grupo nuevo pone otro arriba (continua): cada ranura acaba con <b>dos lados</b>.`,
-      v: {marca: [{k: D.r(c0.b), c: 'U'}], coils: [...ids(G0), ...ids(G1)], nuevo: ids(G1)}});
-    if (U > 1) s.push({t: 'Los saltos: los dos primeros grupos, cerrados', h: `Las ${U} bobinas de un grupo se hacen seguidas, sin cortar el hilo: abajo, el <b>salto</b> del final de una al principio de la siguiente. Con sus saltos, los dos primeros grupos quedan <b>cerrados</b>.` +
-        (resto.length ? ` Ciérralos antes de empezar los siguientes: así no se lía el dibujo.` : ''),
-      v: {coils: [...ids(G0), ...ids(G1)], saltos: [...sal(G0), ...sal(G1)], nuevo: [...sal(G0), ...sal(G1)].map(x => 's' + x)}});
-    if (resto.length) s.push({t: 'Los demás grupos, igual', h: `La columna U de la tabla dice dónde empiezan los otros grupos impares: <b>${lista(cu.slice(1))}</b>. Cada uno se hace igual que el primero, con el par empezando en la ranura a la que llega${U > 1 ? ' y sus saltos' : ''}. Así hasta tener los <b>${D.Gf} grupos</b> de la fase U (G<sub>f</sub> = 2p = ${D.Gf}).`,
-      v: {marca: cu.slice(1).map(k => ({k, c: 'U'})), coils: bobinasDe(D, 'U'), saltos: saltosDe(D, ['U']), nuevo: [...resto.flatMap(ids), ...resto.flatMap(sal).map(x => 's' + x)]}});
+    const U = D.U, Yk = D.Yk, cu = colU(D);
+    const imp = D.grupos.U.filter(G => G.n % 2 === 0), par = D.grupos.U.filter(G => G.n % 2 === 1);
+    const ids = gs => gs.flatMap(G => G.bobinas.map(c => c.id)), sal = gs => gs.flatMap(G => G.saltos.map(x => x.id));
+    const c0 = imp[0].bobinas[0];
+    const s = [pasoTabla(D)];
+    s.push({t: 'Los grupos impares', h: `En doble capa el paso <b>no se acorta</b>: Y<sub>k</sub> = Y<sub>p</sub> = ${D.K} / ${D.polos} = <b>${Yk}</b>. Cada grupo lleva U = <b>${U}</b> bobina${U > 1 ? 's seguidas' : ''}: ${imp[0].bobinas.map(c => c.a + '→' + D.r(c.b)).join(', ')}${cu.length > 1 ? `, y lo mismo desde ${lista(cu.slice(1))}` : ''}. La línea <b>continua</b> es el lado de la capa de arriba (el que sale) y la <b>discontinua</b>, el de la capa de abajo (el que llega).`,
+      v: {marca: cu.map(k => ({k, c: 'U'})), coils: ids(imp), nuevo: ids(imp), cota: {a: c0.a, b: c0.b, txt: `Y_k = ${Yk} saltos`, txt2: `Y_k = Y_p = ${D.K} / ${D.polos} (no se acorta)`}}});
+    if (U > 1) s.push({t: 'Los saltos: los grupos impares, cerrados', h: `Las ${U} bobinas de un grupo se hacen seguidas, sin cortar el hilo: abajo, el <b>salto</b> del final de una al principio de la siguiente. Con sus saltos, los grupos impares quedan <b>cerrados</b>. Ciérralos antes de empezar los pares: así no se lía el dibujo.`,
+      v: {coils: ids(imp), saltos: sal(imp), nuevo: sal(imp).map(x => 's' + x)}});
+    s.push({t: 'Los grupos pares, en la misma ranura', h: `Cada grupo par empieza <b>en la misma ranura</b> a la que llega el primer haz del grupo impar de antes: la <b>${D.r(c0.b)}</b>${par.length > 1 ? ` (y ${lista(par.slice(1).map(G => D.r(G.ini.k)))})` : ''}. Allí ya hay un lado abajo (discontinua) y el grupo nuevo pone otro arriba (continua): cada ranura acaba con <b>dos lados</b>.`,
+      v: {marca: par.map(G => ({k: D.r(G.ini.k), c: 'U'})), coils: [...ids(imp), ...ids(par)], saltos: sal(imp), nuevo: ids(par)}});
+    if (U > 1) s.push({t: 'Los saltos: los grupos pares, cerrados', h: `Igual que antes: abajo, el salto del final de cada bobina al principio de la siguiente. Ya están <b>todos los grupos cerrados</b>: la fase U tiene sus ${D.Gf} grupos (G<sub>f</sub> = 2p = ${D.Gf}).`,
+      v: {coils: bobinasDe(D, 'U'), saltos: saltosDe(D, ['U']), nuevo: sal(par).map(x => 's' + x)}});
     s.push(pasoColas(D));
     return s;
   },
   // --------------------------------------------- concéntrico (1): amplitud y grupos
+  // (en el concéntrico va de otra forma, como en la tabla de pasos del formulario: el primer grupo entero, los otros grupos
+  // y, después, los saltos de todos)
   concA(D) {
-    const U = D.U, m = D.m, cu = colU(D), gs = D.grupos.U, G0 = gs[0], resto = gs.slice(1);
-    const ids = G => G.bobinas.map(c => c.id), sal = G => G.saltos.map(x => x.id);
+    const U = D.U, m = D.m, cu = colU(D), G0 = D.grupos.U[0];
     const peq = G0.bobinas[U - 1], otras = G0.bobinas.slice(0, U - 1).map(c => c.id);
-    const ini = gs.map(G => G.ini.k);
+    const restoG = D.grupos.U.slice(1).flatMap(G => G.bobinas.map(c => c.id));
+    const ini = D.grupos.U.map(G => G.ini.k);
     const s = [pasoTabla(D, D.conexion === 'polos'
       ? `Con 2 polos la tabla tiene <b>una sola fila</b>: U empieza en la 1, V en la ${D.tabla[0][1]} y W en la ${D.tabla[0][2]}.`
-      : `La <b>columna U</b> dice dónde empieza cada grupo de la fase U: ranura${cu.length > 1 ? 's' : ''} <b>${lista(cu)}</b>. Se empieza por el primero.`)];
+      : `La <b>columna U</b> dice dónde empieza cada grupo de la fase U: ranura${cu.length > 1 ? 's' : ''} <b>${lista(cu)}</b>.`)];
     s.push({t: 'La bobina pequeña y la amplitud', h: (D.conexion === 'polos'
         ? `Con 2 polos: U = K / (4p · q) = ${D.K} / 12 = <b>${U}</b> y m = (q − 1) · 2U = <b>${m}</b>. `
         : `Con más de 2 polos: U = K / (2p · q) = ${D.K} / ${6 * D.p} = <b>${U}</b> y m = (q − 1) · U = <b>${m}</b>. `) +
         `La bobina pequeña deja <b>${m} ranuras libres</b> dentro (la amplitud): va de la ${peq.a} a la ${D.r(peq.b)}.`,
       v: {coils: [peq.id], nuevo: [peq.id], amp: {a: peq.a + 1, b: peq.b - 1}}});
     if (U > 1) s.push({t: 'Las demás bobinas, una alrededor de otra', h: `Cada bobina rodea a la anterior, con una ranura más a cada lado: ${G0.bobinas.slice().reverse().map(c => c.a + '→' + D.r(c.b)).join(', ')}. Es un grupo concéntrico de U = ${U} bobinas.`,
-      v: {coils: ids(G0), nuevo: otras}});
+      v: {coils: G0.bobinas.map(c => c.id), nuevo: otras}});
     else s.push({t: 'Un grupo, una bobina', h: `Aquí U = <b>1</b>: el grupo es una sola bobina.`, v: {coils: [peq.id]}});
-    if (U > 1) s.push({t: 'Los saltos: el primer grupo, cerrado', h: `Se bobina de la grande a la pequeña, sin cortar el hilo: abajo, el salto del final de una bobina al principio de la siguiente. El grupo empieza en la grande (${G0.ini.k}) y acaba en la pequeña (${D.r(G0.fin.k)}). Con sus saltos queda <b>cerrado</b>: ciérralo antes de empezar el siguiente.`,
-      v: {coils: ids(G0), saltos: sal(G0), nuevo: sal(G0).map(x => 's' + x)}});
-    s.push({t: resto.length === 1 ? 'El segundo grupo' : 'Los demás grupos, igual', h: (D.conexion === 'polos'
+    s.push({t: 'Los otros grupos de U', h: D.conexion === 'polos'
         ? `Con 2 polos hacen falta <b>2 grupos</b> por fase, pero la tabla solo tiene una fila. El segundo empieza <b>un paso polar más allá</b>: 1 + ${D.Yp} = <b>${ini[1]}</b>.`
-        : `Hay G<sub>f</sub> = p = <b>${D.p}</b> grupos por fase. Cada uno empieza en su casilla de la columna U: ${lista(cu)}. Entre grupo y grupo queda sitio libre: ahí saldrán los polos S.`) +
-        ` Se hace${resto.length > 1 ? 'n' : ''} igual que el primero${U > 1 ? ', con sus saltos' : ''}.`,
-      v: {marca: resto.map(G => ({k: G.ini.k, c: 'U'})), coils: bobinasDe(D, 'U'), saltos: saltosDe(D, ['U']), nuevo: [...resto.flatMap(ids), ...resto.flatMap(sal).map(x => 's' + x)]}});
+        : `Hay G<sub>f</sub> = p = <b>${D.p}</b> grupos por fase. Cada uno empieza en su casilla de la columna U: ${lista(cu)}. Entre grupo y grupo queda sitio libre: ahí saldrán los polos S.`,
+      v: {marca: ini.map(k => ({k, c: 'U'})), coils: bobinasDe(D, 'U'), nuevo: restoG}});
+    if (U > 1) s.push({t: 'Los saltos dentro del grupo', h: `Se bobina de la grande a la pequeña, sin cortar el hilo: abajo, el salto del final de una bobina al principio de la siguiente. El grupo empieza en la grande (${G0.ini.k}) y acaba en la pequeña (${D.r(G0.fin.k)}).`,
+      v: {coils: bobinasDe(D, 'U'), saltos: saltosDe(D, ['U']), nuevo: saltosDe(D, ['U']).map(x => 's' + x)}});
+    else s.push({t: 'Comprueba', h: `La fase U ya tiene sus ${D.Gf} grupos.`, v: {coils: bobinasDe(D, 'U')}});
     s.push(pasoColas(D));
     return s;
   },
