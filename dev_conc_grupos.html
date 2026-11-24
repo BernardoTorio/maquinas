@@ -387,9 +387,13 @@ function svgDevanado(D, G, V) {
   const conc = D.tipo === 'conc';
   FASES.forEach(f => D.grupos[f].forEach(Gr => Gr.bobinas.forEach(c => {
     const xa = G.xl(c.a, c.ca), xb = G.xl(c.b, c.cb);
-    if (V.lados && V.lados.has(f)) {
+    // solo los lados en las ranuras: las fases V y W simplificadas (lados) o, en el concéntrico, el primer grupo antes de
+    // cerrarlo (soloLados: lista de bobinas; su lado sale más gordo si 'l' + id está en nuevo)
+    const soloL = V.soloLados && V.soloLados.includes(c.id);
+    if ((V.lados && V.lados.has(f)) || soloL) {
+      const nl = soloL && V.nuevo && V.nuevo.has('l' + c.id);
       [[c.a, c.ca], [c.b, c.cb]].forEach(([k, cp]) => { const x = G.xv(k, cp);
-        o.push(`<line x1="${x}" y1="${G.yHB}" x2="${x}" y2="${G.yBB}" ${st(f, false, cp === 'b')}/>`); });
+        o.push(`<line x1="${x}" y1="${G.yHB}" x2="${x}" y2="${G.yBB}" ${st(f, nl, cp === 'b')}/>`); });
       return;
     }
     if (!V.coils || !V.coils.has(c.id)) return;
@@ -610,17 +614,25 @@ const PASOS = {
     const s = [pasoTabla(D, D.conexion === 'polos'
       ? `Con 2 polos la tabla tiene <b>una sola fila</b>: U empieza en la 1, V en la ${D.tabla[0][1]} y W en la ${D.tabla[0][2]}.`
       : `La <b>columna U</b> dice dónde empieza cada grupo de la fase U: ranura${cu.length > 1 ? 's' : ''} <b>${lista(cu)}</b>.`)];
-    s.push({t: 'La bobina pequeña y la amplitud', h: (D.conexion === 'polos'
+    // (24/11/2026, lo pidió el profesor) primero los lados: U lados, m libres y otros U lados, sin cerrar (todavía no se sabe
+    // dónde acaba cada bobina); en el paso siguiente, con todo colocado, se cierran
+    const ids0 = G0.bobinas.map(c => c.id), izq = G0.bobinas.map(c => c.a), der = G0.bobinas.map(c => D.r(c.b)).reverse();
+    const pl = (n, uno, varios) => n > 1 ? varios : uno;
+    s.push({t: 'Los lados del grupo y la amplitud', h: (D.conexion === 'polos'
         ? `Con 2 polos: U = K / (4p · q) = ${D.K} / 12 = <b>${U}</b> y m = (q − 1) · 2U = <b>${m}</b>. `
         : `Con más de 2 polos: U = K / (2p · q) = ${D.K} / ${6 * D.p} = <b>${U}</b> y m = (q − 1) · U = <b>${m}</b>. `) +
-        `La bobina pequeña deja <b>${m} ranuras libres</b> dentro (la amplitud): va de la ${peq.a} a la ${D.r(peq.b)}.`,
-      v: {coils: [peq.id], nuevo: [peq.id], amp: {a: peq.a + 1, b: peq.b - 1}}});
-    if (U > 1) s.push({t: 'Las demás bobinas, una alrededor de otra', h: `Cada bobina rodea a la anterior, con una ranura más a cada lado: ${G0.bobinas.slice().reverse().map(c => c.a + '→' + D.r(c.b)).join(', ')}. Es un grupo concéntrico de U = ${U} bobinas.`,
-      v: {coils: G0.bobinas.map(c => c.id), nuevo: otras}});
-    else s.push({t: 'Un grupo, una bobina', h: `Aquí U = <b>1</b>: el grupo es una sola bobina.`, v: {coils: [peq.id]}});
-    s.push({t: 'Los otros grupos de U', h: D.conexion === 'polos'
+        `Desde la ${izq[0]} se ${pl(U, 'pinta', 'pintan')} <b>${U} ${pl(U, 'lado', 'lados')}</b> (${lista(izq)}), se dejan <b>${m} ranuras libres</b> (la amplitud: de la ${peq.a + 1} a la ${D.r(peq.b - 1)}) ` +
+        `y se ${pl(U, 'pinta', 'pintan')} <b>otro${pl(U, '', 's')} ${U}</b> (${lista(der)}). Todavía <b>no se cierra${pl(U, '', 'n')}</b>: aún no sabemos dónde acaba cada bobina.`,
+      v: {soloLados: ids0, nuevo: ids0.map(x => 'l' + x), amp: {a: peq.a + 1, b: peq.b - 1}}});
+    s.push({t: pl(U, 'Se cierra la bobina', 'Se cierran las bobinas, una alrededor de otra'), h: `Ahora que sabemos dónde va cada lado, se cierra${pl(U, '', 'n')}. ` + (U > 1
+        ? `La <b>pequeña</b> une los dos lados de dentro (${peq.a}→${D.r(peq.b)}) y deja las ${m} libres; cada una rodea a la anterior: ${G0.bobinas.slice().reverse().map(c => c.a + '→' + D.r(c.b)).join(', ')}. Es un grupo concéntrico de U = ${U} bobinas.`
+        : `Aquí U = <b>1</b>: el grupo es una sola bobina, de la ${peq.a} a la ${D.r(peq.b)}, con las ${m} libres dentro.`),
+      v: {coils: ids0, nuevo: ids0}});
+    const nr = D.grupos.U.length - 1;
+    s.push({t: 'Los otros grupos de U', h: (D.conexion === 'polos'
         ? `Con 2 polos hacen falta <b>2 grupos</b> por fase, pero la tabla solo tiene una fila. El segundo empieza <b>un paso polar más allá</b>: 1 + ${D.Yp} = <b>${ini[1]}</b>.`
-        : `Hay G<sub>f</sub> = p = <b>${D.p}</b> grupos por fase. Cada uno empieza en su casilla de la columna U: ${lista(cu)}. Entre grupo y grupo queda sitio libre: ahí saldrán los polos S.`,
+        : `Hay G<sub>f</sub> = p = <b>${D.p}</b> grupos por fase. Cada uno empieza en su casilla de la columna U: ${lista(cu)}. Entre grupo y grupo queda sitio libre: ahí saldrán los polos S.`) +
+        ` Se hace${pl(nr, '', 'n')} igual que el primero: ${U} ${pl(U, 'lado', 'lados')}, ${m} libres, otro${pl(U, '', 's')} ${U}, y se cierra${pl(nr, '', 'n')}.`,
       v: {marca: ini.map(k => ({k, c: 'U'})), coils: bobinasDe(D, 'U'), nuevo: restoG}});
     if (U > 1) s.push({t: 'Los saltos dentro del grupo', h: `Se bobina de la grande a la pequeña, sin cortar el hilo: abajo, el salto del final de una bobina al principio de la siguiente. El grupo empieza en la grande (${G0.ini.k}) y acaba en la pequeña (${D.r(G0.fin.k)}).`,
       v: {coils: bobinasDe(D, 'U'), saltos: saltosDe(D, ['U']), nuevo: saltosDe(D, ['U']).map(x => 's' + x)}});
