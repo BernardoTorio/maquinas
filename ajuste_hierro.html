@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ajuste del hierro al carrete</title>
+<script>(function(){try{var t=localStorage.getItem('maq-tema');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<title>P1.3 Ajuste del hierro al carrete</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
@@ -109,15 +110,23 @@ svg .blue{fill:var(--field)}
   .tnav>a{padding:0 9px}.tnav .where{font-size:.86rem}
   .tnav .steps a.seen{position:relative}.tnav .steps a.seen::after{position:absolute;top:1px;right:3px;margin:0;font-size:.62em}}
 /* --- fin de la tira del tema --- */
+/* --- barra de arriba: volver, dónde estás y modo claro/oscuro (como en Automatismos) --- */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px;padding:4px 0 10px;border-bottom:1px solid var(--line)}
+.tb-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.tbback{flex:none;display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 12px;border-radius:10px;border:2px solid var(--line);color:var(--ink);text-decoration:none;font-size:1rem;font-weight:700;background:transparent;white-space:nowrap}
+.tbback:hover,.themebtn:hover{border-color:#1F4E79}
+.topbar .crumbs{min-width:0;flex:1;overflow:hidden;white-space:nowrap;text-overflow:clip;direction:rtl;text-align:left;font-size:.92rem;color:var(--muted)}
+.topbar .crumbs span.in{direction:ltr;unicode-bidi:bidi-override}
+.topbar .crumbs a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted)}
+.topbar .crumbs .sep{margin:0 6px;opacity:.7}
+.topbar .crumbs b{color:var(--ink)}
+.themebtn{flex:none;width:44px;height:44px;border-radius:10px;border:2px solid var(--line);background:transparent;color:var(--ink);font-size:1.15rem;cursor:pointer;line-height:1;padding:0}
+@media (max-width:620px){.topbar .crumbs{display:none}}
 </style>
 </head>
 <body>
 <main>
-  <div class="bar">
-    <a class="back" href="index.html#practicas" aria-label="Volver al índice de animaciones">← Índice</a>
-    <nav class="crumbs" aria-label="Dónde estás"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#practicas">Prácticas</a> › Práctica 1 › <b>Ajuste del hierro</b></nav>
-    <button class="theme" id="bTheme" type="button" aria-label="Cambiar entre modo claro y oscuro">◐ Automático</button>
-  </div>
+  <header class="topbar"><div class="tb-left"><a class="tbback" href="index.html#practicas" title="Volver al índice (tecla Esc)">← Volver al índice</a><nav class="crumbs" aria-label="Dónde estás"><span class="in"><a href="index.html">Máquinas Eléctricas</a><span class="sep">›</span><a href="index.html#practicas">Prácticas</a><span class="sep">›</span><a href="index.html#practicas">Práctica 1</a><span class="sep">›</span><b>P1.3 Ajuste del hierro</b></span></nav></div><button id="themeBtn" class="themebtn" type="button" aria-label="Cambiar modo claro u oscuro">🌙</button></header>
   <nav class="tnav" aria-label="Animaciones de la Práctica 1"><a class="tarr" href="medir.html" aria-label="Anterior: Cómo medir con calibre y micrómetro">‹ Anterior</a><span class="where">Práctica 1 · 3 de 4</span><a class="tarr" href="calculadora_trafo.html" aria-label="Siguiente: Calculadora de transformadores">Siguiente ›</a><div class="steps"><a href="problemas_trafos.html" title="Qué les pasó a nuestros trafos">Nuestros trafos</a><a href="medir.html" title="Cómo medir con calibre y micrómetro">Medir</a><a href="ajuste_hierro.html" class="cur" aria-current="page" title="Ajuste del hierro al carrete">Ajuste del hierro</a><a href="calculadora_trafo.html" title="Calculadora de transformadores">Calculadora</a></div></nav>
   <header class="top">
     <small>Máquinas Eléctricas 2MB · Taller · Práctica P1: cálculo y construcción de un trafo</small>
@@ -175,7 +184,7 @@ svg .blue{fill:var(--field)}
       <li>Pulsa <b>Llenar el carrete</b> para ver qué pasaría si lo llenaras entero.</li>
       <li>Abajo a la derecha te dice a qué inducción trabaja el hierro con esas chapas y si el trafo va bien. Pulsa <b>Esc</b> para volver al índice.</li></ul></div>
   </div>
-  <a class="nextbig" href="calculadora_trafo.html">Siguiente: Calculadora de transformadores →</a>
+  <a class="nextbig" href="calculadora_trafo.html">Siguiente: P1.4 Calculadora de transformadores →</a>
 </main>
 <script>
 const NS='http://www.w3.org/2000/svg';
@@ -325,12 +334,11 @@ $('rN').oninput=e=>{stop();justMode=false;N=+e.target.value;render();};
 $('bJust').onclick=()=>goTo(T.ch,true);
 $('bFull').onclick=()=>goTo(MAX,false);
 $('bEmpty').onclick=()=>goTo(0,false);
-// modo claro / oscuro
-const MODES=[['auto','◐ Automático'],['light','☀ Claro'],['dark','☾ Oscuro']];
-let mi=0; try{const m=localStorage.getItem('maq-tema');const k=MODES.findIndex(x=>x[0]===m);if(k>0)mi=k;}catch(e){}
-function applyTheme(){const m=MODES[mi][0]; if(m==='auto')document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme',m); $('bTheme').textContent=MODES[mi][1]; try{localStorage.setItem('maq-tema',m);}catch(e){}}
-$('bTheme').onclick=()=>{mi=(mi+1)%3;applyTheme();};
-applyTheme();
+// modo claro / oscuro: solo se guarda al tocar el botón (light o dark)
+(function(){const b=document.getElementById('themeBtn'),r=document.documentElement;
+ const cur=()=>{const t=r.getAttribute('data-theme');if(t==='light'||t==='dark')return t;return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';};
+ const paint=()=>{const d=cur()==='dark';b.textContent=d?'☀️':'🌙';b.setAttribute('aria-label',d?'Cambiar a modo claro':'Cambiar a modo oscuro');b.title=b.getAttribute('aria-label');};
+ b.onclick=()=>{const t=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',t);try{localStorage.setItem('maq-tema',t);}catch(e){}paint();};paint();})();
 drawLeft(); render();
 </script>
 <script>(function(){ // tira del tema: esta animación queda como «vista» y las ya abiertas llevan ✓; Esc y Retroceso vuelven al índice

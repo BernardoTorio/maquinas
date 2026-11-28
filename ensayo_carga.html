@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<script>try{const t=localStorage.getItem('maq-tema');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script>(function(){try{var t=localStorage.getItem('maq-tema');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <style>
 :root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -93,15 +93,23 @@ button:focus-visible,input:focus-visible{outline:3px solid #F2B400;outline-offse
   .tnav>a{padding:0 9px}.tnav .where{font-size:.86rem}
   .tnav .steps a.seen{position:relative}.tnav .steps a.seen::after{position:absolute;top:1px;right:3px;margin:0;font-size:.62em}}
 /* --- fin de la tira del tema --- */
+/* --- barra de arriba: volver, dónde estás y modo claro/oscuro (como en Automatismos) --- */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px;padding:4px 0 10px;border-bottom:1px solid var(--line)}
+.tb-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.tbback{flex:none;display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 12px;border-radius:10px;border:2px solid var(--line);color:var(--ink);text-decoration:none;font-size:1rem;font-weight:700;background:transparent;white-space:nowrap}
+.tbback:hover,.themebtn:hover{border-color:#1F4E79}
+.topbar .crumbs{min-width:0;flex:1;overflow:hidden;white-space:nowrap;text-overflow:clip;direction:rtl;text-align:left;font-size:.92rem;color:var(--muted)}
+.topbar .crumbs span.in{direction:ltr;unicode-bidi:bidi-override}
+.topbar .crumbs a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted)}
+.topbar .crumbs .sep{margin:0 6px;opacity:.7}
+.topbar .crumbs b{color:var(--ink)}
+.themebtn{flex:none;width:44px;height:44px;border-radius:10px;border:2px solid var(--line);background:transparent;color:var(--ink);font-size:1.15rem;cursor:pointer;line-height:1;padding:0}
+@media (max-width:620px){.topbar .crumbs{display:none}}
 </style>
 </head>
 <body>
 <main>
-  <nav class="tbar" aria-label="Navegación">
-    <a class="back" href="index.html#animaciones" title="Volver al índice (tecla Esc)">← Índice</a>
-    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 3 › <b>T3.17 Ensayo de carga</b></span>
-    <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
-  </nav>
+  <header class="topbar"><div class="tb-left"><a class="tbback" href="index.html#animaciones" title="Volver al índice (tecla Esc)">← Volver al índice</a><nav class="crumbs" aria-label="Dónde estás"><span class="in"><a href="index.html">Máquinas Eléctricas</a><span class="sep">›</span><a href="index.html#animaciones">Animaciones</a><span class="sep">›</span><a href="index.html#animaciones">Tema 3</a><span class="sep">›</span><b>T3.17 Ensayo de carga</b></span></nav></div><button id="themeBtn" class="themebtn" type="button" aria-label="Cambiar modo claro u oscuro">🌙</button></header>
   <nav class="tnav" aria-label="Animaciones del Tema 3"><a class="tarr" href="ensayo_cortocircuito.html" aria-label="Anterior: Ensayo de cortocircuito">‹ T3.16</a><span class="where">Tema 3 · 6 de 7</span><a class="tarr" href="aislamiento.html" aria-label="Siguiente: Pruebas de aislamiento">T3.18 ›</a><div class="steps"><a href="trafo_funcionamiento.html" title="Cómo funciona un transformador">T3.12</a><a href="homologos.html" title="Terminales homólogos">T3.13</a><a href="tipos_trafo.html" title="Tipos de transformadores">T3.14</a><a href="ensayo_vacio.html" title="Ensayo de vacío">T3.15</a><a href="ensayo_cortocircuito.html" title="Ensayo de cortocircuito">T3.16</a><a href="ensayo_carga.html" class="cur" aria-current="page" title="Ensayo de carga">T3.17</a><a href="aislamiento.html" title="Pruebas de aislamiento">T3.18</a></div></nav>
   <header class="top"><small>Máquinas Eléctricas 2MB · Tema 3 · Punto 3.17</small><h1>Ensayo de carga</h1><p class="sub">Conecta el transformador a su tensión nominal y ve subiendo la carga. Mira la tensión del secundario, las corrientes y el rendimiento.</p></header>
   
@@ -200,9 +208,9 @@ $('rC').oninput=draw;setupSel(pick);
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape' || e.key === 'Backspace') { var t = e.target.tagName; if (t !== 'INPUT' && t !== 'TEXTAREA' && t !== 'SELECT') { e.preventDefault(); location.href = 'index.html#animaciones'; } } });
 })();
 (function(){const b=document.getElementById('themeBtn'),r=document.documentElement;
- const cur=()=>r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
- const lab=()=>{b.textContent=cur()==='dark'?'☀ Modo claro':'☾ Modo oscuro';};
- b.onclick=()=>{const n=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('maq-tema',n);}catch(e){}lab();};lab();})();
+ const cur=()=>{const t=r.getAttribute('data-theme');if(t==='light'||t==='dark')return t;return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';};
+ const paint=()=>{const d=cur()==='dark';b.textContent=d?'☀️':'🌙';b.setAttribute('aria-label',d?'Cambiar a modo claro':'Cambiar a modo oscuro');b.title=b.getAttribute('aria-label');};
+ b.onclick=()=>{const t=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',t);try{localStorage.setItem('maq-tema',t);}catch(e){}paint();};paint();})();
 </script>
 </body>
 </html>

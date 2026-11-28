@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>(function(){try{var t=localStorage.getItem('maq-tema');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;}catch(e){}})();</script>
 <title>Test de iniciación 2 · Máquinas Eléctricas 2MB</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -89,6 +90,10 @@ figcaption{font-size:14px;color:var(--muted);font-style:italic;margin-top:4px}
 .review .ra{color:var(--ok);font-weight:700}
 .review .ry{color:var(--red)}
 .hint{font-size:13px;color:var(--muted);margin-top:8px}
+.cgrp{margin:0 0 10px}
+.cgrp h3{font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:6px 0 6px}
+.cbtns{display:flex;gap:8px;margin:0 0 8px}
+.cbtns button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--btn);color:var(--ink);border-radius:8px;padding:4px 10px;cursor:pointer}
 #zoom{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:20;cursor:zoom-out;padding:16px}
 #zoom img{max-width:100%;max-height:100%;background:#fff;border-radius:8px;padding:8px}
 .jump{display:grid;grid-template-columns:auto auto 1fr auto auto;gap:8px;margin:0 0 12px}
@@ -156,7 +161,7 @@ const app = document.getElementById('app');
 
 /* ---------- tema claro/oscuro ---------- */
 const root = document.documentElement;
-try { const t = localStorage.getItem('maq-tema'); if (t) root.dataset.theme = t; } catch(e) {}
+try { const t = localStorage.getItem('maq-tema'); if (t === 'light' || t === 'dark') root.dataset.theme = t; } catch(e) {}
 document.getElementById('theme').onclick = () => {
   const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
   root.dataset.theme = dark ? 'light' : 'dark';
@@ -173,7 +178,7 @@ document.addEventListener('keydown', e => {
     if (zoom.style.display === 'flex') { zoom.style.display = 'none'; return; }
     location.href = 'index.html#tests'; return;
   }
-  if (e.key === 'Backspace' && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) {
+  if (e.key === 'Backspace' && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) {
     location.href = 'index.html#tests'; return;
   }
   if (state.screen !== 'q') return;
@@ -190,63 +195,127 @@ document.addEventListener('keydown', e => {
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
+/* ---------- «Por tema»: un grupo por bloque y, dentro, cada punto de los apuntes o de la práctica (sale de q.t) ---------- */
+const CATT = [...new Set(DATA.map(q => q.t))];
+DATA.forEach(q => { q.cat = ['c' + CATT.indexOf(q.t)]; });
+const catLabel = t => { const s = t.replace(/^(T\d+|Práctica \d+) · /, ''); return s.charAt(0).toUpperCase() + s.slice(1); };
+const CATS = Object.keys(TEMAS).map(t => [TEMAS[t], CATT.filter(k => DATA.some(q => q.tema === t && q.t === k)).map(k => ['c' + CATT.indexOf(k), esc(catLabel(k))])]).filter(g => g[1].length);
+
 let state = { screen: 'start' };
 
 /* ---------- inicio ---------- */
 function start(){
   state = { screen: 'start' }; drawMap();
   const cnt = t => DATA.filter(q => q.tema === t).length;
+  const N = DATA.length, B = 25, blocks = [];
+  for (let a = 1; a <= N; a += B) blocks.push([a, Math.min(a + B - 1, N)]);
+  const tiposHay = Object.keys(TIPO).filter(t => DATA.some(q => q.tipo === t));
+  let mode = 'orden';
+  try { mode = localStorage.getItem('maq-testModo') || 'orden'; } catch(e) {}
+  if (['orden','azar','cat'].indexOf(mode) < 0) mode = 'orden';
   app.innerHTML = `
   <h1>Test de iniciación 2 · <span>Máquinas Eléctricas</span></h1>
   <p class="sub">${DATA.length} preguntas de los puntos 1.1, 1.2 y 1.7 del tema 1 y de los puntos 3.13 a 3.18 del tema 3 (homólogos, tipos, ensayos y aislamiento).</p>
   <div class="card">
-    <fieldset><legend>Temas</legend><div class="chips">
-      ${Object.keys(TEMAS).map(t => `<label class="chip"><input type="checkbox" name="tema" value="${t}" checked><span>${TEMAS[t]} <span class="cnt">(${cnt(t)})</span></span></label>`).join('')}
+    <fieldset><legend>¿Cómo quieres hacerlo?</legend><div class="chips">
+      <label class="chip"><input type="radio" name="modo" value="orden" ${mode==='orden'?'checked':''}><span>En orden</span></label>
+      <label class="chip"><input type="radio" name="modo" value="azar" ${mode==='azar'?'checked':''}><span>Al azar</span></label>
+      <label class="chip"><input type="radio" name="modo" value="cat" ${mode==='cat'?'checked':''}><span>Por tema</span></label>
     </div></fieldset>
-    <fieldset><legend>Dificultad</legend><div class="chips">
-      <label class="chip"><input type="radio" name="dif" value="all" checked><span>Todas</span></label>
-      <label class="chip"><input type="radio" name="dif" value="M"><span>Medias</span></label>
-      <label class="chip"><input type="radio" name="dif" value="D"><span>Difíciles</span></label>
-    </div></fieldset>
-    <fieldset><legend>Orden</legend><div class="chips">
-      <label class="chip"><input type="radio" name="ord" value="fix" checked><span>Por orden (1, 2, 3…)</span></label>
-      <label class="chip"><input type="radio" name="ord" value="mix"><span>Mezcladas</span></label>
-    </div></fieldset>
-    <fieldset><legend>Número de preguntas</legend><div class="chips">
-      ${[10,20,30,40].map((n,i) => `<label class="chip"><input type="radio" name="num" value="${n}" ${i===1?'checked':''}><span>${n}</span></label>`).join('')}
-      <label class="chip"><input type="radio" name="num" value="0"><span>Todas</span></label>
-    </div></fieldset>
+    <div id="m-orden">
+      <fieldset><legend>Qué preguntas</legend><div class="chips">
+        ${blocks.map(([a,b],i) => `<label class="chip"><input type="radio" name="bloque" value="${a}-${b}" ${i===0?'checked':''}><span>${a} a ${b}</span></label>`).join('')}
+        <label class="chip"><input type="radio" name="bloque" value="1-${N}"><span>Todas (1 a ${N})</span></label>
+      </div></fieldset>
+    </div>
+    <div id="m-azar">
+      <fieldset><legend>Temas</legend><div class="chips">
+        ${Object.keys(TEMAS).filter(t => cnt(t) > 0).map(t => `<label class="chip"><input type="checkbox" name="tema" value="${t}" checked><span>${TEMAS[t]} <span class="cnt">(${cnt(t)})</span></span></label>`).join('')}
+      </div></fieldset>
+      <fieldset${tiposHay.length < 2 ? ' style="display:none"' : ''}><legend>Tipo de pregunta</legend><div class="chips">
+        ${tiposHay.map(t => `<label class="chip"><input type="checkbox" name="tipo" value="${t}" checked><span>${TIPO[t]} <span class="cnt">(${DATA.filter(q => q.tipo === t).length})</span></span></label>`).join('')}
+      </div></fieldset>
+      <fieldset><legend>Dificultad</legend><div class="chips">
+        <label class="chip"><input type="radio" name="dif" value="all" checked><span>Todas</span></label>
+        <label class="chip"><input type="radio" name="dif" value="M"><span>Medias</span></label>
+        <label class="chip"><input type="radio" name="dif" value="D"><span>Difíciles</span></label>
+      </div></fieldset>
+      <fieldset><legend>Número de preguntas</legend><div class="chips">
+        ${[10,20,30,40].map((n,i) => `<label class="chip"><input type="radio" name="num" value="${n}" ${i===1?'checked':''}><span>${n}</span></label>`).join('')}
+        <label class="chip"><input type="radio" name="num" value="0"><span>Todas</span></label>
+      </div></fieldset>
+    </div>
+    <div id="m-cat">
+      <p class="cnt" style="margin:0 0 8px">Elige uno o varios puntos: saldrán preguntas al azar solo de lo que marques.</p>
+      <div class="cbtns"><button type="button" id="call">Marcar todos</button><button type="button" id="cnone">Quitar todos</button></div>
+      ${CATS.map(([g, items]) => `<div class="cgrp"><h3>${g}</h3><div class="chips">
+        ${items.map(([k, l]) => `<label class="chip"><input type="checkbox" name="cat" value="${k}"><span>${l} <span class="cnt">(${DATA.filter(q => q.cat.includes(k)).length})</span></span></label>`).join('')}
+      </div></div>`).join('')}
+      <fieldset><legend>Número de preguntas</legend><div class="chips">
+        ${[10,20].map((n,i) => `<label class="chip"><input type="radio" name="numc" value="${n}" ${i===0?'checked':''}><span>${n}</span></label>`).join('')}
+        <label class="chip"><input type="radio" name="numc" value="0"><span>Todas</span></label>
+      </div></fieldset>
+    </div>
     <p id="avail" class="cnt"></p>
     <button class="go" id="go">Empezar</button>
   </div>
   <div class="box"><span class="lbl">CÓMO FUNCIONA</span>
     Elige una respuesta tocándola (o con las teclas A, B, C, D). Aciertes o no, verás <b>por qué</b> es esa la respuesta.
     Si sales a medias, el test se queda guardado en este móvil u ordenador y puedes seguirlo otro día.<br>
-    <b>Por orden</b>: las preguntas van del 1 al 50 y las respuestas, con las mismas letras que el test en papel. <b>Mezcladas</b>: cambian el orden de las preguntas y de las respuestas cada vez.</div>`;
+    <b>En orden</b>: las preguntas van del 1 al 50, con el mismo número y las mismas letras que el test en papel.
+    <b>Al azar</b>: cambian las preguntas y el orden de las respuestas cada vez.
+    <b>Por tema</b>: practica solo lo que quieras (por ejemplo, un punto de los apuntes).</div>`;
   const upd = () => {
-    const pool = filtered();
-    document.getElementById('avail').textContent = `Hay ${pool.length} preguntas con estos filtros.`;
+    const m = app.querySelector('input[name=modo]:checked').value;
+    document.getElementById('m-orden').style.display = m === 'orden' ? '' : 'none';
+    document.getElementById('m-azar').style.display = m === 'azar' ? '' : 'none';
+    document.getElementById('m-cat').style.display = m === 'cat' ? '' : 'none';
+    try { localStorage.setItem('maq-testModo', m); } catch(e) {}
+    const pool = pick();
+    document.getElementById('avail').textContent = m === 'orden'
+      ? `${pool.length} preguntas, de la ${pool[0].n} a la ${pool[pool.length-1].n}.`
+      : m === 'cat'
+      ? (catPool().length ? `Hay ${catPool().length} preguntas de estos puntos; te saldrán ${pool.length}.` : 'Marca al menos un punto.')
+      : `Hay ${filtered().length} preguntas con estos filtros.`;
     document.getElementById('go').disabled = pool.length === 0;
   };
   app.querySelectorAll('input').forEach(i => i.onchange = upd);
+  document.getElementById('call').onclick = () => { app.querySelectorAll('input[name=cat]').forEach(i => i.checked = true); upd(); };
+  document.getElementById('cnone').onclick = () => { app.querySelectorAll('input[name=cat]').forEach(i => i.checked = false); upd(); };
   upd();
   offerProg();
   document.getElementById('go').onclick = () => {
-    const n = +app.querySelector('input[name=num]:checked').value;
-    const mix = app.querySelector('input[name=ord]:checked').value === 'mix';
-    let pool = filtered();
-    if (mix) pool = shuffle(pool);
-    if (n) pool = pool.slice(0, n);
-    state = { screen: 'q', mode: mix ? 'azar' : 'orden', list: pool.map(q => item(q, !mix)), i: 0, ok: 0, answered: false };
+    const pool = pick(), ord = state.mode === 'orden';
+    state = { screen: 'q', mode: ord ? 'orden' : 'azar', list: pool.map(q => item(q, ord)), i: 0, ok: 0, answered: false };
     show();
   };
 }
-// «por orden»: las respuestas salen con las mismas letras que en el test en papel (q.o)
+// «en orden»: las respuestas salen con las mismas letras que en el test en papel (q.o)
 function item(q, ord){ return { q, order: ord ? q.o.slice() : shuffle([0,1,2,3]), pick: null }; }
+function pick(){
+  const m = app.querySelector('input[name=modo]:checked').value;
+  state.mode = m;
+  if (m === 'orden') {
+    const [a, b] = app.querySelector('input[name=bloque]:checked').value.split('-').map(Number);
+    return DATA.filter(q => q.n >= a && q.n <= b);
+  }
+  if (m === 'cat') {
+    const nc = +app.querySelector('input[name=numc]:checked').value, pc = shuffle(catPool());
+    return nc ? pc.slice(0, nc) : pc;
+  }
+  const n = +app.querySelector('input[name=num]:checked').value;
+  let pool = shuffle(filtered());
+  return n ? pool.slice(0, n) : pool;
+}
+function catPool(){
+  const cs = [...app.querySelectorAll('input[name=cat]:checked')].map(i => i.value);
+  return DATA.filter(q => q.cat.some(c => cs.includes(c)));
+}
 function filtered(){
   const temas = [...app.querySelectorAll('input[name=tema]:checked')].map(i => i.value);
   const dif = app.querySelector('input[name=dif]:checked').value;
-  return DATA.filter(q => temas.includes(q.tema) && (dif === 'all' || q.dif === dif));
+  const tipos = [...app.querySelectorAll('input[name=tipo]:checked')].map(i => i.value);
+  return DATA.filter(q => temas.includes(q.tema) && tipos.includes(q.tipo) && (dif === 'all' || q.dif === dif));
 }
 
 /* ---------- test a medias: se guarda en este navegador para seguirlo otro día ---------- */

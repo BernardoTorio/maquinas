@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<script>try{const t=localStorage.getItem('maq-tema');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script>(function(){try{var t=localStorage.getItem('maq-tema');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <style>
 :root{--bg:#EEF1F4;--ink:#1a1a1a;--muted:#56606b;--card:#fff;--line:#cfd6de;--acc:#1F4E79;--field:#2E75B6;--cu:#C87533;--cur:#D9362E;--gray:#8a939c;--force:#3F8F2A;--ph1:#D9362E;--ph2:#2E75B6;--ph3:#3F8F2A;--steel:#9aa5b1;--steel2:#c3cbd3;--warn:#C00000;--ok:#3F8F2A;--grid:#e3e8ee;
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -99,15 +99,23 @@ svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif}
   .tnav>a{padding:0 9px}.tnav .where{font-size:.86rem}
   .tnav .steps a.seen{position:relative}.tnav .steps a.seen::after{position:absolute;top:1px;right:3px;margin:0;font-size:.62em}}
 /* --- fin de la tira del tema --- */
+/* --- barra de arriba: volver, dónde estás y modo claro/oscuro (como en Automatismos) --- */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px;padding:4px 0 10px;border-bottom:1px solid var(--line)}
+.tb-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.tbback{flex:none;display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 12px;border-radius:10px;border:2px solid var(--line);color:var(--ink);text-decoration:none;font-size:1rem;font-weight:700;background:transparent;white-space:nowrap}
+.tbback:hover,.themebtn:hover{border-color:#1F4E79}
+.topbar .crumbs{min-width:0;flex:1;overflow:hidden;white-space:nowrap;text-overflow:clip;direction:rtl;text-align:left;font-size:.92rem;color:var(--muted)}
+.topbar .crumbs span.in{direction:ltr;unicode-bidi:bidi-override}
+.topbar .crumbs a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted)}
+.topbar .crumbs .sep{margin:0 6px;opacity:.7}
+.topbar .crumbs b{color:var(--ink)}
+.themebtn{flex:none;width:44px;height:44px;border-radius:10px;border:2px solid var(--line);background:transparent;color:var(--ink);font-size:1.15rem;cursor:pointer;line-height:1;padding:0}
+@media (max-width:620px){.topbar .crumbs{display:none}}
 </style>
 </head>
 <body>
 <main>
-  <nav class="bar" aria-label="Navegación">
-    <a class="back" href="index.html#animaciones" aria-label="Volver al índice de animaciones">← Índice</a>
-    <span class="crumbs"><a href="index.html">Máquinas Eléctricas</a> › <a href="index.html#animaciones">Animaciones</a> › Tema 5 › <b>T5.7 Arranques</b></span>
-    <button class="theme" id="themeBtn" type="button" aria-label="Cambiar modo claro u oscuro">◐ Modo</button>
-  </nav>
+  <header class="topbar"><div class="tb-left"><a class="tbback" href="index.html#animaciones" title="Volver al índice (tecla Esc)">← Volver al índice</a><nav class="crumbs" aria-label="Dónde estás"><span class="in"><a href="index.html">Máquinas Eléctricas</a><span class="sep">›</span><a href="index.html#animaciones">Animaciones</a><span class="sep">›</span><a href="index.html#animaciones">Tema 5</a><span class="sep">›</span><b>T5.7 Arranques</b></span></nav></div><button id="themeBtn" class="themebtn" type="button" aria-label="Cambiar modo claro u oscuro">🌙</button></header>
   <nav class="tnav" aria-label="Animaciones del Tema 5"><a class="tarr" href="placa_bornes.html" aria-label="Anterior: Placa de bornes: estrella o triángulo">‹ T5.6</a><span class="where">Tema 5 · 6 de 7</span><a class="tarr" href="averias_motor.html" aria-label="Siguiente: Averías del motor: encuentra la causa">T5.9 ›</a><div class="steps"><a href="motor_generador.html" title="Motor o generador: la misma máquina">T5.1</a><a href="partes_motor.html" title="Las partes del motor asíncrono">T5.3</a><a href="campo_giratorio.html" title="Campo magnético giratorio">T5.4</a><a href="curva_par.html" title="Par, velocidad y corriente del motor">T5.4.2 a 5.8</a><a href="placa_bornes.html" title="Placa de bornes: estrella o triángulo">T5.6</a><a href="arranques.html" class="cur" aria-current="page" title="Arranques del motor">T5.7</a><a href="averias_motor.html" title="Averías del motor: encuentra la causa">T5.9</a></div></nav>
   <header class="top"><small>Máquinas Eléctricas 2MB · Tema 5 · Punto 5.7</small><h1>¿Cuánta corriente pide el motor al arrancar?</h1><p class="sub">Elige un sistema de arranque, la potencia del motor y la carga. Pulsa Arrancar y compara con el límite del REBT.</p></header>
   <div class="grid">
@@ -145,9 +153,9 @@ svg text{font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif}
 <script>
 // navegación y tema (común a todas las páginas)
 (function(){const b=document.getElementById('themeBtn'),r=document.documentElement;
- const cur=()=>r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
- const lab=()=>{b.textContent=cur()==='dark'?'☀ Modo claro':'☾ Modo oscuro';};
- b.onclick=()=>{const n=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('maq-tema',n);}catch(e){}lab();};lab();})();
+ const cur=()=>{const t=r.getAttribute('data-theme');if(t==='light'||t==='dark')return t;return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';};
+ const paint=()=>{const d=cur()==='dark';b.textContent=d?'☀️':'🌙';b.setAttribute('aria-label',d?'Cambiar a modo claro':'Cambiar a modo oscuro');b.title=b.getAttribute('aria-label');};
+ b.onclick=()=>{const t=cur()==='dark'?'light':'dark';r.setAttribute('data-theme',t);try{localStorage.setItem('maq-tema',t);}catch(e){}paint();};paint();})();
 const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id);
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const fmt=(x,d=0)=>x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});

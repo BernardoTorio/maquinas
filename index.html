@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
 <script>(function(){try{var t=localStorage.getItem('maq-tema');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <title>Máquinas Eléctricas · 2MB</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -70,8 +71,8 @@ details.grp summary:hover,details.grp summary:focus-visible{background:var(--bg)
 
 /* ===== portada: aspecto de los apuntes (igual que la de Automatismos) ===== */
 :root{--bg:#F4F1E8;--card:#FFFEFA;--line:#D6D0C0;--acc:#1a1a1a;--green:#5E8C1A;--fase:#D0191C;--neutro:#1F5FBF}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#16181b;--card:#1f2327;--line:#3a4047;--acc:#eef1f4;--green:#9CCB4A}}
-:root[data-theme="dark"]{--bg:#16181b;--card:#1f2327;--line:#3a4047;--acc:#eef1f4;--green:#9CCB4A}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#16181b;--card:#1f2327;--line:#3a4047;--acc:#eef1f4;--green:#9CCB4A;--fase:#FF7A70;--neutro:#6FA8FF}}
+:root[data-theme="dark"]{--bg:#16181b;--card:#1f2327;--line:#3a4047;--acc:#eef1f4;--green:#9CCB4A;--fase:#FF7A70;--neutro:#6FA8FF}
 main{max-width:860px;padding-top:14px}
 .top{border-bottom:0;margin-bottom:14px;padding-bottom:0}
 .top small{color:var(--muted);letter-spacing:.06em;font-size:.82rem}
@@ -193,7 +194,7 @@ details.grp summary{color:var(--ink)}
       <div>Resultados de los 4 trafos<small>Las hojas de ensayos de los cuatro grupos juntas, en 2 caras, para compararlas en la memoria</small></div>
     </a>
     <a class="card" href="problemas_trafos.html">
-      <div class="num">P1</div>
+      <div class="num">P1.1</div>
       <div><h2>Qué les pasó a nuestros trafos</h2><p>Animación resumen de los 4 trafos con los datos de sus hojas: los trafos 1 y 2 van bien solo porque trabajan a poca tensión, el Trafo 3 se satura a 109 V y el Trafo 4 tiene espiras en cortocircuito (parece saturado a 20-30 V). Y por qué la lámpara casi no se nota.</p></div>
     </a>
     <h2 class="sec" style="margin-top:26px">Práctica 1 · animaciones del tema que te sirven</h2>
@@ -229,7 +230,7 @@ details.grp summary{color:var(--ink)}
     <h2 class="sec">Tests · repasa con preguntas tipo test</h2>
     <a class="card" href="test_repaso.html">
       <div class="num">Inicio 1</div>
-      <div><h2>Test de iniciación 1 · Puntos 1.3 a 1.11 y 3.12</h2><p>40 preguntas del tema 1 (puntos 1.3 a 1.11, sin el 1.7) y del funcionamiento del transformador. Elige temas, dificultad y cuántas; al responder ves por qué.</p></div>
+      <div><h2>Test de iniciación 1 · Puntos 1.3 a 1.11 y 3.12</h2><p>40 preguntas del tema 1 (puntos 1.3 a 1.11, sin el 1.7) y del funcionamiento del transformador. Hazlas en orden, al azar o por tema; al responder ves por qué.</p></div>
     </a>
     <a class="card" href="test_repaso_2.html">
       <div class="num">Inicio 2</div>
@@ -243,7 +244,7 @@ details.grp summary{color:var(--ink)}
       <div class="num">Medio 2</div>
       <div><h2>Test intermedio 2 · Temas 1 y 3 + Práctica 1</h2><p>100 preguntas nuevas, del mismo nivel que el Test intermedio, sacadas de lo que explican las animaciones de esta web: en cada pregunta te dice qué animación mirar. Incluye nuestros trafos, el ajuste de las chapas, cómo medir y la calculadora.</p></div>
     </a>
-    <p class="foot">Puedes hacerlos por orden (como en papel) o con las preguntas mezcladas. Al final ves tu nota y puedes repetir solo los fallos. Si sales a medias, el test se queda guardado en ese móvil u ordenador.</p>
+    <p class="foot">Puedes hacerlos en orden (como en papel), al azar o por tema. Al final ves tu nota y puedes repetir solo los fallos. Si sales a medias, el test se queda guardado en ese móvil u ordenador.</p>
   </section>
   <div class="rail N" aria-hidden="true"><span>N</span><i></i></div>
   <p class="foot" style="margin-top:0">Máquinas Eléctricas · 2MB · I.E.S. Trinidad Arroyo.</p>
@@ -349,9 +350,9 @@ details.grp summary{color:var(--ink)}
   ];
   // Herramientas para el taller de la práctica 1 (no van con un punto concreto)
   var HERR=[
-    {f:'medir.html',t:'Cómo medir con calibre y micrómetro',d:'Calibres de 0,05 y 0,02 mm y micrómetros de 0–25 a 75–100 mm: escala ampliada, lectura paso a paso y práctica con medidas al azar, como en las fichas.'},
-    {f:'ajuste_hierro.html',t:'Ajuste del hierro al carrete de 40 × 40 mm',d:'Por qué el paquete de chapas no llena todo el carrete. El paso 10 de los 4 trafos, con chapa nueva y con las chapas oxidadas del aula: mete las chapas y mira si el hierro se satura.'},
-    {f:'calculadora_trafo.html',t:'Calculadora de transformadores pequeños',d:'Carrete de 40 × 40 mm. Pon la potencia, la tensión, las chapas, las espiras y el hilo que tienes: salen tensiones, corrientes, inducción real, capas del bobinado y si cabe y funciona.'}];
+    {f:'medir.html',n:'P1.2',t:'Cómo medir con calibre y micrómetro',d:'Calibres de 0,05 y 0,02 mm y micrómetros de 0–25 a 75–100 mm: escala ampliada, lectura paso a paso y práctica con medidas al azar, como en las fichas.'},
+    {f:'ajuste_hierro.html',n:'P1.3',t:'Ajuste del hierro al carrete de 40 × 40 mm',d:'Por qué el paquete de chapas no llena todo el carrete. El paso 10 de los 4 trafos, con chapa nueva y con las chapas oxidadas del aula: mete las chapas y mira si el hierro se satura.'},
+    {f:'calculadora_trafo.html',n:'P1.4',t:'Calculadora de transformadores pequeños',d:'Carrete de 40 × 40 mm. Pon la potencia, la tensión, las chapas, las espiras y el hilo que tienes: salen tensiones, corrientes, inducción real, capas del bobinado y si cabe y funciona.'}];
 
   function ord(k){ return k.split('.').map(Number); }
   function cmp(a,b){ var x=ord(a), y=ord(b); return x[0]-y[0] || x[1]-y[1] || (x[2]||0)-(y[2]||0); }
@@ -384,7 +385,7 @@ details.grp summary{color:var(--ink)}
 
   // ---- pestaña Prácticas: herramientas del taller ----
   document.getElementById('herr').innerHTML = HERR.map(function(a){
-    return '<a class="card" href="'+a.f+'"><div class="num">P1</div><div><h2>'+a.t+'</h2><p>'+a.d+'</p></div></a>'; }).join('');
+    return '<a class="card" href="'+a.f+'"><div class="num">'+a.n+'</div><div><h2>'+a.t+'</h2><p>'+a.d+'</p></div></a>'; }).join('');
   // ---- pestaña Prácticas: animaciones del tema que se usan en la Práctica 1 (los ensayos de su hoja de ensayos)
   var PRAC_T = ['ensayo_vacio.html', 'ensayo_cortocircuito.html', 'ensayo_carga.html', 'aislamiento.html'];
   document.getElementById('prt').innerHTML = PRAC_T.map(function(f){ return ANIM.filter(function(a){ return a.f === f; })[0]; }).map(function(a){

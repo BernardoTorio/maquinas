@@ -39,7 +39,7 @@ subir.bat                  publica todo con doble clic
 - Prácticas y Apuntes: un recuadro por PDF con enlace `download`. Si el PDF todavía no está en el servidor, un `fetch HEAD` lo marca en gris como «próximamente» (también en «Ahora en clase» y en «Por temas»).
 - **Marca «✓ vista»**: las animaciones que ya se han abierto en ese navegador salen marcadas. La pone la portada al tocar una tarjeta y cada animación al abrirse (también desde un QR). No se marca en los tests.
 - En todas las páginas, la primera miga («Máquinas Eléctricas») lleva a `index.html`.
-- **Letra delante del número (T, P, E)**, igual en las tres webs: cada animación dice a qué se refiere. **T** si explica un apartado del tema (`T3.15`, `T1.2 y 1.3`), **P** si es la solución de un ejercicio de una práctica (aquí, la Práctica 1: sus tarjetas, también las del taller, dicen `P1`; en la tira van con su nombre) y **E** si es un ejercicio suelto, como los de los exámenes (`E1`, `E2`). Va en las tarjetas, en «Ahora en clase» (`ruta` y `chips`), en la tira, en la última miga, en el título y en el botón «Siguiente». Los tests no llevan letra. Una animación nueva se pone ya con su letra.
+- **Letra delante del número (T, P, E)**, igual en las tres webs: cada animación dice a qué se refiere. **T** si explica un apartado del tema (`T3.15`, `T1.2 y 1.3`), **P** si es de una práctica (aquí, la Práctica 1, en el orden de su tira: `P1.1` Nuestros trafos, `P1.2` Medir, `P1.3` Ajuste del hierro y `P1.4` Calculadora; lo llevan sus tarjetas, la última miga, el título y el botón «Siguiente»; en la tira y en «Ahora en clase» van con su nombre; si se pasa `tira_tema.py`, mirar que no quite la P1.x del «Siguiente») y **E** si es un ejercicio suelto, como los de los exámenes (`E1`, `E2`). Va en las tarjetas, en «Ahora en clase» (`ruta` y `chips`), en la tira, en la última miga, en el título y en el botón «Siguiente». Los tests no llevan letra. Una animación nueva se pone ya con su letra.
   `tira_tema.py` ya lleva las etiquetas con T; las migas de las páginas que ya tienen barra no las toca: si cambia una etiqueta, se cambia su miga a mano.
 
 ## Lo que se guarda en el navegador
@@ -47,6 +47,7 @@ subir.bat                  publica todo con doble clic
 - `maq-tema`: modo claro u oscuro.
 - `maq-visto:<archivo>`: animación ya abierta.
 - `maq-testProg:<archivo>`: test a medias.
+- `maq-testModo`: el último modo elegido en los tests (en orden, al azar o por tema).
 
 ## Tests
 Los cuatro llevan el mismo motor que los de Automatismos (`DATA`, `IMGS`, `show`, `paint`, `answer`, `result`).
@@ -54,7 +55,8 @@ Los cuatro llevan el mismo motor que los de Automatismos (`DATA`, `IMGS`, `show`
 - Se salta entre preguntas con anterior / siguiente, −10 / +10, el mapa, las flechas ← → y AvPág / RePág. Se puede terminar con preguntas sin contestar: no cuentan en la nota y después se pueden hacer «las que faltan».
 - El **test a medias se guarda solo en ese navegador**: al volver, la pantalla de inicio ofrece «Seguir donde lo dejé» o «Borrarlo». Se borra al terminarlo entero.
 - Al fallar, el mensaje dice «La buena es la opción C».
-- **«Por orden»** coincide con el test en papel: mismo número de pregunta y mismas letras (el orden de las respuestas está en `q.o`). Si se cambia una pregunta, se cambia también su Word en papel.
+- Pantalla de inicio como la de Automatismos (`test_diciembre.html`): **En orden** (en bloques de 25 o todas), **Al azar** (temas, tipo de pregunta si hay más de uno, dificultad y cuántas) y **Por tema** (un grupo por tema o práctica y, dentro, cada punto de los apuntes, sacado de `q.t`); recuerda el último modo (`maq-testModo`). El script del tema va en `<head>`.
+- **«En orden»** coincide con el test en papel: mismo número de pregunta y mismas letras (el orden de las respuestas está en `q.o`). Si se cambia una pregunta, se cambia también su Word en papel.
 - **Letras en los puntos de medida**: hoy no hacen falta. La única figura es la gráfica del ensayo de vacío de los 4 trafos (tests intermedios) y ninguna pregunta mide con el polímetro sobre un dibujo. Si algún día hay preguntas así, se hace como en Automatismos: una letra en bolita amarilla (A, B, C…, sin I, L, N ni O) en cada tornillo que se usa, `Ⓐ`, `Ⓑ`… en `DATA`, y el «¿Por qué?» empieza diciendo qué tornillo es.
 - Vuelven a `index.html#tests` (botón, Esc y Retroceso).
 
@@ -98,8 +100,9 @@ Las de los Temas 4 y 5 ya se enseñan (las dos desde el 17/11/2026; las del 4, t
 | Práctica 1 | Calculadora | `calculadora_trafo.html` | Calculadora de trafos con carrete de 40 × 40 mm |
 
 ### Reglas de las animaciones (todas)
-- **Barra de arriba**: botón «← Índice», migas («Máquinas Eléctricas › Animaciones › Tema 3 › 3.15 Ensayo de vacío») y botón de modo claro/oscuro. En el móvil las migas se esconden.
-- «← Índice», **Esc** y **Retroceso** vuelven a la pestaña donde está la animación: `index.html#animaciones` o, las de la Práctica 1, `index.html#practicas`. Retroceso no actúa con el foco en un campo o un desplegable.
+- **Barra de arriba**, igual que la de Automatismos (`<header class="topbar">`): botón «← Volver al índice» (`.tbback`, 44 px, title «Volver al índice (tecla Esc)»), migas (`<nav class="crumbs"><span class="in">` con `<span class="sep">›</span>`: «Máquinas Eléctricas › Animaciones › Tema 3 › T3.15 Ensayo de vacío»; si no caben, se cortan por la izquierda) y botón de modo claro/oscuro con icono 🌙/☀️ (`.themebtn`, 44 px). En el móvil (620 px o menos) las migas se esconden.
+- **Modo claro/oscuro**: en `<head>`, antes del CSS, el script que lee `maq-tema` y solo acepta `light` o `dark` (un valor viejo, como `auto`, se ignora). El botón solo guarda al tocarlo.
+- «← Volver al índice», **Esc** y **Retroceso** vuelven a la pestaña donde está la animación: `index.html#animaciones` o, las de la Práctica 1, `index.html#practicas`. Retroceso no actúa con el foco en un campo o un desplegable.
 - Bajo la barra, la **tira del tema** (`.tnav`): «‹ anterior · Tema 3 · 4 de 7 · siguiente ›» y todos los pasos del grupo, con un ✓ en los ya abiertos. En la Práctica 1 las flechas dicen «‹ Anterior» y «Siguiente ›». En la última, la flecha es «Fin ›» y vuelve al índice.
 - Al final de la página, el botón grande **«Siguiente: 3.16 Ensayo de cortocircuito →»**; en la última, «Has llegado al final del Tema 3 · Volver a las animaciones →».
 - Debajo de «Qué pasa» (el cajón que cambia en cada momento), un cajón fijo **«Para qué sirve»** de dos o tres frases, con lenguaje sencillo y sin fórmulas.
@@ -121,7 +124,7 @@ Las de los Temas 4 y 5 ya se enseñan (las dos desde el 17/11/2026; las del 4, t
 
 ### Al añadir, quitar o reordenar una animación
 1. `index.html`: una línea en `ANIM` (o en `HERR`, si es una herramienta de la práctica).
-2. La tira hay que actualizarla **en todas las animaciones del grupo**. Se hace con el guion `tira_tema.py` (guardado en el proyecto «Materiales para instituto» de claude.ai, en `claude/herramientas/`): se añade la animación a `GRUPOS` y su texto a `PQS`, y se pasa con `python3 tira_tema.py <carpeta>`. Regenera la tira y el botón «Siguiente» de todas, y pone lo demás solo donde falte. La página nueva tiene que tener la barra de arriba (o el botón «← Índice» justo después de `<main>`) y un cajón con `id="exp"` dentro de un `<div class="boxes">`.
+2. La tira hay que actualizarla **en todas las animaciones del grupo**. Se hace con el guion `tira_tema.py` (guardado en el proyecto «Materiales para instituto» de claude.ai, en `claude/herramientas/`): se añade la animación a `GRUPOS` y su texto a `PQS`, y se pasa con `python3 tira_tema.py <carpeta>`. Regenera la tira y el botón «Siguiente» de todas, y pone lo demás solo donde falte. La página nueva tiene que tener la barra de arriba (`<header class="topbar">`; ojo: si el guion busca todavía la barra vieja `.tbar` / `a.back`, hay que adaptarlo) y un cajón con `id="exp"` dentro de un `<div class="boxes">`.
 3. Añadir su fila a la tabla de arriba.
 
 ## Comprobaciones automáticas (desde el 23/11/2026)
@@ -145,7 +148,7 @@ C:\dev\originales\
 - Una tarea de Windows («Archivo de Word de clase», cada día a las 23:00 o al encender) guarda en `versiones\` los Word nuevos o cambiados de las tres webs (también «Claude outputs»), de Descargas y del propio archivo, y pone arriba la última. No mueve ni borra nada. Para que pase ya: `C:\dev\originales\archivar_ahora.bat`.
 
 ## Cómo se publica
-1. Doble clic en `subir.bat`: descomprime el `maquinas*.zip` más reciente si lo hay (aquí o en Descargas), ordena los PDF en `temas/` y `practicas/`, hace `git add -A`, commit con fecha y `push`, y abre la web. Recargar con **Ctrl+F5** si se ve la versión vieja.
-2. **Ojo:** `subir.bat` no hace `git pull`. Si se ha publicado algo desde otro sitio (por ejemplo, Claude desde la nube), hay que hacer antes `git pull` en `C:\dev\maquinas`, o el `push` será rechazado.
+1. Doble clic en `subir.bat`: descomprime el `maquinas*.zip` más reciente si lo hay (aquí o en Descargas), ordena los PDF en `temas/` y `practicas/`, hace `git pull`, `git add -A`, commit con fecha y `push`, y abre la web. Recargar con **Ctrl+F5** si se ve la versión vieja.
+2. Antes del commit, `subir.bat` hace `git pull --rebase --autostash origin main` (como el de Automatismos), para traer lo que se haya publicado desde otro sitio (por ejemplo, Claude desde la nube); si no, el `push` sería rechazado. Si el pull da un conflicto, el .bat se para y hay que resolverlo a mano.
 3. Si se trabaja con Claude en vez del .bat: un commit claro por bloque, a `main`, probado antes en escritorio y en móvil (400 px), en claro y en oscuro, y revisado después en la web publicada. **Nunca subir zips ni .docx.**
 4. Esto es una web de clase: los cambios de forma se hacen sin más; si un cambio toca lo que se explica o el texto de una pregunta, se pregunta antes.

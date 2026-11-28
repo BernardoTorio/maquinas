@@ -57,7 +57,8 @@ findstr /x /c:"*.zip" .gitignore >nul 2>&1 || echo *.zip>>.gitignore
 findstr /x /c:"*.docx" .gitignore >nul 2>&1 || echo *.docx>>.gitignore
 git rm -r --cached -q --ignore-unmatch *.zip *.docx >nul 2>&1
 
-rem --- 4. Commit y push ---
+rem --- 4. Trae lo que se haya publicado desde otro sitio (si no, el push se rechaza), commit y push ---
+git pull --rebase --autostash origin main
 git add -A
 git diff --cached --quiet
 if not errorlevel 1 (
